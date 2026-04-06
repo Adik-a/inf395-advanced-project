@@ -1,16 +1,13 @@
-import os
-from dotenv import load_dotenv
-
 from fastapi import Depends, HTTPException, status
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 
-load_dotenv()
+from config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = settings.secret_key
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")

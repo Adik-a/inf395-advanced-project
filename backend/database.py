@@ -1,19 +1,19 @@
-import os
-from dotenv import load_dotenv
-
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
 from sqlalchemy.orm import DeclarativeBase, MappedAsDataclass
-
 from typing import Annotated
-from fastapi import Depends
 
-load_dotenv()
+from config import settings
 
-DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_async_engine(DATABASE_URL)
+engine = create_async_engine(url=settings.database_url, echo=False)
 
-new_session = async_sessionmaker(engine, expire_on_commit=False)
+new_session = async_sessionmaker(
+    bind=engine,
+    expire_on_commit=False,
+    autoflush=False,
+    autocommit=False,
+)
 
 
 class Model(MappedAsDataclass, DeclarativeBase):
