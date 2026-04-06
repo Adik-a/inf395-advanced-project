@@ -1,9 +1,9 @@
 from fastapi import FastAPI
-from routers.login import router as login_router
-from routers.registration import router as registration_router
-
 from contextlib import asynccontextmanager
+
+from api.v1.api import router as v1_router
 from database import engine, Model
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,11 +16,11 @@ async def lifespan(app: FastAPI):
 
     print("🛑🔗Turn off Server🔗🛑")
 
+
 app = FastAPI(
     title="QWork",
     description="REST API for QWork freelance web-site",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
-app.include_router(login_router)
-app.include_router(registration_router)
+app.include_router(v1_router)
