@@ -7,9 +7,6 @@ from database import engine, Model
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Model.metadata.create_all)
-
     print("🔰🔗Database is launched🔗🔰")
 
     yield

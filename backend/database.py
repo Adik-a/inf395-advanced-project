@@ -17,7 +17,7 @@ new_session = async_sessionmaker(
 )
 
 
-class Model(MappedAsDataclass, DeclarativeBase):
+class Model(DeclarativeBase):
     metadata = MetaData(
         naming_convention={
             "ix": "ix_%(column_0_label)s",
