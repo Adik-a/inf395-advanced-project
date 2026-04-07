@@ -2,7 +2,7 @@ from fastapi import status, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete, update
 
-from modules.users.schemas import UsersFullSchema, UsersSchema, UsersUpdateSchema
+from modules.users.schemas import UsersSchema, UsersUpdateSchema
 from modules.users.models import UsersModel
 from auth import hash_password
 
@@ -19,6 +19,13 @@ class UsersRepository:
     async def get_user_by_id(cls, user_id: int, session: AsyncSession):
         data: UsersModel | None = await session.scalar(
             select(UsersModel).where(UsersModel.id == user_id)
+        )
+        return data
+    
+    @classmethod
+    async def get_user_by_username(cls, username: str, session: AsyncSession):
+        data: UsersModel | None = await session.scalar(
+            select(UsersModel).where(UsersModel.username == username)
         )
         return data
 
@@ -51,7 +58,7 @@ class UsersRepository:
     async def update_user(
         cls,
         session: AsyncSession,
-        user: UsersFullSchema,
+        user: UsersModel,
         user_update: UsersUpdateSchema,
         partial: bool = False,
     ):

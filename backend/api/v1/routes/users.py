@@ -22,7 +22,7 @@ async def get_user(
     current_user: dict = Depends(get_current_user),
 ) -> UsersMineSchema:
     user_data = await UsersRepository.get_user_by_id(
-        int(current_user["sub"]),
+        current_user["sub"],
         session=session,
     )
     return user_data
@@ -35,14 +35,27 @@ async def update_user(
     current_user: dict = Depends(get_current_user),
 ) -> UsersMineSchema:
     user_data = await UsersRepository.get_user_by_id(
-        int(current_user["sub"]),
+        current_user["sub"],
         session=session,
     )
+
     if not user_data:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="User not found",
         )
+    
+    if user_data.username and user_update.username:
+        is_username_taken = await UsersRepository.get_user_by_username(
+            user_update.username,
+            session=session,
+        )
+        if is_username_taken and is_username_taken.id != user_data.id:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Username already taken",
+            )
+
     updated_user = await UsersRepository.update_user(
         session=session,
         user=user_data,

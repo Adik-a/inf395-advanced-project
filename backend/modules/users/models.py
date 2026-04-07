@@ -13,7 +13,7 @@ class UsersModel(Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    username: Mapped[str | None] = mapped_column(default=None, nullable=True, unique=True)
     password: Mapped[str | None] = mapped_column(default=None, nullable=True)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     first_name: Mapped[str] = mapped_column(nullable=False)

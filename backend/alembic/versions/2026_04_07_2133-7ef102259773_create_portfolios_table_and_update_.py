@@ -1,8 +1,8 @@
-"""create portfolios table
+"""create portfolios table and update username column in users table
 
-Revision ID: 1ba7e281b0f5
+Revision ID: 7ef102259773
 Revises: 8ead171d0b2c
-Create Date: 2026-04-07 20:54:03.384170
+Create Date: 2026-04-07 21:33:02.279883
 
 """
 
@@ -12,7 +12,7 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision: str = "1ba7e281b0f5"
+revision: str = "7ef102259773"
 down_revision: Union[str, Sequence[str], None] = "8ead171d0b2c"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -45,8 +45,12 @@ def upgrade() -> None:
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_portfolios")),
     )
+    op.create_unique_constraint(
+        op.f("uq_users_username"), "users", ["username"]
+    )
 
 
 def downgrade() -> None:
     """Downgrade schema."""
+    op.drop_constraint(op.f("uq_users_username"), "users", type_="unique")
     op.drop_table("portfolios")

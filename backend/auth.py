@@ -39,7 +39,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
             detail="Could not validate credentials",
         )
 
-    return {"sub": user_id, "role": role}
+    return {"sub": int(user_id), "role": role}
 
 
 def get_any_user(user: dict = Depends(get_current_user)):

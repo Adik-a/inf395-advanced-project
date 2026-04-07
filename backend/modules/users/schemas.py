@@ -10,11 +10,6 @@ class UsersSchema(BaseModel):
     last_name: str | None = None
 
 
-class UsersFullSchema(UsersSchema):
-    username: str | None = None
-    bio: str | None = None
-
-
 class UsersMineSchema(BaseModel):
     id: int
     email: EmailStr
@@ -35,7 +30,6 @@ class UsersOthersSchema(BaseModel):
 
 
 class UsersUpdateSchema(BaseModel):
-    email: EmailStr | None = None
     password: str | None = None
     first_name: str | None = None
     last_name: str | None = None
