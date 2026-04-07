@@ -1,10 +1,13 @@
+from typing import TYPE_CHECKING
 from datetime import datetime
 
 from sqlalchemy import func
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from database import Model
 
+if TYPE_CHECKING:
+    from modules.portfolios.models import PortfoliosModel
 
 class UsersModel(Model):
     __tablename__ = "users"
@@ -24,3 +27,4 @@ class UsersModel(Model):
         server_default=func.now(),
         default=datetime.utcnow,
     )
+    portfolios: Mapped[list["PortfoliosModel"]] = relationship(back_populates="user")

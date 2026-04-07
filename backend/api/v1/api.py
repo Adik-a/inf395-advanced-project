@@ -1,10 +1,12 @@
 from fastapi import APIRouter
 
-from api.v1.routes import authentication as auth_router
-from api.v1.routes import users as users_router
+from api.v1.routes.authentication import router as auth_router
+from api.v1.routes.users import router as users_router
+from api.v1.routes.portfolios import router as portfolios_router
 
 
 router = APIRouter()
 
-router.include_router(auth_router.router)
-router.include_router(users_router.router)
+router.include_router(auth_router)
+router.include_router(users_router)
+router.include_router(portfolios_router)
