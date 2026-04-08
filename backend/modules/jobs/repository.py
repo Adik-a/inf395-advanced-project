@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import JobsModel
 from .schemas import JobsSchema, JobsUpdateSchema
+from modules.offers.models import OffersModel
 
 
 class JobsRepository:
@@ -88,3 +89,22 @@ class JobsRepository:
     ):
         await session.delete(job)
         await session.commit()
+
+    @classmethod
+    async def get_user_job_and_offer(
+        cls,
+        user_id: int,
+        offer_id: int,
+        session: AsyncSession,
+    ):
+        data = await session.scalar(
+            select(JobsModel)
+            .join(OffersModel)
+            .where(
+                JobsModel.id == OffersModel.job_id,
+                JobsModel.user_id == user_id,
+                OffersModel.id == offer_id,
+            )
+        )
+
+        return data

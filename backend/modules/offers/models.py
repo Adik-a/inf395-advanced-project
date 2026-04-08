@@ -3,7 +3,7 @@ from datetime import datetime
 
 from database import Model
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey, func
+from sqlalchemy import ForeignKey, func, UniqueConstraint
 
 if TYPE_CHECKING:
     from modules.jobs.models import JobsModel
@@ -27,3 +27,7 @@ class OffersModel(Model):
 
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["UsersModel"] = relationship(back_populates="offers")
+
+    __table_args__ = (
+        UniqueConstraint("user_id", "job_id"),
+    )
