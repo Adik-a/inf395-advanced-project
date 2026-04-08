@@ -8,6 +8,7 @@ from database import Model
 
 if TYPE_CHECKING:
     from modules.users.models import UsersModel
+    from modules.offers.models import OffersModel
 
 
 class JobsModel(Model):
@@ -33,3 +34,5 @@ class JobsModel(Model):
     )
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     user: Mapped["UsersModel"] = relationship(back_populates="jobs")
+
+    offers: Mapped[list["OffersModel"]] = relationship(back_populates="job")

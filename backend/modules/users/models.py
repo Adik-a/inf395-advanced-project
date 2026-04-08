@@ -9,12 +9,16 @@ from database import Model
 if TYPE_CHECKING:
     from modules.portfolios.models import PortfoliosModel
     from modules.jobs.models import JobsModel
+    from modules.offers.models import OffersModel
+
 
 class UsersModel(Model):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    username: Mapped[str | None] = mapped_column(default=None, nullable=True, unique=True)
+    username: Mapped[str | None] = mapped_column(
+        default=None, nullable=True, unique=True
+    )
     password: Mapped[str | None] = mapped_column(default=None, nullable=True)
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     first_name: Mapped[str] = mapped_column(nullable=False)
@@ -30,3 +34,4 @@ class UsersModel(Model):
     )
     portfolios: Mapped[list["PortfoliosModel"]] = relationship(back_populates="user")
     jobs: Mapped[list["JobsModel"]] = relationship(back_populates="user")
+    offers: Mapped[list["OffersModel"]] = relationship(back_populates="user")
