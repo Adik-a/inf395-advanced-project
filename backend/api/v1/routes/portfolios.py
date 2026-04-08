@@ -97,7 +97,7 @@ async def update_user_portfolio(
     }
 
 
-@router.delete("/delete/{portfolio_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/delete/{portfolio_id}")
 async def delete_user_portfolio(
     portfolio_id: int,
     session: SessionDep,

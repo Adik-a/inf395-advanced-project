@@ -8,6 +8,7 @@ from database import Model
 
 if TYPE_CHECKING:
     from modules.portfolios.models import PortfoliosModel
+    from modules.jobs.models import JobsModel
 
 class UsersModel(Model):
     __tablename__ = "users"
@@ -28,3 +29,4 @@ class UsersModel(Model):
         default=datetime.utcnow,
     )
     portfolios: Mapped[list["PortfoliosModel"]] = relationship(back_populates="user")
+    jobs: Mapped[list["JobsModel"]] = relationship(back_populates="user")
