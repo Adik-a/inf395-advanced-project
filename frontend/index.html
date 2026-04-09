@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QWork - Freelance Experts for Kazakhstan</title>
+    <meta name="description" content="Connect with top local talent in Kazakhstan. Scale your business with verified professionals.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="#" class="logo">QWork</a>
+                
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+                
+                <div class="header-actions" id="guest-actions">
+                    <a href="#" class="freelancer-link">Are you a freelancer?</a>
+                    <a href="auth.html" class="sign-in-link">Sign In</a>
+                    <a href="auth.html" class="btn btn-primary">Sign Up</a>
+                </div>
+
+                <div class="header-actions" id="user-actions" style="display: none;">
+                    <a href="#" class="nav-item">Dashboard</a>
+                    <a href="#" class="nav-item">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications" style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    <div class="user-profile" style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                        <span id="user-name-display" style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
+                        <a href="#" onclick="logoutUser(event)" class="nav-item" style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item"><a href="#">Design</a></li>
+                    <li class="cat-item"><a href="#">Development & IT</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Writing & Translations</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translations</h4>
+                                <a href="#">Articles</a>
+                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
+                                <a href="#">Business Names & Slogans</a>
+                                <a href="#">Website Content Posting</a>
+                                <a href="#">Creative Writing</a>
+                            </div>
+                            <div class="dropdown-col">
+                                <h4>&nbsp;</h4>
+                                <a href="#">Scriptwriting</a>
+                                <a href="#">Proofreading & Editing</a>
+                                <a href="#">Transcripts</a>
+                                <a href="#">Translations</a>
+                                <a href="#">Resumes & Job Ads</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item"><a href="#">Audio & Video</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="badge">#1 MARKETPLACE IN KAZAKHSTAN</span>
+                <h1>Freelance<br>Experts for<br><span class="highlight">Kazakhstan</span></h1>
+                <p>Connect with top local talent. Scale your business with verified professionals from Almaty to Astana.</p>
+                <div class="hero-search">
+                    <i class="ph ph-magnifying-glass" style="color: #6c757d;"></i>
+                    <input type="text" placeholder="Search for a designer, developer, or tutor...">
+                    <button class="btn btn-primary">Find Talent</button>
+                </div>
+                <div class="hero-trust">
+                    <button class="btn btn-secondary">See Services</button>
+                    <div class="avatars">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="User" class="avatar">
+                        <img src="https://i.pravatar.cc/100?img=2" alt="User" class="avatar">
+                        <img src="https://i.pravatar.cc/100?img=3" alt="User" class="avatar">
+                        <div class="avatar-count">2k+</div>
+                    </div>
+                    <span class="trust-text">Trusted by Kazakh businesses</span>
+                </div>
+            </div>
+            <div class="hero-image-wrapper">
+                <img src="assets/images/hero.png" alt="QWork Professional Hub" class="hero-image">
+                <div class="floating-badge">
+                    <div class="badge-icon"><i class="ph-fill ph-check-circle"></i></div>
+                    <div class="badge-info">
+                        <span class="badge-title">VERIFIED PRO</span>
+                        <span class="badge-name">Arman S.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Categories Section -->
+        <section class="categories">
+            <div class="section-header">
+                <div>
+                    <h2>Popular Categories</h2>
+                    <p>Explore specialized services tailored for the local market.</p>
+                </div>
+                <a href="#" class="view-all">View All <i class="ph ph-arrow-right"></i></a>
+            </div>
+            <div class="category-grid">
+                <div class="category-card large">
+                    <div class="icon-wrapper"><i class="ph ph-code"></i></div>
+                    <h3>Web Development</h3>
+                    <p>Portals, E-commerce, Mobile Apps</p>
+                </div>
+                <div class="category-card">
+                    <div class="icon-wrapper"><i class="ph ph-pen-nib"></i></div>
+                    <h3>Graphic Design</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon-wrapper"><i class="ph ph-pencil-line"></i></div>
+                    <h3>Copywriting</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon-wrapper"><i class="ph ph-translate"></i></div>
+                    <h3>Translation</h3>
+                </div>
+                <div class="category-card">
+                    <div class="icon-wrapper"><i class="ph ph-video-camera"></i></div>
+                    <h3>Video Editing</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Services Section -->
+        <section class="featured-services">
+            <div class="section-header">
+                <div>
+                    <h2>Featured Services</h2>
+                    <p>Handpicked professionals delivering exceptional value.</p>
+                </div>
+            </div>
+            <div class="services-grid">
+                <!-- Service 1 -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="assets/images/service_web.png" alt="Web Design">
+                        <span class="service-tag">WEB DESIGN</span>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-author">
+                            <img src="https://i.pravatar.cc/100?img=11" alt="Daniel R.">
+                            <div>
+                                <span class="author-name">Daniel R.</span>
+                                <span class="author-rating"><i class="ph-fill ph-star"></i> 4.9 (42 reviews)</span>
+                            </div>
+                        </div>
+                        <h3 class="service-title">Premium landing page design for startups and SME</h3>
+                        <div class="service-footer">
+                            <span class="price-label">FROM</span>
+                            <span class="price-value">₸ 45,000</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Service 2 -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="assets/images/service_brand.png" alt="Brand Identity">
+                        <span class="service-tag">BRANDING</span>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-author">
+                            <img src="https://i.pravatar.cc/100?img=12" alt="Aigerim M.">
+                            <div>
+                                <span class="author-name">Aigerim M.</span>
+                                <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (28 reviews)</span>
+                            </div>
+                        </div>
+                        <h3 class="service-title">Complete brand identity & logo design package</h3>
+                        <div class="service-footer">
+                            <span class="price-label">FROM</span>
+                            <span class="price-value">₸ 25,000</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Service 3 -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="assets/images/service_smm.png" alt="SMM">
+                        <span class="service-tag">SMM</span>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-author">
+                            <img src="https://i.pravatar.cc/100?img=13" alt="Ruslan T.">
+                            <div>
+                                <span class="author-name">Ruslan T.</span>
+                                <span class="author-rating"><i class="ph-fill ph-star"></i> 4.8 (115 reviews)</span>
+                            </div>
+                        </div>
+                        <h3 class="service-title">Instagram growth strategy & 30-day content plan</h3>
+                        <div class="service-footer">
+                            <span class="price-label">FROM</span>
+                            <span class="price-value">₸ 60,000</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Service 4 -->
+                <div class="service-card">
+                    <div class="service-image">
+                        <img src="assets/images/service_tutoring.png" alt="Tutoring">
+                        <span class="service-tag">TUTORING</span>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-author">
+                            <img src="https://i.pravatar.cc/100?img=14" alt="Madina A.">
+                            <div>
+                                <span class="author-name">Madina A.</span>
+                                <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (82 reviews)</span>
+                            </div>
+                        </div>
+                        <h3 class="service-title">Professional English & IELTS preparation lessons</h3>
+                        <div class="service-footer">
+                            <span class="price-label">FROM</span>
+                            <span class="price-value">₸ 5,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose QWork Section -->
+        <section class="why-choose">
+            <div class="why-choose-container">
+                <div class="why-content">
+                    <h2>Why Kazakh businesses need QWork?</h2>
+                    
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="ph ph-shield-check"></i></div>
+                            <div>
+                                <h4>Verified Professionals</h4>
+                                <p>Every freelancer on our platform goes through a multi-step verification process to ensure quality.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="ph ph-wallet"></i></div>
+                            <div>
+                                <h4>Safe Escrow Payments</h4>
+                                <p>Your funds are held safely and only released when you are 100% satisfied with the work.</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon"><i class="ph ph-headset"></i></div>
+                            <div>
+                                <h4>Local KZT Support</h4>
+                                <p>Our support team is based in Kazakhstan, providing assistance in Kazakh, Russian, and English.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stats-card">
+                    <div class="stat-main">
+                        <div class="stat-icon-large"><i class="ph ph-rocket-launch"></i></div>
+                        <div>
+                            <span class="stat-label">EARLY ADOPTER OFFER</span>
+                            <span class="stat-value">0% Commission</span>
+                        </div>
+                    </div>
+                    <div class="stat-secondary-grid">
+                        <div class="stat-secondary">
+                            <span class="stat-label">Beta Access</span>
+                            <span class="stat-value-small">Free</span>
+                        </div>
+                        <div class="stat-secondary">
+                            <span class="stat-label">Support</span>
+                            <span class="stat-value-small">24/7 Priority</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col-main">
+                <div class="footer-logo">QWork</div>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH EXPERTISE ACROSS THE STEPPE.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>COMPANY</h4>
+                    <a href="#">ABOUT US</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">PRIVACY POLICY</a>
+                </div>
+                <div class="footer-column">
+                    <h4>SUPPORT</h4>
+                    <a href="#">CONTACT SUPPORT</a>
+                    <a href="#">HELP CENTER</a>
+                    <a href="#">KZT RATES</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 QWORK KAZAKHSTAN. ALL RIGHTS RESERVED. | KZT</p>
+            <div class="social-links">
+                <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                <a href="#"><i class="ph ph-youtube-logo"></i></a>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

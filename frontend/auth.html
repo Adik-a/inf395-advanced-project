@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In / Sign Up - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+
+<body class="auth-body">
+    <div id="g_id_onload" data-client_id="966066889783-683oka4pse63qa90l5br6rlku5tgvl67.apps.googleusercontent.com"
+        data-callback="handleCredentialResponse" data-auto_prompt="false">
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-left">
+            <a href="index.html" class="logo auth-logo" style="color: white; z-index: 10;">QWork</a>
+            <div class="auth-left-content">
+                <h2>Join the #1 Freelance network in Kazakhstan</h2>
+                <p>Connect with businesses, scale your career, and manage projects from anywhere.</p>
+                <div class="auth-testimonial">
+                    <p>"QWork transformed how our company sources talent. Exceptional professionals, right here in KZ."
+                    </p>
+                    <div class="testimonial-author">
+                        <img src="https://i.pravatar.cc/100?img=5" alt="CEO">
+                        <div>
+                            <strong>Timur K.</strong>
+                            <span>CEO, TechKZ</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="auth-overlay"></div>
+        </div>
+
+        <div class="auth-right">
+            <a href="index.html" class="back-link"><i class="ph ph-arrow-left"></i> Back to Home</a>
+
+            <div class="auth-form-wrapper">
+                <div class="auth-tabs">
+                    <button class="auth-tab active" onclick="switchTab('signin')">Sign In</button>
+                    <button class="auth-tab" onclick="switchTab('signup')">Sign Up</button>
+                </div>
+
+                <form id="signin-form" class="auth-form active">
+                    <div class="form-header">
+                        <h3>Welcome back</h3>
+                        <p>Enter your details to access your account.</p>
+                    </div>
+
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                        data-text="signin_with" data-size="large" data-logo_alignment="left" data-width="100%"></div>
+
+                    <div class="divider"><span>or</span></div>
+
+                    <div class="form-error" style="display: none;" id="signin-error-box">
+                        <i class="ph-fill ph-warning-circle"></i>
+                        <span id="signin-error-msg">Incorrect email or password.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signin-email">Email</label>
+                        <input type="email" id="signin-email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signin-password">Password</label>
+                        <input type="password" id="signin-password" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox">
+                            <span class="checkmark"></span>
+                            Remember me
+                        </label>
+                        <a href="#" class="forgot-password">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary full-width">Sign In</button>
+                </form>
+
+                <form id="signup-form" class="auth-form">
+                    <div class="form-header">
+                        <h3>Create an account</h3>
+                        <p>Let's get started with your professional journey.</p>
+                    </div>
+
+                    <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
+                        data-text="signup_with" data-size="large" data-logo_alignment="left" data-width="100%"></div>
+
+                    <div class="divider"><span>or</span></div>
+
+                    <div class="form-error" style="display: none;" id="signup-error-box">
+                        <i class="ph-fill ph-warning-circle"></i>
+                        <span id="signup-error-msg">Please fill out all required fields properly.</span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="signup-fname">First Name</label>
+                            <input type="text" id="signup-fname" placeholder="First Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="signup-lname">Last Name</label>
+                            <input type="text" id="signup-lname" placeholder="Last Name">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-email">Email</label>
+                        <input type="email" id="signup-email" placeholder="Enter your email">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-password">Password</label>
+                        <input type="password" id="signup-password" placeholder="Create a password">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signup-password-confirm">Confirm Password</label>
+                        <input type="password" id="signup-password-confirm" placeholder="Confirm your password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary full-width">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabId) {
+            document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+            document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+
+            document.getElementById(tabId + '-form').classList.add('active');
+            const targetTab = document.querySelector(`.auth-tab[onclick*='${tabId}']`);
+            if (targetTab) {
+                targetTab.classList.add('active');
+            }
+
+            document.querySelectorAll('.form-error').forEach(err => err.style.display = 'none');
+            document.querySelectorAll('input').forEach(input => input.classList.remove('input-error'));
+        }
+
+        function showUIError(formType, message) {
+            const errorBox = document.querySelector(`#${formType}-error-box`);
+            const errorMsg = document.querySelector(`#${formType}-error-msg`);
+            errorMsg.textContent = message;
+            errorBox.style.display = 'flex';
+        }
+
+        function clearErrors(formType) {
+            const errorBox = document.querySelector(`#${formType}-error-box`);
+            errorBox.style.display = 'none';
+            document.querySelectorAll(`#${formType}-form input`).forEach(input => input.classList.remove('input-error'));
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function handleCredentialResponse(response) {
+            console.log("Encoded JWT ID token: " + response.credential);
+
+            // Отправляем токен на наш FastAPI бэкенд
+            fetch('http://localhost:8000/auth/google', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ token: response.credential })
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.access_token) {
+                        alert("Успешно!");
+                        localStorage.setItem('qwork_currentUser', JSON.stringify(data.user || { email: "google_user" }));
+                        window.location.href = 'profile.html';
+                    }
+                })
+                .catch(err => console.error("Ошибка запроса к бэкенду:", err));
+        }
+
+        // --- Sign In Logic ---
+        document.getElementById('signin-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            clearErrors('signin');
+
+            const emailInput = document.getElementById('signin-email');
+            const passwordInput = document.getElementById('signin-password');
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            let hasError = false;
+            let errorMsg = 'Please fill out all required fields properly.';
+
+            if (!email) {
+                emailInput.classList.add('input-error');
+                hasError = true;
+            } else if (!validateEmail(email)) {
+                emailInput.classList.add('input-error');
+                hasError = true;
+                errorMsg = 'Please enter a valid email address.';
+            }
+
+            if (!password) {
+                passwordInput.classList.add('input-error');
+                hasError = true;
+            }
+
+            if (hasError) {
+                showUIError('signin', errorMsg);
+                return;
+            }
+
+            // Отправка данных на сервер (для Sign In)
+            try {
+                // В FastAPI стандартный OAuth2PasswordRequestForm требует
+                // application/x-www-form-urlencoded с полями username и password
+                const params = new URLSearchParams();
+                params.append('username', email); // Обычно email используется как username
+                params.append('password', password);
+
+                const response = await fetch('http://localhost:8000/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.access_token) {
+                    // Успешный вход
+                    localStorage.setItem('access_token', data.access_token);
+                    
+                    // Если бекенд возвращает данные о пользователе вместе с токеном, сохраняем их:
+                    localStorage.setItem('qwork_currentUser', JSON.stringify(data.user || { email: email }));
+                    
+                    window.location.href = 'profile.html';
+                } else {
+                    // Ошибка со стороны сервера
+                    showUIError('signin', data.detail || 'Incorrect email or password.');
+                }
+            } catch (err) {
+                console.error("Login Error:", err);
+                showUIError('signin', 'Server connection failed. Is the backend running?');
+            }
+        });
+
+        // --- Sign Up Logic ---
+        document.getElementById('signup-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            clearErrors('signup');
+
+            const fNameInput = document.getElementById('signup-fname');
+            const lNameInput = document.getElementById('signup-lname');
+            const emailInput = document.getElementById('signup-email');
+            const passwordInput = document.getElementById('signup-password');
+            const confirmPasswordInput = document.getElementById('signup-password-confirm');
+
+            const first_name = fNameInput.value.trim();
+            const last_name = lNameInput.value.trim();
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            let hasError = false;
+            let errorMsg = 'Please fill out all required fields properly.';
+
+            if (!first_name) {
+                fNameInput.classList.add('input-error');
+                hasError = true;
+            }
+            if (!last_name) {
+                lNameInput.classList.add('input-error');
+                hasError = true;
+            }
+            if (!email) {
+                emailInput.classList.add('input-error');
+                hasError = true;
+            } else if (!validateEmail(email)) {
+                emailInput.classList.add('input-error');
+                hasError = true;
+                errorMsg = 'Please enter a valid email address.';
+            }
+
+            if (!password) {
+                passwordInput.classList.add('input-error');
+                hasError = true;
+            } else if (password.length < 8) {
+                passwordInput.classList.add('input-error');
+                hasError = true;
+                errorMsg = 'Password must be at least 8 characters.';
+            }
+
+            if (!confirmPassword || confirmPassword !== password) {
+                confirmPasswordInput.classList.add('input-error');
+                hasError = true;
+                errorMsg = 'Passwords do not match.';
+            }
+
+            if (hasError) {
+                showUIError('signup', errorMsg);
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        first_name: first_name,
+                        last_name: last_name
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert("Registration successful! Please sign in.");
+                    // Also save locally for fallback testing
+                    let users = JSON.parse(localStorage.getItem('qwork_users')) || [];
+                    users.push({ fname: first_name, lname: last_name, email, password });
+                    localStorage.setItem('qwork_users', JSON.stringify(users));
+                    
+                    document.getElementById('signup-form').reset();
+                    switchTab('signin');
+                } else {
+                    showUIError('signup', data.detail || 'Error occurred');
+                }
+            } catch (err) {
+                console.error("Error:", err);
+
+                // Fallback local storage logic since backend might be offline
+                let users = JSON.parse(localStorage.getItem('qwork_users')) || [];
+                const newUser = { fname: first_name, lname: last_name, email, password };
+                users.push(newUser);
+                localStorage.setItem('qwork_users', JSON.stringify(users));
+                alert("Registration successful (Local mode). Please sign in.");
+                
+                document.getElementById('signup-form').reset();
+                switchTab('signin');
+            }
+        });
+    </script>
+</body>
+
+</html>

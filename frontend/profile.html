@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Dashboard - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="bg-gray">
+    <!-- Header -->
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="index.html" class="logo">QWork</a>
+
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+
+                <div class="header-actions" id="guest-actions">
+                    <a href="#" class="freelancer-link">Are you a freelancer?</a>
+                    <a href="auth.html" class="sign-in-link">Sign In</a>
+                    <a href="auth.html" class="btn btn-primary">Sign Up</a>
+                </div>
+
+                <div class="header-actions" id="user-actions" style="display: none;">
+                    <a href="profile.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Dashboard</a>
+                    <a href="#" class="nav-item">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications"
+                        style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    <div class="user-profile"
+                        style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
+                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                        <span id="user-name-display"
+                            style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
+                        <a href="#" onclick="logoutUser(event)" class="nav-item"
+                            style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item"><a href="#">Design</a></li>
+                    <li class="cat-item"><a href="#">Development & IT</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Writing & Translations</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translations</h4>
+                                <a href="#">Articles</a>
+                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
+                                <a href="#">Business Names & Slogans</a>
+                                <a href="#">Website Content Posting</a>
+                                <a href="#">Creative Writing</a>
+                            </div>
+                            <div class="dropdown-col">
+                                <h4>&nbsp;</h4>
+                                <a href="#">Scriptwriting</a>
+                                <a href="#">Proofreading & Editing</a>
+                                <a href="#">Transcripts</a>
+                                <a href="#">Translations</a>
+                                <a href="#">Resumes & Job Ads</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item"><a href="#">Audio & Video</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Sidebar -->
+            <aside class="dashboard-sidebar">
+                <div class="profile-card">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
+                    <h2 class="profile-name" id="dashboard-name">Daniel R.</h2>
+                    <span class="profile-role">Seller</span>
+
+                    <div class="profile-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Reliability</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Punctuality</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Response Rate</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Response Time</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <section class="dashboard-content">
+                <!-- Data Blocks -->
+                <div class="dashboard-block">
+                    <h3>My Orders <span class="badge-neutral">0</span></h3>
+                </div>
+
+                <div class="dashboard-block flex-between">
+                    <h3>My QWorks <span class="badge-neutral">0</span></h3>
+                    <a href="#" class="btn btn-primary-outline">Create a QWork</a>
+                </div>
+
+                <!-- Success Banner -->
+                <div class="success-banner">
+                    <div class="banner-text">
+                        <h2>Four Simple Steps to QWork Success</h2>
+                        <p>The secret to success on QWork is starting off on the right foot and actively maintaining your ratings. Here are some tips to help you become a top seller on QWork.</p>
+                    </div>
+                    <img src="assets/images/trophy.png" alt="Success Trophy" class="banner-image">
+                </div>
+
+                <!-- Steps List -->
+                <div class="steps-list">
+                    <!-- Step 1 -->
+                    <div class="step-item">
+                        <div class="step-icon">
+                            <i class="ph ph-magic-wand"></i>
+                        </div>
+                        <div class="step-details">
+                            <h4>Step 1: Create your QWorks—the more, the better</h4>
+                            <div class="step-progress">
+                                <div class="step-bar">
+                                    <div class="step-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="step-text">0/9 active QWorks</span>
+                                <i class="ph ph-question marker-icon"></i>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-outline">Learn More</a>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="step-item">
+                        <div class="step-icon">
+                            <i class="ph ph-megaphone"></i>
+                        </div>
+                        <div class="step-details">
+                            <h4>Step 2: Share your QWorks to get your first orders and reviews!</h4>
+                            <div class="step-progress">
+                                <div class="step-bar">
+                                    <div class="step-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="step-text">0/10 reviews</span>
+                                <i class="ph ph-question marker-icon"></i>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-outline">Learn More</a>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="step-item">
+                        <div class="step-icon">
+                            <i class="ph ph-device-mobile"></i>
+                        </div>
+                        <div class="step-details">
+                            <h4>Step 3: Get the QWork app</h4>
+                            <div class="step-progress">
+                                <div class="step-bar">
+                                    <div class="step-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="step-text">You haven't downloaded the app yet</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-outline">Learn More</a>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="step-item">
+                        <div class="step-icon">
+                            <i class="ph ph-graduation-cap"></i>
+                        </div>
+                        <div class="step-details">
+                            <h4>Step 4: Take our free introductory course How To Earn on QWork</h4>
+                            <div class="step-progress">
+                                <div class="step-bar">
+                                    <div class="step-fill" style="width: 0%;"></div>
+                                </div>
+                                <span class="step-text">0/7 lessons completed</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-primary-outline">Learn More</a>
+                    </div>
+                </div>
+
+                <!-- Tips Section -->
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-header">
+                            <h4>Tip #6</h4>
+                            <i class="ph ph-lightbulb"></i>
+                        </div>
+                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also bid on buyer requests in the Exchange. This can be particularly helpful when you're just getting started and don't have a strong rating yet.</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-header">
+                            <h4>Tip #14</h4>
+                            <i class="ph ph-lightbulb"></i>
+                        </div>
+                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it is higher than the buyer might initially expect.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col-main">
+                <div class="footer-logo">QWork</div>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH EXPERTISE ACROSS THE STEPPE.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>COMPANY</h4>
+                    <a href="#">ABOUT US</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">PRIVACY POLICY</a>
+                </div>
+                <div class="footer-column">
+                    <h4>SUPPORT</h4>
+                    <a href="#">CONTACT SUPPORT</a>
+                    <a href="#">HELP CENTER</a>
+                    <a href="#">KZT RATES</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 QWORK KAZAKHSTAN. ALL RIGHTS RESERVED. | KZT</p>
+            <div class="social-links">
+                <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                <a href="#"><i class="ph ph-youtube-logo"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update profile name automatically if logged in
+            const currentUserStr = localStorage.getItem('qwork_currentUser');
+            if (currentUserStr) {
+                try {
+                    const currentUser = JSON.parse(currentUserStr);
+                    const dbName = document.getElementById('dashboard-name');
+                    if (dbName) {
+                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email; 
+                        if (currentUser.last_name || currentUser.lname) {
+                            nameStr += ' ' + (currentUser.last_name || currentUser.lname);
+                        }
+                        dbName.textContent = nameStr;
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+    </script>
+</body>
+
+</html>
