@@ -8,8 +8,6 @@ from database import engine, Model
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    async with engine.begin() as conn:
-        await conn.run_sync(Model.metadata.create_all)
     print("🔰🔗Database is launched🔗🔰")
 
     yield
@@ -26,15 +24,14 @@ app = FastAPI(
 origins = [
     "http://127.0.0.1:5500",
     "http://localhost:5500",
-    # добавь другие адреса, если используешь их
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,            # Разрешает запросы с твоего фронтенда
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],              # Разрешает все методы (GET, POST и т.д.)
-    allow_headers=["*"],              # Разрешает все заголовки
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 app.include_router(v1_router)

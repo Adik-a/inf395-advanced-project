@@ -8,7 +8,7 @@ from modules.portfolios.schemas import (
     PortfoliosUpdateSchema,
 )
 from modules.users.models import UsersModel
-from .models import PortfoliosModel
+from .models import PortfoliosModel, FAQsModel, RequirementsModel
 
 
 class PortfoliosRepository:
@@ -19,12 +19,74 @@ class PortfoliosRepository:
         portfolio_data: PortfoliosSchema,
         session: AsyncSession,
     ) -> PortfoliosCreateSchema:
-        new_portfolio = PortfoliosModel(**portfolio_data.model_dump(), user_id=user_id)
+        portfolio_data = portfolio_data.model_dump()
+        faqs = portfolio_data.pop("faqs", [])
+        requirements = portfolio_data.pop("requirements", [])
+
+        if portfolio_data["pricing_mode"] == "one":
+            del portfolio_data["price_standard"]
+            del portfolio_data["price_premium"]
+            del portfolio_data["package_name_standard"]
+            del portfolio_data["package_name_premium"]
+            del portfolio_data["description_standard"]
+            del portfolio_data["description_premium"]
+            del portfolio_data["delivery_standard"]
+            del portfolio_data["delivery_premium"]
+            del portfolio_data["revisions_standard"]
+            del portfolio_data["revisions_premium"]
+        else:
+            portfolio_data["price_standard"] = int(
+                float(portfolio_data["price_standard"])
+            )
+            portfolio_data["price_premium"] = int(
+                float(portfolio_data["price_premium"])
+            )
+
+        portfolio_data["price_basic"] = int(float(portfolio_data["price_basic"]))
+
+        new_portfolio = PortfoliosModel(**portfolio_data, user_id=user_id)
         session.add(new_portfolio)
         await session.commit()
         await session.refresh(new_portfolio)
 
+        await cls.create_faqs(
+            portfolio_id=new_portfolio.id,
+            faqs_data=faqs,
+            session=session,
+        )
+
+        await cls.create_requirements(
+            portfolio_id=new_portfolio.id,
+            requirements_data=requirements,
+            session=session,
+        )
+
         return new_portfolio
+
+    @classmethod
+    async def create_faqs(
+        cls,
+        portfolio_id: int,
+        faqs_data: list,
+        session: AsyncSession,
+    ):
+        new_faqs = [FAQsModel(**faq, portfolio_id=portfolio_id) for faq in faqs_data]
+        session.add_all(new_faqs)
+        await session.commit()
+
+    @classmethod
+    async def create_requirements(
+        cls,
+        portfolio_id: int,
+        requirements_data: list,
+        session: AsyncSession,
+    ):
+        new_requirements = [
+            RequirementsModel(**req, portfolio_id=portfolio_id)
+            for req in requirements_data
+        ]
+        session.add_all(new_requirements)
+        await session.commit()
 
     @classmethod
     async def get_user_portfolios(
@@ -37,10 +99,17 @@ class PortfoliosRepository:
         #     .where(UsersModel.id == user_id)
         #     .options(selectinload(UsersModel.portfolios))
         # )
-        data = await session.scalars(
-            select(PortfoliosModel).where(PortfoliosModel.user_id == user_id)
-        )
-        return data.all()
+        query = select(
+            PortfoliosModel.id,
+            PortfoliosModel.title,
+            PortfoliosModel.initial_status,
+            PortfoliosModel.price_basic,
+            PortfoliosModel.category,
+            PortfoliosModel.images,
+        ).where(PortfoliosModel.user_id == user_id)
+
+        data = await session.execute(query)
+        return data.mappings().all()
 
     @classmethod
     async def get_user_portfolio(
