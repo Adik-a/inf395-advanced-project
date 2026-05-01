@@ -113,6 +113,20 @@
             font-size: 14px;
         }
 
+        .status-badge-mini {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+        }
+
+        .status-active { background: #ecfdf5; color: #059669; border: 1px solid #d1fae5; }
+        .status-paused { background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; }
+        .status-draft { background: #f3f4f6; color: #4b5563; border: 1px solid #e5e7eb; }
+
         .detail-gallery {
             padding: 0 24px;
         }
@@ -189,34 +203,61 @@
             gap: 24px;
         }
 
+        .sidebar-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+        }
+
         .pricing-card {
             background: var(--white);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
             overflow: hidden;
-            position: relative;
-            top: 0;
         }
 
         .pricing-header {
             padding: 24px;
             background: #fcfcfc;
             border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pricing-tab {
+            flex: 1;
+            padding: 15px 5px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .pricing-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: rgba(16, 185, 129, 0.05);
         }
 
         .pricing-header h2 {
             font-size: 24px;
-            color: var(--primary);
+            color: var(--text-primary);
             font-weight: 800;
+            margin-bottom: 5px;
         }
 
-        .pricing-header span {
+        .pricing-header p {
             font-size: 14px;
-            font-weight: 600;
             color: var(--text-secondary);
+            line-height: 1.4;
         }
 
         .pricing-body {
@@ -451,9 +492,9 @@
 
             <div class="detail-main">
                 <div class="service-header" style="padding-top: 24px;">
-                    <div style="margin-bottom: 12px;">
-                        <span id="status-badge-detail" class="status-badge"
-                            style="position:static; padding: 4px 10px; font-size: 11px;">Active</span>
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom: 12px;">
+                        <span id="status-badge-detail" class="status-badge-mini status-active">Active</span>
+                        <span id="service-category-badge" style="font-size:12px; color:var(--text-secondary); font-weight:500;">Design > Logo Design</span>
                     </div>
                     <h1 id="service-title">I will create a good logo for ur company</h1>
                     <div class="author-meta">
@@ -478,7 +519,6 @@
                 <div class="detail-section">
                     <h3>QWork Overview</h3>
                     <div class="description-text" id="service-description">
-                        Description content goes here...
                     </div>
                 </div>
 
@@ -514,13 +554,20 @@
         <div class="detail-sidebar">
 
             <div class="pricing-card">
+                <div class="pricing-tabs" id="pricing-tabs" style="display: none;">
+                    <div class="pricing-tab active" onclick="switchPricingTier('basic')">Basic</div>
+                    <div class="pricing-tab" onclick="switchPricingTier('standard')">Standard</div>
+                    <div class="pricing-tab" onclick="switchPricingTier('premium')">Premium</div>
+                </div>
                 <div class="pricing-header">
                     <h2 id="service-price">10 ₸</h2>
-                    <span>Order Details</span>
+                    <p id="package-name">Basic Package</p>
                 </div>
                 <div class="pricing-body">
-                    <div class="benefit-item"><i class="ph ph-clock"></i> 3-day delivery</div>
-                    <div class="benefit-item"><i class="ph ph-arrows-counter-clockwise"></i> Unlimited Revisions</div>
+                    <p id="package-desc" style="font-size: 14px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;"></p>
+                    
+                    <div class="benefit-item"><i class="ph ph-clock"></i> <span id="sidebar-delivery">3-day delivery</span></div>
+                    <div class="benefit-item"><i class="ph ph-arrows-counter-clockwise"></i> <span id="sidebar-revisions">Unlimited Revisions</span></div>
 
                     <button class="btn-edit-full" onclick="editCurrentQWork()">
                         <i class="ph ph-note-pencil"></i> Edit QWork
@@ -590,6 +637,7 @@
                 const draftIdx = drafts.findIndex(g => g.id == id);
                 if (draftIdx !== -1) {
                     currentGig = drafts[draftIdx];
+                    gigIndex = draftIdx;
                 } else {
                     alert('QWork not found!');
                     window.location.href = 'profile.html';
@@ -605,12 +653,13 @@
         function renderDetails(gig) {
             document.getElementById('service-title').textContent = gig.title;
 
-            const priceEl = document.getElementById('service-price');
-            if (gig.pricingMode === 'three' && gig.priceStandard) {
-                priceEl.innerHTML = `<span style="font-size:14px; display:block; color:var(--text-secondary); font-weight:400; margin-bottom:4px;">Starting at</span> ${Number(gig.price).toLocaleString()} ₸`;
-            } else {
-                priceEl.textContent = Number(gig.price).toLocaleString() + ' ₸';
-            }
+            const badge = document.getElementById('status-badge-detail');
+            const status = gig.status || 'Active';
+            badge.textContent = status;
+            badge.className = `status-badge-mini status-${status.toLowerCase()}`;
+
+            document.getElementById('service-category-badge').textContent = (gig.category || '') + (gig.subcategory ? ` > ${gig.subcategory}` : '');
+            updatePricingUI(gig, 'basic');
 
             document.getElementById('service-description').textContent = gig.description || gig.desc || 'No description provided.';
 
@@ -618,16 +667,13 @@
                 document.getElementById('main-image').src = gig.image;
             }
 
-            const badge = document.getElementById('status-badge-detail');
-            const status = gig.status || 'Active';
-            badge.textContent = status;
-            badge.className = `status-badge status-${status.toLowerCase()}`;
-
             if (gig.requirements && gig.requirements.length) {
                 document.getElementById('req-section').style.display = 'block';
                 const list = document.getElementById('requirements-list-detail');
                 list.innerHTML = gig.requirements.map(r => `
-                    <li><i class="ph ph-dot"></i> <span>${r.text} ${r.isRequired ? '<strong style="color:#ef4444; font-size:11px;">(REQUIRED)</strong>' : ''}</span></li>
+                    <li style="margin-bottom:10px;"><i class="ph ph-check-circle" style="color:var(--primary); margin-top:2px;"></i> 
+                        <span>${r.text} ${r.isRequired ? '<strong style="color:#ef4444; font-size:11px;">(REQUIRED)</strong>' : ''}</span>
+                    </li>
                 `).join('');
             }
 
@@ -659,6 +705,52 @@
                     document.getElementById('user-name-head').textContent = name;
                     document.getElementById('user-avatar-head').src = avatarUrl;
                 } catch (e) { }
+            }
+        }
+
+        function updatePricingUI(gig, tier) {
+            const tabs = document.getElementById('pricing-tabs');
+            if (gig.pricingMode === 'three') {
+                tabs.style.display = 'flex';
+                const tabEls = tabs.querySelectorAll('.pricing-tab');
+                tabEls.forEach(el => el.classList.remove('active'));
+                if (tier === 'basic') tabEls[0].classList.add('active');
+                if (tier === 'standard') tabEls[1].classList.add('active');
+                if (tier === 'premium') tabEls[2].classList.add('active');
+            } else {
+                tabs.style.display = 'none';
+            }
+
+            const priceEl = document.getElementById('service-price');
+            const nameEl = document.getElementById('package-name');
+            const descEl = document.getElementById('package-desc');
+            const deliveryEl = document.getElementById('sidebar-delivery');
+            const revisionsEl = document.getElementById('sidebar-revisions');
+
+            if (tier === 'basic') {
+                priceEl.textContent = Number(gig.price).toLocaleString() + ' ₸';
+                nameEl.textContent = gig.pkgNameBasic || 'Basic Package';
+                descEl.textContent = gig.descriptionBasic || '';
+                deliveryEl.textContent = gig.deliveryBasic || '3-day delivery';
+                revisionsEl.textContent = gig.revisionsBasic || 'Unlimited Revisions';
+            } else if (tier === 'standard') {
+                priceEl.textContent = Number(gig.priceStandard).toLocaleString() + ' ₸';
+                nameEl.textContent = gig.pkgNameStandard || 'Standard Package';
+                descEl.textContent = gig.descriptionStandard || '';
+                deliveryEl.textContent = gig.deliveryStandard || '5-day delivery';
+                revisionsEl.textContent = gig.revisionsStandard || 'Unlimited Revisions';
+            } else if (tier === 'premium') {
+                priceEl.textContent = Number(gig.pricePremium).toLocaleString() + ' ₸';
+                nameEl.textContent = gig.pkgNamePremium || 'Premium Package';
+                descEl.textContent = gig.descriptionPremium || '';
+                deliveryEl.textContent = gig.deliveryPremium || '7-day delivery';
+                revisionsEl.textContent = gig.revisionsPremium || 'Unlimited Revisions';
+            }
+        }
+
+        function switchPricingTier(tier) {
+            if (currentGig) {
+                updatePricingUI(currentGig, tier);
             }
         }
 

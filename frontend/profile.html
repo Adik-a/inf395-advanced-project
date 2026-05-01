@@ -13,7 +13,7 @@
 </head>
 
 <body class="bg-gray">
-    <!-- Header -->
+    
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
@@ -82,7 +82,7 @@
 
     <main class="dashboard-main">
         <div class="dashboard-container">
-            <!-- Sidebar -->
+            
             <aside class="dashboard-sidebar">
                 <div class="profile-card">
                     <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
@@ -122,9 +122,9 @@
                 </div>
             </aside>
 
-            <!-- Main Content -->
+            
             <section class="dashboard-content">
-                <!-- Data Blocks -->
+                
                 <div class="dashboard-block">
                     <h3>My Orders <span class="badge-neutral">0</span></h3>
                 </div>
@@ -152,7 +152,7 @@
                 </div>
 
 
-                <!-- Tips Section -->
+                
                 <div class="tips-grid">
                     <div class="tip-card">
                         <div class="tip-header">
@@ -209,12 +209,12 @@
         </div>
     </footer>
 
-    <!-- QWork Detail Modal -->
+    
     <div id="qwork-modal" class="modal-overlay">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">&times;</span>
             <div id="modal-image-container" class="modal-header-img">
-                <!-- Image here -->
+                
             </div>
             <div class="modal-body">
                 <div id="modal-category" class="modal-tag-badge">Category</div>
@@ -247,7 +247,7 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Update profile name automatically if logged in
+            
             const currentUserStr = localStorage.getItem('qwork_currentUser');
             if (currentUserStr) {
                 try {
@@ -262,7 +262,7 @@
                     }
                 } catch (e) { console.error(e); }
             }
-            // Render My QWorks
+            
             const myGigsStr = localStorage.getItem('qwork_my_gigs');
             const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
             const userName = currentUser.first_name || currentUser.fname || currentUser.email || 'User';
@@ -276,7 +276,7 @@
 
                     if (myGigs.length > 0) {
                         countBadge.textContent = myGigs.length;
-                        list.innerHTML = ''; // Clear empty message
+                        list.innerHTML = ''; 
 
                         myGigs.forEach((gig, index) => {
                             const gigEl = document.createElement('div');
@@ -318,7 +318,7 @@
                 } catch (e) { console.error(e); }
             }
 
-            // Render My Drafts
+            
             const myDraftsStr = localStorage.getItem('qwork_saved_drafts');
             if (myDraftsStr) {
                 try {
@@ -334,7 +334,14 @@
                             const draftEl = document.createElement('div');
                             draftEl.className = 'service-card draft-card';
                             draftEl.style.cursor = 'pointer';
-                            draftEl.onclick = () => window.location.href = `service-detail.html?id=${draft.id}`;
+                            draftEl.onclick = () => {
+                                localStorage.setItem('qwork_temp_form', JSON.stringify({
+                                    ...draft,
+                                    isEditingDraft: true,
+                                    draftIndex: index
+                                }));
+                                window.location.href = 'create-qwork.html';
+                            };
 
                             const imgHtml = draft.image
                                 ? `<img src="${draft.image}" alt="${draft.title}" style="opacity: 0.7;">`
@@ -355,9 +362,11 @@
                                         </div>
                                     </div>
                                     <h3 class="service-title">${draft.title || 'Untitled Draft'}</h3>
-                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
-                                        <button onclick="resumeDraft(${index})" class="btn btn-primary-outline" style="padding: 4px 12px; font-size: 12px;">Resume</button>
-                                        <button onclick="deleteDraft(${index})" style="color:#ef4444; font-size:18px; cursor:pointer; background:none; border:none;"><i class="ph ph-trash"></i></button>
+                                    <div class="service-footer">
+                                        <span class="price-label">DRAFT</span>
+                                        <div style="display:flex; gap:10px; align-items:center;">
+                                            <button onclick="event.stopPropagation(); deleteDraft(${index})" style="color:#ef4444; font-size:18px; cursor:pointer; background:none; border:none;"><i class="ph ph-trash"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             `;
@@ -412,7 +421,7 @@
                 imgContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#cbd5e1;font-size:48px;"><i class="ph ph-image"></i></div>`;
             }
 
-            // Setup Buttons
+            
             document.getElementById('modal-edit-btn').onclick = () => editQWork(index);
             document.getElementById('modal-delete-btn').onclick = () => deleteQWork(index);
 

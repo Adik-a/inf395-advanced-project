@@ -19,19 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add smooth appearance using Intersection Observer
+    
 
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
-                    // Stagger the animation slightly
+                    
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
                     }, 50 * index); // very short delay for each item
 
-                    // Optional: Unobserve after animating if we only want it once
+                    
                     observer.unobserve(entry.target);
                 }
             });
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rootMargin: '0px 0px -50px 0px'
         });
 
-        // Initialize elements with initial state
+        
         animatedElements.forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(el);
         });
     } else {
-        // Fallback for older browsers
+        
         animatedElements.forEach(el => {
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
         });
     }
 
-    // Floating animation for trust badge
+    
     const badge = document.querySelector('.floating-badge');
     if (badge) {
         let posY = 0;
@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Global Log out function
+
 window.logoutUser = function (e) {
     if (e) e.preventDefault();
     localStorage.removeItem('qwork_currentUser');

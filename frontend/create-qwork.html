@@ -39,7 +39,7 @@
             <h1>Create a New QWork</h1>
             <div class="create-topbar-actions">
                 <button class="btn-nav-back" onclick="saveDraft()">Save Draft</button>
-                <a href="profile.html" class="btn-nav-back">Cancel</a>
+                <button class="btn-nav-back" onclick="handleCancel()">Cancel</button>
             </div>
         </div>
     </div>
@@ -193,28 +193,28 @@
                                 <tbody>
                                     <tr>
                                         <th>Package Name</th>
-                                        <td><input type="text" placeholder="e.g. Basic Package" value="Basic"></td>
-                                        <td class="pkg-multi" style="display:none;"><input type="text"
+                                        <td><input type="text" id="pkg-name-basic" placeholder="e.g. Basic Package" value="Basic"></td>
+                                        <td class="pkg-multi" style="display:none;"><input type="text" id="pkg-name-standard"
                                                 placeholder="e.g. Standard Package" value="Standard"></td>
-                                        <td class="pkg-multi" style="display:none;"><input type="text"
+                                        <td class="pkg-multi" style="display:none;"><input type="text" id="pkg-name-premium"
                                                 placeholder="e.g. Premium Package" value="Premium"></td>
                                     </tr>
                                     <tr>
                                         <th>Description</th>
-                                        <td><textarea
+                                        <td><textarea id="pkg-desc-basic"
                                                 placeholder="Summarize what you offer in this package..."></textarea>
                                         </td>
-                                        <td class="pkg-multi" style="display:none;"><textarea
+                                        <td class="pkg-multi" style="display:none;"><textarea id="pkg-desc-standard"
                                                 placeholder="Summarize what you offer in this package..."></textarea>
                                         </td>
-                                        <td class="pkg-multi" style="display:none;"><textarea
+                                        <td class="pkg-multi" style="display:none;"><textarea id="pkg-desc-premium"
                                                 placeholder="Summarize what you offer in this package..."></textarea>
                                         </td>
                                     </tr>
                                     <tr>
                                         <th>Delivery Time</th>
                                         <td>
-                                            <select>
+                                            <select id="pkg-delivery-basic">
                                                 <option>1 Day Delivery</option>
                                                 <option>2 Days Delivery</option>
                                                 <option>3 Days Delivery</option>
@@ -223,7 +223,7 @@
                                             </select>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
-                                            <select>
+                                            <select id="pkg-delivery-standard">
                                                 <option>3 Days Delivery</option>
                                                 <option>5 Days Delivery</option>
                                                 <option>7 Days Delivery</option>
@@ -231,7 +231,7 @@
                                             </select>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
-                                            <select>
+                                            <select id="pkg-delivery-premium">
                                                 <option>7 Days Delivery</option>
                                                 <option>10 Days Delivery</option>
                                                 <option>14 Days Delivery</option>
@@ -242,7 +242,7 @@
                                     <tr>
                                         <th>Revisions</th>
                                         <td>
-                                            <select>
+                                            <select id="pkg-revisions-basic">
                                                 <option>1</option>
                                                 <option>2</option>
                                                 <option>3</option>
@@ -250,14 +250,14 @@
                                             </select>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
-                                            <select>
+                                            <select id="pkg-revisions-standard">
                                                 <option>3</option>
                                                 <option>5</option>
                                                 <option>Unlimited</option>
                                             </select>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
-                                            <select>
+                                            <select id="pkg-revisions-premium">
                                                 <option>Unlimited</option>
                                             </select>
                                         </td>
@@ -645,7 +645,8 @@
             }
 
             if (step === 5) {
-                if (galleryFiles.length === 0) {
+                const hasExistingImages = document.querySelectorAll('#gallery-preview .gallery-thumb').length > 0;
+                if (galleryFiles.length === 0 && !hasExistingImages) {
                     document.getElementById('gallery-error').classList.add('show');
                     isValid = false;
                 } else {
@@ -734,6 +735,18 @@
                 price: document.getElementById('basic-price').value,
                 priceStandard: document.getElementById('standard-price').value,
                 pricePremium: document.getElementById('premium-price').value,
+                pkgNameBasic: document.getElementById('pkg-name-basic').value,
+                pkgNameStandard: document.getElementById('pkg-name-standard').value,
+                pkgNamePremium: document.getElementById('pkg-name-premium').value,
+                descriptionBasic: document.getElementById('pkg-desc-basic').value,
+                descriptionStandard: document.getElementById('pkg-desc-standard').value,
+                descriptionPremium: document.getElementById('pkg-desc-premium').value,
+                deliveryBasic: document.getElementById('pkg-delivery-basic').value,
+                deliveryStandard: document.getElementById('pkg-delivery-standard').value,
+                deliveryPremium: document.getElementById('pkg-delivery-premium').value,
+                revisionsBasic: document.getElementById('pkg-revisions-basic').value,
+                revisionsStandard: document.getElementById('pkg-revisions-standard').value,
+                revisionsPremium: document.getElementById('pkg-revisions-premium').value,
                 description: document.getElementById('gig-desc').value,
                 faqs,
                 requirements,
@@ -747,16 +760,38 @@
                 draft.editIndex = currentTemp.editIndex;
                 draft.id = currentTemp.id;
                 draft.createdAt = currentTemp.createdAt;
+                draft.image = currentTemp.image;
+            }
+
+            if (currentTemp.isEditingDraft) {
+                draft.isEditingDraft = true;
+                draft.draftIndex = currentTemp.draftIndex;
             }
 
             if (isAuto) {
                 localStorage.setItem('qwork_temp_form', JSON.stringify(draft));
             } else {
                 const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
-                savedDrafts.push(draft);
+                
+                if (currentTemp.isEditingDraft && currentTemp.draftIndex !== undefined) {
+                    savedDrafts[currentTemp.draftIndex] = draft;
+                } else {
+                    savedDrafts.push(draft);
+                }
+                
                 localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
-                alert('Draft saved to your drafts list!');
+                alert('Draft saved successfully!');
                 localStorage.removeItem('qwork_temp_form');
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function handleCancel() {
+            localStorage.removeItem('qwork_temp_form');
+            if (window.history.length > 1) {
+                history.back();
+            } else {
+                window.location.href = 'profile.html';
             }
         }
 
@@ -795,11 +830,24 @@
                 if (draft.priceStandard) document.getElementById('standard-price').value = draft.priceStandard;
                 if (draft.pricePremium) document.getElementById('premium-price').value = draft.pricePremium;
 
+                if (draft.pkgNameBasic) document.getElementById('pkg-name-basic').value = draft.pkgNameBasic;
+                if (draft.pkgNameStandard) document.getElementById('pkg-name-standard').value = draft.pkgNameStandard;
+                if (draft.pkgNamePremium) document.getElementById('pkg-name-premium').value = draft.pkgNamePremium;
+                if (draft.descriptionBasic) document.getElementById('pkg-desc-basic').value = draft.descriptionBasic;
+                if (draft.descriptionStandard) document.getElementById('pkg-desc-standard').value = draft.descriptionStandard;
+                if (draft.descriptionPremium) document.getElementById('pkg-desc-premium').value = draft.descriptionPremium;
+                if (draft.deliveryBasic) document.getElementById('pkg-delivery-basic').value = draft.deliveryBasic;
+                if (draft.deliveryStandard) document.getElementById('pkg-delivery-standard').value = draft.deliveryStandard;
+                if (draft.deliveryPremium) document.getElementById('pkg-delivery-premium').value = draft.deliveryPremium;
+                if (draft.revisionsBasic) document.getElementById('pkg-revisions-basic').value = draft.revisionsBasic;
+                if (draft.revisionsStandard) document.getElementById('pkg-revisions-standard').value = draft.revisionsStandard;
+                if (draft.revisionsPremium) document.getElementById('pkg-revisions-premium').value = draft.revisionsPremium;
+
                 if (draft.pricingMode) {
                     setPricingMode(draft.pricingMode);
                 }
 
-                document.getElementById('gig-desc').value = draft.description || draft.desc || '';
+                document.getElementById('gig-desc').value = draft.description || '';
                 document.getElementById('gig-desc').dispatchEvent(new Event('input'));
 
                 if (draft.status) {
@@ -813,10 +861,9 @@
                         const item = document.createElement('div');
                         item.className = 'faq-item';
                         item.innerHTML = `
-                            <input type="text" placeholder="Question: e.g. Do you provide source files?" value="${f.q}">
-                            <textarea placeholder="Answer: e.g. Yes, I provide AI, PSD and PDF formats." rows="3">${f.a}</textarea>
-                            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
-                        `;
+                            <input type="text" placeholder="Question: e.g. What file formats do you provide?" value="${f.q}">
+                            <textarea placeholder="Answer: e.g. I deliver PNG, SVG, and PDF files.">${f.a}</textarea>
+                            <div class="faq-footer"><button class="btn-remove" onclick="removeFaq(this)">Remove</button></div>`;
                         list.appendChild(item);
                     });
                 }
@@ -828,19 +875,29 @@
                         const item = document.createElement('div');
                         item.className = 'req-item';
                         item.innerHTML = `
-                            <input type="text" placeholder="e.g. Your company name and industry" value="${r.text}">
-                            <label><input type="checkbox" ${r.isRequired ? 'checked' : ''}> Required</label>
-                            <button type="button" class="remove-btn" onclick="this.parentElement.remove()">Remove</button>
-                        `;
+                            <input type="text" placeholder="e.g. Please share your brand colors and logo preferences" value="${r.text}">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <label class="req-required"><input type="checkbox" ${r.isRequired ? 'checked' : ''}> Required</label>
+                                <button class="btn-remove" onclick="removeRequirement(this)">Remove</button>
+                            </div>`;
                         list.appendChild(item);
                     });
                 }
 
+                if (draft.image && !galleryFiles.length) {
+                    addThumb(draft.image, 0);
+                }
+
                 if (draft.isEditing) {
-                    const header = document.querySelector('.create-header h1');
-                    if (header) header.innerHTML = '<i class="ph ph-note-pencil"></i> Edit Your QWork';
+                    const topHeader = document.querySelector('.create-topbar-inner h1');
+                    if (topHeader) topHeader.textContent = 'Edit Your QWork';
                     const publishBtn = document.querySelector('.btn-publish');
                     if (publishBtn) publishBtn.textContent = 'Update My QWork →';
+                } else if (draft.isEditingDraft) {
+                    const topHeader = document.querySelector('.create-topbar-inner h1');
+                    if (topHeader) topHeader.textContent = 'Continue Your Draft';
+                    const saveBtn = document.querySelector('.create-topbar-actions .btn-nav-back');
+                    if (saveBtn) saveBtn.textContent = 'Update Draft';
                 }
 
                 if (draft.currentStep && draft.currentStep > 1) {
@@ -854,6 +911,8 @@
                 document.getElementById('gallery-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
             }
+
+            const currentDraft = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
 
             const firstImg = document.querySelector('#gallery-preview .gallery-thumb img');
             const faqs = [];
@@ -871,7 +930,7 @@
             });
 
             const newGig = {
-                id: Date.now(),
+                id: currentDraft.isEditing ? (currentDraft.id || Date.now()) : Date.now(),
                 title: document.getElementById('gig-title').value,
                 category: document.getElementById('gig-category').value,
                 subcategory: document.getElementById('gig-subcategory').value,
@@ -880,24 +939,47 @@
                 price: document.getElementById('basic-price').value,
                 priceStandard: document.getElementById('standard-price').value,
                 pricePremium: document.getElementById('premium-price').value,
+                pkgNameBasic: document.getElementById('pkg-name-basic').value,
+                pkgNameStandard: document.getElementById('pkg-name-standard').value,
+                pkgNamePremium: document.getElementById('pkg-name-premium').value,
+                descriptionBasic: document.getElementById('pkg-desc-basic').value,
+                descriptionStandard: document.getElementById('pkg-desc-standard').value,
+                descriptionPremium: document.getElementById('pkg-desc-premium').value,
+                deliveryBasic: document.getElementById('pkg-delivery-basic').value,
+                deliveryStandard: document.getElementById('pkg-delivery-standard').value,
+                deliveryPremium: document.getElementById('pkg-delivery-premium').value,
+                revisionsBasic: document.getElementById('pkg-revisions-basic').value,
+                revisionsStandard: document.getElementById('pkg-revisions-standard').value,
+                revisionsPremium: document.getElementById('pkg-revisions-premium').value,
                 description: document.getElementById('gig-desc').value,
                 faqs,
                 requirements,
-                image: firstImg ? firstImg.src : null,
-                createdAt: new Date().toISOString()
+                tags,
+                image: firstImg ? firstImg.src : (currentDraft.image || null),
+                createdAt: currentDraft.isEditing ? (currentDraft.createdAt || new Date().toISOString()) : new Date().toISOString()
             };
 
             const existingGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-            const currentDraft = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
-            if (currentDraft.isEditing && currentDraft.editIndex !== undefined) {
-                newGig.id = currentDraft.id || newGig.id;
-                newGig.createdAt = currentDraft.createdAt || newGig.createdAt;
-                existingGigs[currentDraft.editIndex] = newGig;
+            
+            if (currentDraft.isEditing) {
+                const index = existingGigs.findIndex(g => g.id === newGig.id);
+                if (index !== -1) {
+                    existingGigs[index] = newGig;
+                } else {
+                    existingGigs.push(newGig);
+                }
             } else {
                 existingGigs.push(newGig);
             }
 
             localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
+
+            if (currentDraft.isEditingDraft && currentDraft.draftIndex !== undefined) {
+                const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+                savedDrafts.splice(currentDraft.draftIndex, 1);
+                localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
+            }
+
             localStorage.removeItem('qwork_temp_form');
             document.getElementById('success-overlay').classList.add('show');
         }
