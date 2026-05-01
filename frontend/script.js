@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const currentUserStr = localStorage.getItem('qwork_currentUser');
     const guestActions = document.getElementById('guest-actions');
     const userActions = document.getElementById('user-actions');
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Add smooth appearance using Intersection Observer
-    
+
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry, index) => {
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
                     }, 50 * index); // very short delay for each item
-                    
+
                     // Optional: Unobserve after animating if we only want it once
                     observer.unobserve(entry.target);
                 }
@@ -60,12 +60,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (badge) {
         let posY = 0;
         let direction = 1;
-        
+
     }
 });
 
 // Global Log out function
-window.logoutUser = function(e) {
+window.logoutUser = function (e) {
     if (e) e.preventDefault();
     localStorage.removeItem('qwork_currentUser');
     localStorage.removeItem('access_token');

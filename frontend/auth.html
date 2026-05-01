@@ -221,10 +221,7 @@
                 return;
             }
 
-            // Отправка данных на сервер (для Sign In)
             try {
-                // В FastAPI стандартный OAuth2PasswordRequestForm требует
-                // application/x-www-form-urlencoded с полями username и password
                 const params = new URLSearchParams();
                 params.append('username', email); // Обычно email используется как username
                 params.append('password', password);
@@ -240,10 +237,10 @@
                 if (response.ok && data.access_token) {
                     // Успешный вход
                     localStorage.setItem('access_token', data.access_token);
-                    
+
                     // Если бекенд возвращает данные о пользователе вместе с токеном, сохраняем их:
                     localStorage.setItem('qwork_currentUser', JSON.stringify(data.user || { email: email }));
-                    
+
                     window.location.href = 'profile.html';
                 } else {
                     // Ошибка со стороны сервера
@@ -332,7 +329,7 @@
                     let users = JSON.parse(localStorage.getItem('qwork_users')) || [];
                     users.push({ fname: first_name, lname: last_name, email, password });
                     localStorage.setItem('qwork_users', JSON.stringify(users));
-                    
+
                     document.getElementById('signup-form').reset();
                     switchTab('signin');
                 } else {
@@ -347,7 +344,7 @@
                 users.push(newUser);
                 localStorage.setItem('qwork_users', JSON.stringify(users));
                 alert("Registration successful (Local mode). Please sign in.");
-                
+
                 document.getElementById('signup-form').reset();
                 switchTab('signin');
             }

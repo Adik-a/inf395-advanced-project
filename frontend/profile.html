@@ -17,7 +17,7 @@
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
-                <a href="index.html" class="logo">QWork</a>
+                <span class="logo">QWork</span>
 
                 <div class="header-search">
                     <input type="text" placeholder="Find Services">
@@ -31,7 +31,8 @@
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="profile.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Dashboard</a>
+                    <a href="profile.html" class="nav-item"
+                        style="color: var(--primary); font-weight: 600;">Dashboard</a>
                     <a href="#" class="nav-item">Messages</a>
                     <button class="icon-btn" aria-label="Notifications"
                         style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
@@ -128,109 +129,48 @@
                     <h3>My Orders <span class="badge-neutral">0</span></h3>
                 </div>
 
-                <div class="dashboard-block flex-between">
-                    <h3>My QWorks <span class="badge-neutral">0</span></h3>
-                    <a href="#" class="btn btn-primary-outline">Create a QWork</a>
-                </div>
-
-                <!-- Success Banner -->
-                <div class="success-banner">
-                    <div class="banner-text">
-                        <h2>Four Simple Steps to QWork Success</h2>
-                        <p>The secret to success on QWork is starting off on the right foot and actively maintaining your ratings. Here are some tips to help you become a top seller on QWork.</p>
+                <div class="dashboard-block">
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <h3>My QWorks <span class="badge-neutral" id="qwork-count">0</span></h3>
+                        <a href="#" onclick="startNewQWork()" class="btn btn-primary-outline">Create a QWork</a>
                     </div>
-                    <img src="assets/images/trophy.png" alt="Success Trophy" class="banner-image">
-                </div>
-
-                <!-- Steps List -->
-                <div class="steps-list">
-                    <!-- Step 1 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-magic-wand"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 1: Create your QWorks—the more, the better</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/9 active QWorks</span>
-                                <i class="ph ph-question marker-icon"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-                    
-                    <!-- Step 2 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-megaphone"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 2: Share your QWorks to get your first orders and reviews!</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/10 reviews</span>
-                                <i class="ph ph-question marker-icon"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-device-mobile"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 3: Get the QWork app</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">You haven't downloaded the app yet</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-graduation-cap"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 4: Take our free introductory course How To Earn on QWork</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/7 lessons completed</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
+                    <div id="my-qworks-list" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">You haven't created
+                            any QWorks yet.</p>
                     </div>
                 </div>
+
+
+                <div class="dashboard-block">
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <h3>My Drafts <span class="badge-neutral" id="draft-count">0</span></h3>
+                    </div>
+                    <div id="my-drafts-list" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">No saved drafts.
+                        </p>
+                    </div>
+                </div>
+
 
                 <!-- Tips Section -->
                 <div class="tips-grid">
                     <div class="tip-card">
                         <div class="tip-header">
-                            <h4>Tip #6</h4>
+                            <h4>Tip</h4>
                             <i class="ph ph-lightbulb"></i>
                         </div>
-                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also bid on buyer requests in the Exchange. This can be particularly helpful when you're just getting started and don't have a strong rating yet.</p>
+                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also
+                            bid on buyer requests in the Exchange. This can be particularly helpful when you're just
+                            getting started and don't have a strong rating yet.</p>
                     </div>
 
                     <div class="tip-card">
                         <div class="tip-header">
-                            <h4>Tip #14</h4>
+                            <h4>Tip</h4>
                             <i class="ph ph-lightbulb"></i>
                         </div>
-                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it is higher than the buyer might initially expect.</p>
+                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it
+                            is higher than the buyer might initially expect.</p>
                     </div>
                 </div>
             </section>
@@ -241,7 +181,8 @@
         <div class="footer-content">
             <div class="footer-col-main">
                 <div class="footer-logo">QWork</div>
-                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH EXPERTISE ACROSS THE STEPPE.</p>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH
+                    EXPERTISE ACROSS THE STEPPE.</p>
             </div>
             <div class="footer-links">
                 <div class="footer-column">
@@ -268,6 +209,41 @@
         </div>
     </footer>
 
+    <!-- QWork Detail Modal -->
+    <div id="qwork-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <div id="modal-image-container" class="modal-header-img">
+                <!-- Image here -->
+            </div>
+            <div class="modal-body">
+                <div id="modal-category" class="modal-tag-badge">Category</div>
+                <h2 id="modal-title" class="modal-title">QWork Title</h2>
+
+                <div class="modal-details-grid">
+                    <div class="detail-item">
+                        <h5>Price</h5>
+                        <p id="modal-price">0 ₸</p>
+                    </div>
+                    <div class="detail-item">
+                        <h5>Status</h5>
+                        <p id="modal-status" style="color: #10b981;">Active</p>
+                    </div>
+                </div>
+
+                <div class="modal-description">
+                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Description</h4>
+                    <p id="modal-desc">Description text goes here...</p>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="modal-edit-btn" class="btn btn-primary" style="flex: 1;">Edit QWork</button>
+                    <button id="modal-delete-btn" class="btn-delete">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -278,15 +254,196 @@
                     const currentUser = JSON.parse(currentUserStr);
                     const dbName = document.getElementById('dashboard-name');
                     if (dbName) {
-                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email; 
+                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email;
                         if (currentUser.last_name || currentUser.lname) {
                             nameStr += ' ' + (currentUser.last_name || currentUser.lname);
                         }
                         dbName.textContent = nameStr;
                     }
-                } catch(e) { console.error(e); }
+                } catch (e) { console.error(e); }
+            }
+            // Render My QWorks
+            const myGigsStr = localStorage.getItem('qwork_my_gigs');
+            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+            const userName = currentUser.first_name || currentUser.fname || currentUser.email || 'User';
+            const userAvatar = currentUser.avatar || 'https://i.pravatar.cc/100?img=1';
+
+            if (myGigsStr) {
+                try {
+                    const myGigs = JSON.parse(myGigsStr);
+                    const list = document.getElementById('my-qworks-list');
+                    const countBadge = document.getElementById('qwork-count');
+
+                    if (myGigs.length > 0) {
+                        countBadge.textContent = myGigs.length;
+                        list.innerHTML = ''; // Clear empty message
+
+                        myGigs.forEach((gig, index) => {
+                            const gigEl = document.createElement('div');
+                            gigEl.className = 'service-card';
+                            gigEl.style.cursor = 'pointer';
+                            gigEl.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+
+                            const imgHtml = gig.image
+                                ? `<img src="${gig.image}" alt="${gig.title}">`
+                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
+
+                            const status = gig.status || 'Active';
+                            const statusClass = `status-${status.toLowerCase()}`;
+
+                            gigEl.innerHTML = `
+                                <div class="service-image">
+                                    ${imgHtml}
+                                    <span class="service-tag">${gig.category || 'SERVICE'}</span>
+                                    <span class="status-badge ${statusClass}">${status}</span>
+                                </div>
+                                <div class="service-content">
+                                    <div class="service-author">
+                                        <img src="${userAvatar}" alt="${userName}">
+                                        <div>
+                                            <span class="author-name">${userName}</span>
+                                            <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="service-title">${gig.title}</h3>
+                                    <div class="service-footer">
+                                        <span class="price-label">FROM</span>
+                                        <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(gigEl);
+                        });
+                    }
+                } catch (e) { console.error(e); }
+            }
+
+            // Render My Drafts
+            const myDraftsStr = localStorage.getItem('qwork_saved_drafts');
+            if (myDraftsStr) {
+                try {
+                    const myDrafts = JSON.parse(myDraftsStr);
+                    const list = document.getElementById('my-drafts-list');
+                    const countBadge = document.getElementById('draft-count');
+
+                    if (myDrafts.length > 0) {
+                        countBadge.textContent = myDrafts.length;
+                        list.innerHTML = '';
+
+                        myDrafts.forEach((draft, index) => {
+                            const draftEl = document.createElement('div');
+                            draftEl.className = 'service-card draft-card';
+                            draftEl.style.cursor = 'pointer';
+                            draftEl.onclick = () => window.location.href = `service-detail.html?id=${draft.id}`;
+
+                            const imgHtml = draft.image
+                                ? `<img src="${draft.image}" alt="${draft.title}" style="opacity: 0.7;">`
+                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#fef9c3;"><i class="ph ph-note-pencil" style="font-size:48px; color:#ca8a04;"></i></div>`;
+
+                            draftEl.innerHTML = `
+                                <div class="service-image">
+                                    ${imgHtml}
+                                    <span class="service-tag">${draft.category || 'DRAFT'}</span>
+                                    <span class="status-badge status-draft">Draft</span>
+                                </div>
+                                <div class="service-content">
+                                    <div class="service-author">
+                                        <img src="${userAvatar}" alt="${userName}">
+                                        <div>
+                                            <span class="author-name">${userName}</span>
+                                            <span class="author-rating"><i class="ph-fill ph-star"></i> Draft</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="service-title">${draft.title || 'Untitled Draft'}</h3>
+                                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
+                                        <button onclick="resumeDraft(${index})" class="btn btn-primary-outline" style="padding: 4px 12px; font-size: 12px;">Resume</button>
+                                        <button onclick="deleteDraft(${index})" style="color:#ef4444; font-size:18px; cursor:pointer; background:none; border:none;"><i class="ph ph-trash"></i></button>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(draftEl);
+                        });
+                    }
+                } catch (e) { console.error(e); }
             }
         });
+
+        function startNewQWork() {
+            localStorage.removeItem('qwork_temp_form');
+            window.location.href = 'create-qwork.html';
+        }
+
+        function resumeDraft(index) {
+            const myDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+            const draft = myDrafts[index];
+            if (draft) {
+                localStorage.setItem('qwork_temp_form', JSON.stringify(draft));
+                window.location.href = 'create-qwork.html';
+            }
+        }
+
+        function deleteDraft(index) {
+            if (confirm('Delete this draft?')) {
+                const myDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+                myDrafts.splice(index, 1);
+                localStorage.setItem('qwork_saved_drafts', JSON.stringify(myDrafts));
+                window.location.reload();
+            }
+        }
+        function openQWorkModal(index) {
+            const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
+            const gig = myGigs[index];
+            if (!gig) return;
+
+            document.getElementById('modal-title').textContent = gig.title;
+            document.getElementById('modal-category').textContent = gig.category + (gig.subcategory ? ` > ${gig.subcategory}` : '');
+            document.getElementById('modal-price').textContent = `${Number(gig.price).toLocaleString()} ₸`;
+            document.getElementById('modal-desc').textContent = gig.description || gig.desc || 'No description provided.';
+
+            const statusEl = document.getElementById('modal-status');
+            const status = gig.status || 'Active';
+            statusEl.textContent = status;
+            statusEl.style.color = status === 'Active' ? '#10b981' : (status === 'Paused' ? '#f59e0b' : '#64748b');
+
+            const imgContainer = document.getElementById('modal-image-container');
+            if (gig.image) {
+                imgContainer.innerHTML = `<img src="${gig.image}" alt="${gig.title}">`;
+            } else {
+                imgContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#cbd5e1;font-size:48px;"><i class="ph ph-image"></i></div>`;
+            }
+
+            // Setup Buttons
+            document.getElementById('modal-edit-btn').onclick = () => editQWork(index);
+            document.getElementById('modal-delete-btn').onclick = () => deleteQWork(index);
+
+            document.getElementById('qwork-modal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('qwork-modal').classList.remove('show');
+        }
+
+        function deleteQWork(index) {
+            if (confirm('Are you sure you want to delete this QWork?')) {
+                const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
+                myGigs.splice(index, 1);
+                localStorage.setItem('qwork_my_gigs', JSON.stringify(myGigs));
+                window.location.reload();
+            }
+        }
+
+        function editQWork(index) {
+            const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
+            const gig = myGigs[index];
+            if (gig) {
+                localStorage.setItem('qwork_temp_form', JSON.stringify({
+                    ...gig,
+                    isEditing: true,
+                    editIndex: index
+                }));
+                window.location.href = 'create-qwork.html';
+            }
+        }
     </script>
 </body>
 
