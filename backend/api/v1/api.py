@@ -6,6 +6,7 @@ from api.v1.routes.portfolios import router as portfolios_router
 from api.v1.routes.jobs import router as jobs_router
 from api.v1.routes.offers import router as offers_router
 from api.v1.routes.images import router as images_router
+from api.v1.routes.messages import router as messages_router
 
 router = APIRouter()
 
@@ -15,3 +16,4 @@ router.include_router(portfolios_router)
 router.include_router(jobs_router)
 router.include_router(offers_router)
 router.include_router(images_router)
+router.include_router(messages_router)

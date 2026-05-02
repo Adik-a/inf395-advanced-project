@@ -381,7 +381,24 @@
         let chats = [];
         let activeChatEmail = null;
 
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        const socket = new WebSocket(`ws://localhost:8000/messages/ws/${currentUser.id}`);
+
+        // 1. Обработка открытия соединения
+        socket.onopen = (e) => {
+            console.log("Соединение установлено");
+        };
+
+        // 2. Прием сообщений от сервера
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            renderMessages()
+            
+            // Форматируем вывод: "От 2: Всем привет!"
+            const messageLine = `От ${data.sender_id}: ${data.message}`;
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
             if (!currentUser.email) {
                 window.location.href = 'login.html';
                 return;
@@ -405,7 +422,7 @@
                 ensureChatExists(sellerEmail);
             }
 
-            loadChats();
+            await loadChats();
             renderChatList();
             
             if (activeChatEmail) {
@@ -413,11 +430,20 @@
             }
         });
 
-        function ensureChatExists(email) {
-            let messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+        async function ensureChatExists(email) {
+            // let messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
             const chatExists = messages.some(m => 
-                (m.from === currentUser.email && m.to === email) || 
-                (m.from === email && m.to === currentUser.email)
+                (m.sender_email === currentUser.email && m.receiver_email === email) || 
+                (m.sender_email === email && m.receiver_email === currentUser.email)
             );
             
             if (!chatExists) {
@@ -426,35 +452,63 @@
             }
         }
 
-        function loadChats() {
-            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            const uniqueEmails = new Set();
-            
-            messages.forEach(m => {
-                if (m.from === currentUser.email) uniqueEmails.add(m.to);
-                if (m.to === currentUser.email) uniqueEmails.add(m.from);
-            });
+        async function loadChats() {
+            try {
+                const response = await fetch('http://localhost:8000/messages/my/all', {
+                    method: 'GET',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
 
-            // If we came from a seller link, ensure they are in the list
-            const urlParams = new URLSearchParams(window.history.current ? '' : window.location.search);
-            const sellerEmail = urlParams.get('seller');
-            if (sellerEmail) uniqueEmails.add(sellerEmail);
+                if (!response.ok) throw new Error('Failed to fetch messages');
+                const messages = await response.json();
 
-            chats = Array.from(uniqueEmails).map(email => ({
-                email,
-                name: email.split('@')[0], // Simplified
-                avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=random`,
-                lastMsg: getLastMessage(email)
-            }));
+                const uniqueEmails = new Set();
+                messages.forEach(m => {
+                    if (m.sender_email === currentUser.email) uniqueEmails.add(m.receiver_email);
+                    if (m.receiver_email === currentUser.email) uniqueEmails.add(m.sender_email);
+                });
+
+                // Проверка URL на наличие продавца
+                const urlParams = new URLSearchParams(window.location.search);
+                const sellerEmail = urlParams.get('seller');
+                if (sellerEmail) uniqueEmails.add(sellerEmail);
+
+                // Использование Promise.all для корректной обработки асинхронных вызовов в map
+                chats = await Promise.all(Array.from(uniqueEmails).map(async (email) => {
+                    const last = await getLastMessage(email); // Теперь email определен
+                    return {
+                        email,
+                        name: email.split('@')[0],
+                        avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=random`,
+                        lastMsg: last
+                    };
+                }));
+
+                renderChatList(); // Вызываем отрисовку ПОСЛЕ того, как данные загружены
+            } catch (error) {
+                console.error("Ошибка загрузки чатов:", error);
+            }
         }
 
-        function getLastMessage(email) {
-            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+        async function getLastMessage(email) {
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
             const filtered = messages.filter(m => 
-                (m.from === currentUser.email && m.to === email) || 
-                (m.from === email && m.to === currentUser.email)
+                (m.sender_email === currentUser.email && m.receiver_email === email) || 
+                (m.sender_email === email && m.receiver_email === currentUser.email)
             );
-            return filtered.length > 0 ? filtered[filtered.length - 1].text : 'No messages yet';
+            return filtered.length > 0 ? filtered[filtered.length - 1].content : 'No messages yet';
         }
 
         function renderChatList() {
@@ -507,38 +561,89 @@
             document.addEventListener('click', () => userDropdownWrapper.classList.remove('active'));
         }
 
-        function renderMessages() {
-            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+        async function renderMessages() {
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
             const filtered = messages.filter(m => 
-                (m.from === currentUser.email && m.to === activeChatEmail) || 
-                (m.from === activeChatEmail && m.to === currentUser.email)
+                (m.sender_email === currentUser.email && m.receiver_email === activeChatEmail) || 
+                (m.sender_email === activeChatEmail && m.receiver_email === currentUser.email)
             );
             
             const container = document.getElementById('chat-messages');
             container.innerHTML = filtered.map(m => `
-                <div class="message ${m.from === currentUser.email ? 'sent' : 'received'}">
-                    ${m.text}
+                <div class="message ${m.sender_email === currentUser.email ? 'sent' : 'received'}">
+                    ${m.content}
                 </div>
             `).join('');
             
             container.scrollTop = container.scrollHeight;
         }
 
-        function sendMessage(e) {
+        async function sendMessage(e) {
             e.preventDefault();
             const input = document.getElementById('message-input');
             const text = input.value.trim();
             if (!text || !activeChatEmail) return;
 
-            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            messages.push({
-                from: currentUser.email,
-                to: activeChatEmail,
-                text,
-                timestamp: new Date().toISOString()
-            });
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            // const response = await fetch('http://localhost:8000/messages/my/all', {
+            //     method: 'GET',
+            //     headers: { 'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            //         }
+            // });
+
+            // const messages = await response.json();
+
+            // messages.push({
+            //     from: currentUser.email,
+            //     to: activeChatEmail,
+            //     text,
+            //     timestamp: new Date().toISOString()
+            // });
             
-            localStorage.setItem('qwork_messages', JSON.stringify(messages));
+            // localStorage.setItem('qwork_messages', JSON.stringify(messages));
+
+            // const response2 = await fetch('http://localhost:8000/messages/send', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            //         },
+            //     body: JSON.stringify({
+            //         sender_id: currentUser.id,
+            //         receiver_email: activeChatEmail,
+            //         content: text
+            //     })
+            // });
+
+            const response = await fetch(`http://localhost:8000/messages/get-id-by-email/${activeChatEmail}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+        
+            const receiverData = await response.json();
+            console.log("Receiver data:", receiverData);
+        
+            const payload = {
+                receiver_id: receiverData.user_id,
+                message: text
+            };
+
+            // Отправляем JSON на сервер
+            socket.send(JSON.stringify(payload));
+            console.log("Сообщение отправлено:", payload);
+
+
             input.value = '';
             
             loadChats();

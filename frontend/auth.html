@@ -171,7 +171,7 @@
             console.log("Encoded JWT ID token: " + response.credential);
 
             // Отправляем токен на наш FastAPI бэкенд
-            fetch('http://localhost:8000/auth/google', {
+            fetch('http://127.0.0.1:8000/auth/google', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -181,7 +181,7 @@
                 .then(res => res.json())
                 .then(data => {
                     if (data.access_token) {
-                        alert("Успешно!");
+                        localStorage.setItem('access_token', data.access_token);
                         localStorage.setItem('qwork_currentUser', JSON.stringify(data.user || { email: "google_user" }));
                         window.location.href = 'profile.html';
                     }

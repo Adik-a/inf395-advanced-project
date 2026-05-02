@@ -1,4 +1,3 @@
-from email.mime import image
 from typing import TYPE_CHECKING
 from datetime import datetime
 
