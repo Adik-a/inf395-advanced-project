@@ -33,18 +33,26 @@
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="#" class="nav-item">Dashboard</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
                     <a href="#" class="nav-item">Messages</a>
                     <button class="icon-btn" aria-label="Notifications"
                         style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
-                    <div class="user-profile"
-                        style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
-                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
-                        <span id="user-name-display"
-                            style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item"
-                            style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="#" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -52,30 +60,74 @@
         <div class="header-bottom">
             <div class="nav-container">
                 <ul class="category-nav">
-                    <li class="cat-item"><a href="#">Design</a></li>
-                    <li class="cat-item"><a href="#">Development & IT</a></li>
                     <li class="cat-item has-dropdown">
-                        <a href="#">Writing & Translations</a>
+                        <a href="#">Design</a>
                         <div class="cat-dropdown">
                             <div class="dropdown-col">
-                                <h4>Writing & Translations</h4>
-                                <a href="#">Articles</a>
-                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
-                                <a href="#">Business Names & Slogans</a>
-                                <a href="#">Website Content Posting</a>
-                                <a href="#">Creative Writing</a>
+                                <h4>Design</h4>
+                                <a href="#">Logo Design</a>
+                                <a href="#">Brand Identity</a>
+                                <a href="#">Illustration</a>
                             </div>
+                            <div class="dropdown-divider"></div>
                             <div class="dropdown-col">
-                                <h4>&nbsp;</h4>
-                                <a href="#">Scriptwriting</a>
-                                <a href="#">Proofreading & Editing</a>
-                                <a href="#">Transcripts</a>
-                                <a href="#">Translations</a>
-                                <a href="#">Resumes & Job Ads</a>
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">UI/UX Design</a>
+                                <a href="#">Poster & Flyer</a>
                             </div>
                         </div>
                     </li>
-                    <li class="cat-item"><a href="#">Audio & Video</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="#">Web Development</a>
+                                <a href="#">Mobile Apps</a>
+                                <a href="#">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">SEO</a>
+                                <a href="#">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="#">Articles & Blog Posts</a>
+                                <a href="#">Copywriting</a>
+                                <a href="#">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">Proofreading</a>
+                                <a href="#">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="#">Voice Over</a>
+                                <a href="#">Music Production</a>
+                                <a href="#">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">Podcast Editing</a>
+                                <a href="#">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

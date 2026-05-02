@@ -4,12 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Dashboard - QWork</title>
+    <title>User Profile - QWork</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .profile-header-bg {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), #0089aa);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+        .profile-user-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            margin-top: -100px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            gap: 30px;
+            border: 1px solid var(--border);
+        }
+        .profile-user-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid var(--white);
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+        .profile-user-info {
+            flex: 1;
+            padding-top: 20px;
+        }
+        .profile-user-info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .profile-user-info p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        .profile-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+        .meta-item i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        .profile-section {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+        .profile-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .skill-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0 8px 8px 0;
+            color: #475569;
+        }
+        @media (max-width: 992px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .profile-user-card { flex-direction: column; align-items: center; text-align: center; }
+            .profile-meta { justify-content: center; }
+        }
+    </style>
 </head>
 
 <body class="bg-gray">
@@ -17,7 +106,7 @@
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
-                <span class="logo">QWork</span>
+                <a href="index.html" class="logo">QWork</a>
 
                 <div class="header-search">
                     <input type="text" placeholder="Find Services">
@@ -25,152 +114,80 @@
                 </div>
 
                 <div class="header-actions" id="guest-actions">
-                    <a href="#" class="freelancer-link">Are you a freelancer?</a>
                     <a href="auth.html" class="sign-in-link">Sign In</a>
                     <a href="auth.html" class="btn btn-primary">Sign Up</a>
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="profile.html" class="nav-item"
-                        style="color: var(--primary); font-weight: 600;">Dashboard</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
                     <a href="#" class="nav-item">Messages</a>
                     <button class="icon-btn" aria-label="Notifications"
                         style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
-                    <div class="user-profile"
-                        style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
-                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
-                        <span id="user-name-display"
-                            style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item"
-                            style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item" style="color:var(--primary); font-weight:600;">Profile</a>
+                            <a href="#" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="header-bottom">
-            <div class="nav-container">
-                <ul class="category-nav">
-                    <li class="cat-item"><a href="#">Design</a></li>
-                    <li class="cat-item"><a href="#">Development & IT</a></li>
-                    <li class="cat-item has-dropdown">
-                        <a href="#">Writing & Translations</a>
-                        <div class="cat-dropdown">
-                            <div class="dropdown-col">
-                                <h4>Writing & Translations</h4>
-                                <a href="#">Articles</a>
-                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
-                                <a href="#">Business Names & Slogans</a>
-                                <a href="#">Website Content Posting</a>
-                                <a href="#">Creative Writing</a>
-                            </div>
-                            <div class="dropdown-col">
-                                <h4>&nbsp;</h4>
-                                <a href="#">Scriptwriting</a>
-                                <a href="#">Proofreading & Editing</a>
-                                <a href="#">Transcripts</a>
-                                <a href="#">Translations</a>
-                                <a href="#">Resumes & Job Ads</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="cat-item"><a href="#">Audio & Video</a></li>
-                </ul>
             </div>
         </div>
     </header>
 
-    <main class="dashboard-main">
-        <div class="dashboard-container">
-            
-            <aside class="dashboard-sidebar">
-                <div class="profile-card">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
-                    <h2 class="profile-name" id="dashboard-name">Daniel R.</h2>
-                    <span class="profile-role">Seller</span>
+    <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <div class="profile-header-bg"></div>
+        
+        <div class="profile-user-card">
+            <img src="https://i.pravatar.cc/150?img=11" alt="User" class="profile-user-img" id="profile-img-large">
+            <div class="profile-user-info">
+                <h1 id="profile-name-large">Daniel R.</h1>
+                <p id="profile-bio">Professional UI/UX Designer & Frontend Developer based in Almaty. Helping businesses build stunning digital products.</p>
+                <div class="profile-meta">
+                    <div class="meta-item"><i class="ph ph-map-pin"></i> Almaty, Kazakhstan</div>
+                    <div class="meta-item"><i class="ph ph-star-fill" style="color:#ffb33e;"></i> 5.0 (24 reviews)</div>
+                    <div class="meta-item"><i class="ph ph-clock"></i> Member since 2024</div>
+                </div>
+            </div>
+            <div style="padding-top: 20px;">
+                <button class="btn btn-primary" onclick="window.location.href='dashboard.html'">Edit Dashboard</button>
+            </div>
+        </div>
 
-                    <div class="profile-stats">
-                        <div class="stat-row">
-                            <span class="stat-name">Reliability</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Punctuality</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Response Rate</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Response Time</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
-                        </div>
+        <div class="profile-grid">
+            <aside>
+                <div class="profile-section">
+                    <h3>About Me</h3>
+                    <p style="font-size:14px; line-height:1.6; color:var(--text-secondary);">
+                        Passionate about creating clean and functional user interfaces. Over 5 years of experience in the design industry. Specialized in mobile app design and web applications.
+                    </p>
+                </div>
+                <div class="profile-section">
+                    <h3>Skills</h3>
+                    <div id="skills-container">
+                        <span class="skill-tag">UI Design</span>
+                        <span class="skill-tag">UX Research</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">React.js</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">Branding</span>
                     </div>
                 </div>
             </aside>
 
-            
-            <section class="dashboard-content">
-                
-                <div class="dashboard-block">
-                    <h3>My Orders <span class="badge-neutral">0</span></h3>
-                </div>
-
-                <div class="dashboard-block">
-                    <div class="flex-between" style="margin-bottom: 20px;">
-                        <h3>My QWorks <span class="badge-neutral" id="qwork-count">0</span></h3>
-                        <a href="#" onclick="startNewQWork()" class="btn btn-primary-outline">Create a QWork</a>
-                    </div>
-                    <div id="my-qworks-list" class="my-qworks-grid">
-                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">You haven't created
-                            any QWorks yet.</p>
-                    </div>
-                </div>
-
-
-                <div class="dashboard-block">
-                    <div class="flex-between" style="margin-bottom: 20px;">
-                        <h3>My Drafts <span class="badge-neutral" id="draft-count">0</span></h3>
-                    </div>
-                    <div id="my-drafts-list" class="my-qworks-grid">
-                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">No saved drafts.
-                        </p>
-                    </div>
-                </div>
-
-
-                
-                <div class="tips-grid">
-                    <div class="tip-card">
-                        <div class="tip-header">
-                            <h4>Tip</h4>
-                            <i class="ph ph-lightbulb"></i>
-                        </div>
-                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also
-                            bid on buyer requests in the Exchange. This can be particularly helpful when you're just
-                            getting started and don't have a strong rating yet.</p>
-                    </div>
-
-                    <div class="tip-card">
-                        <div class="tip-header">
-                            <h4>Tip</h4>
-                            <i class="ph ph-lightbulb"></i>
-                        </div>
-                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it
-                            is higher than the buyer might initially expect.</p>
+            <section>
+                <div class="profile-section">
+                    <h3 id="services-count-title">My Services (0)</h3>
+                    <div id="profile-qworks-grid" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px;">No active services to display.</p>
                     </div>
                 </div>
             </section>
@@ -181,279 +198,54 @@
         <div class="footer-content">
             <div class="footer-col-main">
                 <div class="footer-logo">QWork</div>
-                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH
-                    EXPERTISE ACROSS THE STEPPE.</p>
-            </div>
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h4>COMPANY</h4>
-                    <a href="#">ABOUT US</a>
-                    <a href="#">TERMS OF SERVICE</a>
-                    <a href="#">PRIVACY POLICY</a>
-                </div>
-                <div class="footer-column">
-                    <h4>SUPPORT</h4>
-                    <a href="#">CONTACT SUPPORT</a>
-                    <a href="#">HELP CENTER</a>
-                    <a href="#">KZT RATES</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 QWORK KAZAKHSTAN. ALL RIGHTS RESERVED. | KZT</p>
-            <div class="social-links">
-                <a href="#"><i class="ph ph-instagram-logo"></i></a>
-                <a href="#"><i class="ph ph-twitter-logo"></i></a>
-                <a href="#"><i class="ph ph-youtube-logo"></i></a>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE.</p>
             </div>
         </div>
     </footer>
 
-    
-    <div id="qwork-modal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="modal-close" onclick="closeModal()">&times;</span>
-            <div id="modal-image-container" class="modal-header-img">
-                
-            </div>
-            <div class="modal-body">
-                <div id="modal-category" class="modal-tag-badge">Category</div>
-                <h2 id="modal-title" class="modal-title">QWork Title</h2>
-
-                <div class="modal-details-grid">
-                    <div class="detail-item">
-                        <h5>Price</h5>
-                        <p id="modal-price">0 ₸</p>
-                    </div>
-                    <div class="detail-item">
-                        <h5>Status</h5>
-                        <p id="modal-status" style="color: #10b981;">Active</p>
-                    </div>
-                </div>
-
-                <div class="modal-description">
-                    <h4 style="color: var(--text-primary); margin-bottom: 12px;">Description</h4>
-                    <p id="modal-desc">Description text goes here...</p>
-                </div>
-
-                <div class="modal-actions">
-                    <button id="modal-edit-btn" class="btn btn-primary" style="flex: 1;">Edit QWork</button>
-                    <button id="modal-delete-btn" class="btn-delete">Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            
             const currentUserStr = localStorage.getItem('qwork_currentUser');
             if (currentUserStr) {
-                try {
-                    const currentUser = JSON.parse(currentUserStr);
-                    const dbName = document.getElementById('dashboard-name');
-                    if (dbName) {
-                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email;
-                        if (currentUser.last_name || currentUser.lname) {
-                            nameStr += ' ' + (currentUser.last_name || currentUser.lname);
-                        }
-                        dbName.textContent = nameStr;
-                    }
-                } catch (e) { console.error(e); }
+                const currentUser = JSON.parse(currentUserStr);
+                const nameDisplay = document.getElementById('profile-name-large');
+                if (nameDisplay) {
+                    nameDisplay.textContent = (currentUser.fname || currentUser.first_name || 'User') + ' ' + (currentUser.lname || currentUser.last_name || '');
+                }
             }
-            
+
             const myGigsStr = localStorage.getItem('qwork_my_gigs');
-            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
-            const userName = currentUser.first_name || currentUser.fname || currentUser.email || 'User';
-            const userAvatar = currentUser.avatar || 'https://i.pravatar.cc/100?img=1';
-
             if (myGigsStr) {
-                try {
-                    const myGigs = JSON.parse(myGigsStr);
-                    const list = document.getElementById('my-qworks-list');
-                    const countBadge = document.getElementById('qwork-count');
-
-                    if (myGigs.length > 0) {
-                        countBadge.textContent = myGigs.length;
-                        list.innerHTML = ''; 
-
-                        myGigs.forEach((gig, index) => {
-                            const gigEl = document.createElement('div');
-                            gigEl.className = 'service-card';
-                            gigEl.style.cursor = 'pointer';
-                            gigEl.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
-
-                            const imgHtml = gig.image
-                                ? `<img src="${gig.image}" alt="${gig.title}">`
-                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
-
-                            const status = gig.status || 'Active';
-                            const statusClass = `status-${status.toLowerCase()}`;
-
-                            gigEl.innerHTML = `
-                                <div class="service-image">
-                                    ${imgHtml}
-                                    <span class="service-tag">${gig.category || 'SERVICE'}</span>
-                                    <span class="status-badge ${statusClass}">${status}</span>
+                const myGigs = JSON.parse(myGigsStr).filter(g => g.status === 'Active');
+                const grid = document.getElementById('profile-qworks-grid');
+                const title = document.getElementById('services-count-title');
+                
+                if (myGigs.length > 0) {
+                    title.textContent = `My Services (${myGigs.length})`;
+                    grid.innerHTML = '';
+                    myGigs.forEach(gig => {
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+                        card.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+                        card.innerHTML = `
+                            <div class="service-image">
+                                <img src="${gig.image || 'https://via.placeholder.com/400x250'}" alt="${gig.title}">
+                                <span class="service-tag">${gig.category}</span>
+                            </div>
+                            <div class="service-content">
+                                <h3 class="service-title">${gig.title}</h3>
+                                <div class="service-footer">
+                                    <span class="price-label">FROM</span>
+                                    <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
                                 </div>
-                                <div class="service-content">
-                                    <div class="service-author">
-                                        <img src="${userAvatar}" alt="${userName}">
-                                        <div>
-                                            <span class="author-name">${userName}</span>
-                                            <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
-                                        </div>
-                                    </div>
-                                    <h3 class="service-title">${gig.title}</h3>
-                                    <div class="service-footer">
-                                        <span class="price-label">FROM</span>
-                                        <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
-                                    </div>
-                                </div>
-                            `;
-                            list.appendChild(gigEl);
-                        });
-                    }
-                } catch (e) { console.error(e); }
-            }
-
-            
-            const myDraftsStr = localStorage.getItem('qwork_saved_drafts');
-            if (myDraftsStr) {
-                try {
-                    const myDrafts = JSON.parse(myDraftsStr);
-                    const list = document.getElementById('my-drafts-list');
-                    const countBadge = document.getElementById('draft-count');
-
-                    if (myDrafts.length > 0) {
-                        countBadge.textContent = myDrafts.length;
-                        list.innerHTML = '';
-
-                        myDrafts.forEach((draft, index) => {
-                            const draftEl = document.createElement('div');
-                            draftEl.className = 'service-card draft-card';
-                            draftEl.style.cursor = 'pointer';
-                            draftEl.onclick = () => {
-                                localStorage.setItem('qwork_temp_form', JSON.stringify({
-                                    ...draft,
-                                    isEditingDraft: true,
-                                    draftIndex: index
-                                }));
-                                window.location.href = 'create-qwork.html';
-                            };
-
-                            const imgHtml = draft.image
-                                ? `<img src="${draft.image}" alt="${draft.title}" style="opacity: 0.7;">`
-                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#fef9c3;"><i class="ph ph-note-pencil" style="font-size:48px; color:#ca8a04;"></i></div>`;
-
-                            draftEl.innerHTML = `
-                                <div class="service-image">
-                                    ${imgHtml}
-                                    <span class="service-tag">${draft.category || 'DRAFT'}</span>
-                                    <span class="status-badge status-draft">Draft</span>
-                                </div>
-                                <div class="service-content">
-                                    <div class="service-author">
-                                        <img src="${userAvatar}" alt="${userName}">
-                                        <div>
-                                            <span class="author-name">${userName}</span>
-                                            <span class="author-rating"><i class="ph-fill ph-star"></i> Draft</span>
-                                        </div>
-                                    </div>
-                                    <h3 class="service-title">${draft.title || 'Untitled Draft'}</h3>
-                                    <div class="service-footer">
-                                        <span class="price-label">DRAFT</span>
-                                        <div style="display:flex; gap:10px; align-items:center;">
-                                            <button onclick="event.stopPropagation(); deleteDraft(${index})" style="color:#ef4444; font-size:18px; cursor:pointer; background:none; border:none;"><i class="ph ph-trash"></i></button>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                            list.appendChild(draftEl);
-                        });
-                    }
-                } catch (e) { console.error(e); }
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
             }
         });
-
-        function startNewQWork() {
-            localStorage.removeItem('qwork_temp_form');
-            window.location.href = 'create-qwork.html';
-        }
-
-        function resumeDraft(index) {
-            const myDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
-            const draft = myDrafts[index];
-            if (draft) {
-                localStorage.setItem('qwork_temp_form', JSON.stringify(draft));
-                window.location.href = 'create-qwork.html';
-            }
-        }
-
-        function deleteDraft(index) {
-            if (confirm('Delete this draft?')) {
-                const myDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
-                myDrafts.splice(index, 1);
-                localStorage.setItem('qwork_saved_drafts', JSON.stringify(myDrafts));
-                window.location.reload();
-            }
-        }
-        function openQWorkModal(index) {
-            const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-            const gig = myGigs[index];
-            if (!gig) return;
-
-            document.getElementById('modal-title').textContent = gig.title;
-            document.getElementById('modal-category').textContent = gig.category + (gig.subcategory ? ` > ${gig.subcategory}` : '');
-            document.getElementById('modal-price').textContent = `${Number(gig.price).toLocaleString()} ₸`;
-            document.getElementById('modal-desc').textContent = gig.description || gig.desc || 'No description provided.';
-
-            const statusEl = document.getElementById('modal-status');
-            const status = gig.status || 'Active';
-            statusEl.textContent = status;
-            statusEl.style.color = status === 'Active' ? '#10b981' : (status === 'Paused' ? '#f59e0b' : '#64748b');
-
-            const imgContainer = document.getElementById('modal-image-container');
-            if (gig.image) {
-                imgContainer.innerHTML = `<img src="${gig.image}" alt="${gig.title}">`;
-            } else {
-                imgContainer.innerHTML = `<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#cbd5e1;font-size:48px;"><i class="ph ph-image"></i></div>`;
-            }
-
-            
-            document.getElementById('modal-edit-btn').onclick = () => editQWork(index);
-            document.getElementById('modal-delete-btn').onclick = () => deleteQWork(index);
-
-            document.getElementById('qwork-modal').classList.add('show');
-        }
-
-        function closeModal() {
-            document.getElementById('qwork-modal').classList.remove('show');
-        }
-
-        function deleteQWork(index) {
-            if (confirm('Are you sure you want to delete this QWork?')) {
-                const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-                myGigs.splice(index, 1);
-                localStorage.setItem('qwork_my_gigs', JSON.stringify(myGigs));
-                window.location.reload();
-            }
-        }
-
-        function editQWork(index) {
-            const myGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-            const gig = myGigs[index];
-            if (gig) {
-                localStorage.setItem('qwork_temp_form', JSON.stringify({
-                    ...gig,
-                    isEditing: true,
-                    editIndex: index
-                }));
-                window.location.href = 'create-qwork.html';
-            }
-        }
     </script>
 </body>
-
 </html>

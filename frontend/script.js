@@ -21,17 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
 
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    
+                    const index = Array.from(animatedElements).indexOf(entry.target);
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                    }, 50 * index); // very short delay for each item
-
-                    
+                    }, 50 * index); 
                     observer.unobserve(entry.target);
                 }
             });
@@ -56,11 +56,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     
-    const badge = document.querySelector('.floating-badge');
-    if (badge) {
-        let posY = 0;
-        let direction = 1;
+    // User Dropdown Toggle
+    const profileTrigger = document.getElementById('profile-trigger');
+    const userDropdown = document.getElementById('user-dropdown');
 
+    if (profileTrigger && userDropdown) {
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (userDropdown.classList.contains('active') && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
     }
 });
 

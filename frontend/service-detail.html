@@ -29,40 +29,6 @@
             }
         }
 
-        .status-banner {
-            background: #fff9eb;
-            border: 1px solid #ffeeba;
-            border-radius: var(--radius-md);
-            padding: 20px;
-            display: flex;
-            gap: 20px;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .status-icon {
-            width: 48px;
-            height: 48px;
-            background: #f59e0b;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .status-content h4 {
-            margin-bottom: 4px;
-            color: #92400e;
-        }
-
-        .status-content p {
-            font-size: 14px;
-            color: #b45309;
-        }
-
         .detail-main {
             background: var(--white);
             border-radius: var(--radius-md);
@@ -70,21 +36,8 @@
             overflow: hidden;
         }
 
-        .breadcrumb {
-            padding: 20px 24px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            display: flex;
-            gap: 8px;
-        }
-
-        .breadcrumb span:last-child {
-            color: var(--primary);
-            font-weight: 500;
-        }
-
         .service-header {
-            padding: 0 24px 24px;
+            padding: 24px;
         }
 
         .service-header h1 {
@@ -134,17 +87,47 @@
         .main-image {
             width: 100%;
             aspect-ratio: 16/9;
+            max-height: 500px;
             border-radius: var(--radius-sm);
             background: #f0f2f5;
             overflow: hidden;
             position: relative;
+            margin: 0 auto;
         }
 
         .main-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: opacity 0.3s ease-in-out;
         }
+
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .slider-btn:hover {
+            background: var(--white);
+            color: var(--primary);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+        }
+
+        .slider-btn.prev { left: 16px; }
+        .slider-btn.next { right: 16px; }
 
         .thumb-row {
             display: flex;
@@ -155,13 +138,14 @@
         }
 
         .thumb-item {
-            width: 100px;
-            height: 60px;
+            width: 80px;
+            height: 50px;
             border-radius: 4px;
+            overflow: hidden;
             border: 2px solid transparent;
             cursor: pointer;
-            overflow: hidden;
             flex-shrink: 0;
+            transition: all 0.2s;
         }
 
         .thumb-item.active {
@@ -172,6 +156,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            opacity: 0.6;
+        }
+
+        .thumb-item:hover img,
+        .thumb-item.active img {
+            opacity: 1;
         }
 
         .section-divider {
@@ -195,20 +185,16 @@
             color: #4b5563;
             font-size: 15px;
             white-space: pre-line;
+            max-width: 850px;
+            width: 100%;
+            overflow-wrap: break-word;
+            word-wrap: break-word;
         }
 
         .detail-sidebar {
             display: flex;
             flex-direction: column;
             gap: 24px;
-        }
-
-        .sidebar-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 32px;
-            box-shadow: var(--shadow-md);
         }
 
         .pricing-card {
@@ -277,55 +263,9 @@
             font-weight: 800;
         }
 
-        .info-card {
-            background: var(--white);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            padding: 24px;
-            margin-top: 24px;
-        }
-
-        .info-card h4 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 12px;
-        }
-
         .info-list {
             list-style: none;
             padding: 0;
-        }
-
-        .info-list li {
-            margin-bottom: 12px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            display: flex;
-            gap: 10px;
-        }
-
-        .info-list li i {
-            color: var(--primary);
-            margin-top: 3px;
-        }
-
-        .faq-item-detail {
-            margin-bottom: 20px;
-        }
-
-        .faq-q {
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            display: block;
-        }
-
-        .faq-a {
-            color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.6;
         }
 
         .btn-edit-full {
@@ -343,6 +283,8 @@
             cursor: pointer;
             border: none;
             transition: all 0.2s;
+            font-family: inherit;
+            font-size: 15px;
         }
 
         .btn-edit-full:hover {
@@ -365,6 +307,7 @@
             cursor: pointer;
             border: 1px solid #fecdd3;
             transition: all 0.2s;
+            font-family: inherit;
             font-size: 14px;
         }
 
@@ -433,6 +376,24 @@
             font-size: 14px;
             font-weight: 700;
         }
+
+        .faq-item-detail {
+            margin-bottom: 24px;
+        }
+
+        .faq-q {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: block;
+            font-size: 15px;
+        }
+
+        .faq-a {
+            color: #4b5563;
+            font-size: 14px;
+            line-height: 1.6;
+        }
     </style>
 </head>
 
@@ -441,7 +402,7 @@
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
-                <a href="index.html" class="logo" style="text-decoration: none; color: inherit;">QWork</a>
+                <a href="index.html" class="logo">QWork</a>
 
                 <div class="header-search">
                     <input type="text" placeholder="Find Services">
@@ -455,20 +416,26 @@
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="profile.html" class="nav-item"
-                        style="color: var(--primary); font-weight: 600;">Dashboard</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
                     <a href="#" class="nav-item">Messages</a>
                     <button class="icon-btn" aria-label="Notifications"
                         style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
-                    <div class="user-profile"
-                        style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar-head"
-                            class="avatar-small"
-                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
-                        <span id="user-name-head"
-                            style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item"
-                            style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="#" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -476,11 +443,74 @@
         <div class="header-bottom">
             <div class="nav-container">
                 <ul class="category-nav">
-                    <li class="cat-item"><a href="#">Design</a></li>
-                    <li class="cat-item"><a href="#">Development & IT</a></li>
-                    <li class="cat-item"><a href="#">Writing & Translations</a></li>
-                    <li class="cat-item"><a href="#">Audio & Video</a></li>
-                    <li class="cat-item"><a href="#">Marketing</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="#">Logo Design</a>
+                                <a href="#">Brand Identity</a>
+                                <a href="#">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">UI/UX Design</a>
+                                <a href="#">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="#">Web Development</a>
+                                <a href="#">Mobile Apps</a>
+                                <a href="#">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">SEO</a>
+                                <a href="#">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="#">Articles & Blog Posts</a>
+                                <a href="#">Copywriting</a>
+                                <a href="#">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">Proofreading</a>
+                                <a href="#">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="#">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="#">Voice Over</a>
+                                <a href="#">Music Production</a>
+                                <a href="#">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="#">Podcast Editing</a>
+                                <a href="#">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -491,15 +521,17 @@
         <div class="detail-content">
 
             <div class="detail-main">
-                <div class="service-header" style="padding-top: 24px;">
+                <div class="service-header">
                     <div style="display:flex; align-items:center; gap:12px; margin-bottom: 12px;">
                         <span id="status-badge-detail" class="status-badge-mini status-active">Active</span>
                         <span id="service-category-badge" style="font-size:12px; color:var(--text-secondary); font-weight:500;">Design > Logo Design</span>
                     </div>
                     <h1 id="service-title">I will create a good logo for ur company</h1>
                     <div class="author-meta">
-                        <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User" id="author-img">
-                        <span id="author-name">City4Ha</span>
+                        <a href="profile.html" style="display:flex; align-items:center; gap:8px; text-decoration:none; color:inherit;">
+                            <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User" id="author-img" style="cursor:pointer; transition: opacity 0.2s;">
+                            <span id="author-name" style="cursor:pointer; font-weight: 600;">City4Ha</span>
+                        </a>
                         <div style="color:var(--text-secondary); font-size:14px; margin-left: 10px;">
                             <i class="ph ph-star" style="color:#ffb33e;"></i> 5.0 (0 reviews)
                         </div>
@@ -508,7 +540,9 @@
 
                 <div class="detail-gallery">
                     <div class="main-image" id="main-image-container">
-                        <img src="https://via.placeholder.com/800x450" alt="Main" id="main-image">
+                        <button class="slider-btn prev" onclick="changeImage(-1)" id="slider-prev"><i class="ph ph-caret-left"></i></button>
+                        <img src="https://placehold.co/800x450/e2e8f0/64748b?text=Service+Image" alt="Main" id="main-image">
+                        <button class="slider-btn next" onclick="changeImage(1)" id="slider-next"><i class="ph ph-caret-right"></i></button>
                     </div>
                     <div class="thumb-row" id="thumb-row">
                     </div>
@@ -622,10 +656,27 @@
         let gigIndex = -1;
 
         function loadServiceDetail() {
+            // Header Auth Logic (Shared with index)
+            const currentUserStr = localStorage.getItem('qwork_currentUser');
+            const guestActions = document.getElementById('guest-actions');
+            const userActions = document.getElementById('user-actions');
+            const userNameDisplay = document.getElementById('user-name-display');
+            const userAvatarHead = document.getElementById('user-avatar');
+
+            if (currentUserStr) {
+                const currentUser = JSON.parse(currentUserStr);
+                if (guestActions && userActions) {
+                    guestActions.style.display = 'none';
+                    userActions.style.display = 'flex';
+                    if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || currentUser.first_name || 'User';
+                    if (userAvatarHead && currentUser.avatar) userAvatarHead.src = currentUser.avatar;
+                }
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (!id) {
-                window.location.href = 'profile.html';
+                window.location.href = 'dashboard.html';
                 return;
             }
 
@@ -640,7 +691,7 @@
                     gigIndex = draftIdx;
                 } else {
                     alert('QWork not found!');
-                    window.location.href = 'profile.html';
+                    window.location.href = 'dashboard.html';
                     return;
                 }
             } else {
@@ -649,6 +700,9 @@
 
             renderDetails(currentGig);
         }
+
+        let currentImageIndex = 0;
+        let gigImages = [];
 
         function renderDetails(gig) {
             document.getElementById('service-title').textContent = gig.title;
@@ -663,8 +717,34 @@
 
             document.getElementById('service-description').textContent = gig.description || gig.desc || 'No description provided.';
 
-            if (gig.image) {
-                document.getElementById('main-image').src = gig.image;
+            // Image Slider Logic
+            gigImages = gig.images || (gig.image ? [gig.image] : []);
+            currentImageIndex = 0;
+            
+            const mainImg = document.getElementById('main-image');
+            const thumbRow = document.getElementById('thumb-row');
+            const prevBtn = document.getElementById('slider-prev');
+            const nextBtn = document.getElementById('slider-next');
+
+            if (gigImages.length > 0) {
+                mainImg.src = gigImages[0];
+                
+                // Show/Hide slider buttons
+                if (gigImages.length > 1) {
+                    prevBtn.style.display = 'flex';
+                    nextBtn.style.display = 'flex';
+                    
+                    // Render Thumbnails
+                    thumbRow.innerHTML = gigImages.map((src, idx) => `
+                        <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToImage(${idx})">
+                            <img src="${src}" alt="Thumb ${idx + 1}">
+                        </div>
+                    `).join('');
+                } else {
+                    prevBtn.style.display = 'none';
+                    nextBtn.style.display = 'none';
+                    thumbRow.innerHTML = '';
+                }
             }
 
             if (gig.requirements && gig.requirements.length) {
@@ -677,15 +757,18 @@
                 `).join('');
             }
 
-            if (gig.faqs && gig.faqs.length) {
+            const faqs = gig.faqs || [];
+            if (faqs.length > 0) {
                 document.getElementById('faq-section').style.display = 'block';
                 const list = document.getElementById('faq-list-detail');
-                list.innerHTML = gig.faqs.map(f => `
+                list.innerHTML = faqs.map(f => `
                     <div class="faq-item-detail">
                         <span class="faq-q">Q: ${f.q}</span>
                         <p class="faq-a">${f.a}</p>
                     </div>
                 `).join('');
+            } else {
+                document.getElementById('faq-section').style.display = 'none';
             }
 
             const userStr = localStorage.getItem('qwork_currentUser');
@@ -775,7 +858,48 @@
             }
         }
 
-        window.onload = loadServiceDetail;
+        function changeImage(dir) {
+            goToImage(currentImageIndex + dir);
+        }
+
+        function goToImage(idx) {
+            if (idx < 0) idx = gigImages.length - 1;
+            if (idx >= gigImages.length) idx = 0;
+            
+            currentImageIndex = idx;
+            const mainImg = document.getElementById('main-image');
+            
+            // Smooth fade effect
+            mainImg.style.opacity = '0';
+            setTimeout(() => {
+                mainImg.src = gigImages[currentImageIndex];
+                mainImg.style.opacity = '1';
+                
+                // Update active thumbnail
+                document.querySelectorAll('.thumb-item').forEach((t, i) => {
+                    t.classList.toggle('active', i === currentImageIndex);
+                });
+            }, 200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadServiceDetail();
+
+            // Local dropdown toggle for redundancy
+            const profileTrigger = document.getElementById('profile-trigger');
+            const userDropdown = document.getElementById('user-dropdown');
+            if (profileTrigger && userDropdown) {
+                profileTrigger.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userDropdown.classList.toggle('active');
+                });
+                document.addEventListener('click', (e) => {
+                    if (userDropdown.classList.contains('active') && !userDropdown.contains(e.target)) {
+                        userDropdown.classList.remove('active');
+                    }
+                });
+            }
+        });
     </script>
 </body>
 

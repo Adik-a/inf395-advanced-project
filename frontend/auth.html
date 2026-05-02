@@ -55,7 +55,7 @@
                     </div>
 
                     <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-                        data-text="signin_with" data-size="large" data-logo_alignment="left" data-width="100%"></div>
+                        data-text="signin_with" data-size="large" data-logo_alignment="left" data-width="360"></div>
 
                     <div class="divider"><span>or</span></div>
 
@@ -93,7 +93,7 @@
                     </div>
 
                     <div class="g_id_signin" data-type="standard" data-shape="rectangular" data-theme="outline"
-                        data-text="signup_with" data-size="large" data-logo_alignment="left" data-width="100%"></div>
+                        data-text="signup_with" data-size="large" data-logo_alignment="left" data-width="360"></div>
 
                     <div class="divider"><span>or</span></div>
 
@@ -328,10 +328,9 @@
                     // Also save locally for fallback testing
                     let users = JSON.parse(localStorage.getItem('qwork_users')) || [];
                     users.push({ fname: first_name, lname: last_name, email, password });
-                    localStorage.setItem('qwork_users', JSON.stringify(users));
+                    localStorage.setItem('qwork_currentUser', JSON.stringify(data.user || { email: email }));
 
-                    document.getElementById('signup-form').reset();
-                    switchTab('signin');
+                    window.location.href = 'dashboard.html';
                 } else {
                     showUIError('signup', data.detail || 'Error occurred');
                 }

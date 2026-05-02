@@ -19,15 +19,22 @@
             <div class="nav-container">
                 <span class="logo">QWork</span>
                 <div class="header-actions" id="user-actions">
-                    <a href="profile.html" class="nav-item">Dashboard</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
                     <a href="#" class="nav-item">Messages</a>
-                    <div class="user-profile"
-                        style="display:flex;align-items:center;border-left:1px solid var(--border);padding-left:20px;margin-left:10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" class="avatar-small"
-                            style="width:32px;height:32px;border-radius:50%;object-fit:cover;">
-                        <span id="user-name-display" style="font-size:14px;font-weight:600;margin-left:8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item"
-                            style="margin-left:16px;color:#ef4444;">Logout</a>
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="#" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -116,8 +123,6 @@
                                 <option value="Development & IT">Development & IT</option>
                                 <option value="Writing & Translation">Writing & Translation</option>
                                 <option value="Audio & Video">Audio & Video</option>
-                                <option value="Digital Marketing">Digital Marketing</option>
-                                <option value="Tutoring">Tutoring</option>
                             </select>
                             <span class="error-text" id="category-error">Please select a category and subcategory</span>
                         </div>
@@ -132,7 +137,6 @@
                             <select id="gig-status">
                                 <option value="Active" selected>Active</option>
                                 <option value="Paused">Paused</option>
-                                <option value="Draft">Draft</option>
                             </select>
                         </div>
                     </div>
@@ -268,18 +272,19 @@
                                             <div class="price-input-cell">
                                                 <input type="number" id="basic-price" placeholder="5000" min="500">
                                             </div>
-                                            <span class="error-text" id="price-error" style="display:none;">Min. 500
-                                                ₸</span>
+                                            <span class="error-text" id="price-error-basic">Please enter a valid price (min 500)</span>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
                                             <div class="price-input-cell">
                                                 <input type="number" id="standard-price" placeholder="15000" min="500">
                                             </div>
+                                            <span class="error-text" id="price-error-standard">Please enter a valid price (min 500)</span>
                                         </td>
                                         <td class="pkg-multi" style="display:none;">
                                             <div class="price-input-cell">
                                                 <input type="number" id="premium-price" placeholder="30000" min="500">
                                             </div>
+                                            <span class="error-text" id="price-error-premium">Please enter a valid price (min 500)</span>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -410,9 +415,7 @@
             'Design': ['Logo Design', 'Brand Identity', 'Illustration', 'UI/UX Design', 'Poster & Flyer'],
             'Development & IT': ['Web Development', 'Mobile Apps', 'WordPress', 'SEO', 'Database'],
             'Writing & Translation': ['Articles & Blog Posts', 'Copywriting', 'Translations', 'Proofreading', 'Creative Writing'],
-            'Audio & Video': ['Voice Over', 'Music Production', 'Video Editing', 'Podcast Editing', 'Subtitles'],
-            'Digital Marketing': ['Social Media', 'Email Marketing', 'Content Strategy', 'Analytics', 'Influencer Marketing'],
-            'Tutoring': ['English', 'Mathematics', 'Physics', 'Programming', 'Art']
+            'Audio & Video': ['Voice Over', 'Music Production', 'Video Editing', 'Podcast Editing', 'Subtitles']
         };
 
         function updateSubcategory() {
@@ -570,6 +573,8 @@
         function setFieldError(id, hasError, errorId) {
             const field = document.getElementById(id);
             const errSpan = document.getElementById(errorId);
+            if (!field || !errSpan) return; // Safety check
+            
             if (hasError) {
                 field.classList.add('input-error');
                 errSpan.classList.add('show');
@@ -616,10 +621,29 @@
             if (step === 2) {
                 const basicPrice = document.getElementById('basic-price').value;
                 if (!basicPrice || basicPrice < 500) {
-                    setFieldError('basic-price', true, 'price-error');
+                    setFieldError('basic-price', true, 'price-error-basic');
                     isValid = false;
                 } else {
-                    setFieldError('basic-price', false, 'price-error');
+                    setFieldError('basic-price', false, 'price-error-basic');
+                }
+
+                if (pricingMode === 'three') {
+                    const stdPrice = document.getElementById('standard-price').value;
+                    const prePrice = document.getElementById('premium-price').value;
+
+                    if (!stdPrice || stdPrice < 500) {
+                        setFieldError('standard-price', true, 'price-error-standard');
+                        isValid = false;
+                    } else {
+                        setFieldError('standard-price', false, 'price-error-standard');
+                    }
+
+                    if (!prePrice || prePrice < 500) {
+                        setFieldError('premium-price', true, 'price-error-premium');
+                        isValid = false;
+                    } else {
+                        setFieldError('premium-price', false, 'price-error-premium');
+                    }
                 }
             }
 
@@ -667,7 +691,9 @@
             setFieldError('gig-subcategory', false, 'category-error');
         });
         document.getElementById('gig-desc').addEventListener('input', () => setFieldError('gig-desc', false, 'desc-error'));
-        document.getElementById('basic-price').addEventListener('input', () => setFieldError('basic-price', false, 'price-error'));
+        document.getElementById('basic-price').addEventListener('input', () => setFieldError('basic-price', false, 'price-error-basic'));
+        document.getElementById('standard-price').addEventListener('input', () => setFieldError('standard-price', false, 'price-error-standard'));
+        document.getElementById('premium-price').addEventListener('input', () => setFieldError('premium-price', false, 'price-error-premium'));
 
         function changeStep(dir) {
             const next = currentStep + dir;
@@ -726,6 +752,9 @@
                 if (text) requirements.push({ text, isRequired });
             });
 
+            const allImgElements = document.querySelectorAll('#gallery-preview .gallery-thumb img');
+            const images = Array.from(allImgElements).map(img => img.src);
+
             const draft = {
                 title: document.getElementById('gig-title').value,
                 category: document.getElementById('gig-category').value,
@@ -751,6 +780,8 @@
                 faqs,
                 requirements,
                 tags,
+                images,
+                image: images[0] || '',
                 currentStep,
                 savedAt: new Date().toISOString()
             };
@@ -791,7 +822,7 @@
             if (window.history.length > 1) {
                 history.back();
             } else {
-                window.location.href = 'profile.html';
+                window.location.href = 'dashboard.html';
             }
         }
 
@@ -884,8 +915,12 @@
                     });
                 }
 
-                if (draft.image && !galleryFiles.length) {
-                    addThumb(draft.image, 0);
+                if (!galleryFiles.length) {
+                    if (draft.images && draft.images.length) {
+                        draft.images.forEach((img, idx) => addThumb(img, idx));
+                    } else if (draft.image) {
+                        addThumb(draft.image, 0);
+                    }
                 }
 
                 if (draft.isEditing) {
@@ -900,9 +935,7 @@
                     if (saveBtn) saveBtn.textContent = 'Update Draft';
                 }
 
-                if (draft.currentStep && draft.currentStep > 1) {
-                    goToStep(draft.currentStep);
-                }
+                // Removed automatic step jump to ensure we always start at Step 1
             } catch (e) { console.error('Error loading draft:', e); }
         }
 
@@ -913,8 +946,9 @@
             }
 
             const currentDraft = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
+            const allImgElements = document.querySelectorAll('#gallery-preview .gallery-thumb img');
+            const images = Array.from(allImgElements).map(img => img.src);
 
-            const firstImg = document.querySelector('#gallery-preview .gallery-thumb img');
             const faqs = [];
             document.querySelectorAll('#faq-list .faq-item').forEach(item => {
                 const q = item.querySelector('input').value;
@@ -954,8 +988,12 @@
                 description: document.getElementById('gig-desc').value,
                 faqs,
                 requirements,
+                images,
+                image: images[0] || '',
+                author: 'City4Ha',
+                rating: 5.0,
+                reviews: 0,
                 tags,
-                image: firstImg ? firstImg.src : (currentDraft.image || null),
                 createdAt: currentDraft.isEditing ? (currentDraft.createdAt || new Date().toISOString()) : new Date().toISOString()
             };
 
@@ -972,16 +1010,24 @@
                 existingGigs.push(newGig);
             }
 
-            localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
-
             if (currentDraft.isEditingDraft && currentDraft.draftIndex !== undefined) {
                 const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
                 savedDrafts.splice(currentDraft.draftIndex, 1);
                 localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
             }
 
-            localStorage.removeItem('qwork_temp_form');
-            document.getElementById('success-overlay').classList.add('show');
+            try {
+                localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
+                localStorage.removeItem('qwork_temp_form');
+
+                document.getElementById('success-overlay').classList.add('show');
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    alert('Error: Browser storage is full! Please delete some old QWorks or drafts to free up space. You can also try using smaller images.');
+                } else {
+                    alert('An error occurred while saving: ' + e.message);
+                }
+            }
         }
 
         loadDraft();
