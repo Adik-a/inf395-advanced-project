@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Request
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
@@ -26,12 +26,19 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 def create_access_token(data: dict):
     to_encode = data.copy()
     to_encode.update({"iat": datetime.now(timezone.utc)})
-    
+
     token = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return token
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(
+    request: Request,
+    token: str = Depends(oauth2_scheme),
+):
+    # cookie_token = request.cookies.get("access_token")
+    # if cookie_token.startswith("Bearer "):
+    #     cookie_token = cookie_token.replace("Bearer ", "")
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
 
