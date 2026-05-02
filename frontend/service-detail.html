@@ -603,13 +603,25 @@
                     <div class="benefit-item"><i class="ph ph-clock"></i> <span id="sidebar-delivery">3-day delivery</span></div>
                     <div class="benefit-item"><i class="ph ph-arrows-counter-clockwise"></i> <span id="sidebar-revisions">Unlimited Revisions</span></div>
 
-                    <button class="btn-edit-full" onclick="editCurrentQWork()">
-                        <i class="ph ph-note-pencil"></i> Edit QWork
-                    </button>
+                    <!-- Owner Buttons -->
+                    <div id="owner-actions" style="display: none; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <button class="btn-edit-full" onclick="editCurrentQWork()">
+                            <i class="ph ph-note-pencil"></i> Edit QWork
+                        </button>
+                        <button class="btn-delete-full" onclick="deleteCurrentQWork()">
+                            <i class="ph ph-trash"></i> Delete QWork
+                        </button>
+                    </div>
 
-                    <button class="btn-delete-full" onclick="deleteCurrentQWork()">
-                        <i class="ph ph-trash"></i> Delete QWork
-                    </button>
+                    <!-- Visitor Buttons -->
+                    <div id="visitor-actions" style="display: none; flex-direction: column; gap: 12px; margin-top: 20px;">
+                        <button class="btn btn-primary" style="width: 100%; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 16px;" onclick="handleBuyNow()">
+                            Buy Now
+                        </button>
+                        <button class="btn btn-secondary" style="width: 100%; padding: 14px; border-radius: 8px; font-weight: 700; font-size: 16px;" onclick="handleOpenChat()">
+                            <i class="ph ph-chat-circle"></i> Message Seller
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -775,39 +787,49 @@
             }
 
             const userStr = localStorage.getItem('qwork_currentUser');
-            if (userStr) {
-                try {
-                    const u = JSON.parse(userStr);
-                    const name = (u.first_name || u.fname || u.email || 'User');
+            const currentUser = userStr ? JSON.parse(userStr) : null;
 
-                    document.getElementById('author-name').textContent = name;
-                    document.getElementById('seller-name').textContent = name;
-                    const avatarUrl = u.avatar || `https://ui-avatars.com/api/?name=${name}&background=random`;
-                    document.getElementById('author-img').src = avatarUrl;
-                    document.getElementById('seller-avatar').src = avatarUrl;
+            // Update Author/Seller Info from gig data
+            const authorName = gig.author_name || 'User';
+            const authorAvatar = gig.author_avatar || `https://ui-avatars.com/api/?name=${authorName}&background=random`;
+            
+            document.getElementById('author-name').textContent = authorName;
+            document.getElementById('seller-name').textContent = authorName;
+            document.getElementById('author-img').src = authorAvatar;
+            document.getElementById('seller-avatar').src = authorAvatar;
 
-                    document.getElementById('guest-actions').style.display = 'none';
-                    document.getElementById('user-actions').style.display = 'flex';
-                    document.getElementById('user-name-head').textContent = name;
-                    document.getElementById('user-avatar-head').src = avatarUrl;
-
-                    // Show contact button only if not my own gig
-                    if (gig.author_username && u.username !== gig.author_username) {
-                        const contactBtn = document.getElementById('contact-seller-btn');
-                        contactBtn.style.display = 'block';
-                        contactBtn.onclick = () => {
-                            window.location.href = `messages.html?contact=${gig.author_username}`;
-                        };
-                    } else if (!gig.author_username && u.username !== 'City4Ha') { 
-                        // Fallback for existing gigs without author_username
-                        const contactBtn = document.getElementById('contact-seller-btn');
-                        contactBtn.style.display = 'block';
-                        contactBtn.onclick = () => {
-                            window.location.href = `messages.html?contact=City4Ha`;
-                        };
-                    }
-                } catch (e) { }
+            // Handle Ownership Buttons
+            const ownerActions = document.getElementById('owner-actions');
+            const visitorActions = document.getElementById('visitor-actions');
+            
+            if (currentUser && gig.owner_email === currentUser.email) {
+                ownerActions.style.display = 'flex';
+                visitorActions.style.display = 'none';
+            } else {
+                ownerActions.style.display = 'none';
+                visitorActions.style.display = 'flex';
             }
+
+            if (currentUser) {
+                document.getElementById('guest-actions').style.display = 'none';
+                document.getElementById('user-actions').style.display = 'flex';
+                document.getElementById('user-name-head').textContent = currentUser.fname || 'User';
+                document.getElementById('user-avatar-head').src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            }
+        }
+
+        function handleBuyNow() {
+            alert('Order placed successfully! This is a simulated checkout.');
+        }
+
+        function handleOpenChat() {
+            const userStr = localStorage.getItem('qwork_currentUser');
+            if (!userStr) {
+                alert('Please login to send messages');
+                window.location.href = 'login.html';
+                return;
+            }
+            window.location.href = `messages.html?seller=${currentGig.owner_email}&gig=${currentGig.id}`;
         }
 
         function updatePricingUI(gig, tier) {

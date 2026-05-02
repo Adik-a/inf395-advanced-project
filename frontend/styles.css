@@ -1691,7 +1691,8 @@ main {
 /* Catalog Grid - Forced 3 Columns */
 .catalog-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Exactly 3 cards per row */
+    grid-template-columns: repeat(3, 1fr);
+    /* Exactly 3 cards per row */
     gap: 24px;
     width: 100%;
 }
@@ -1713,7 +1714,8 @@ main {
 .category-hero h1 {
     font-size: 42px;
     font-weight: 800;
-    margin-bottom: 4px; /* Reduced from 12px */
+    margin-bottom: 4px;
+    /* Reduced from 12px */
     letter-spacing: -0.02em;
 }
 
@@ -1812,11 +1814,6 @@ main {
 /* Hide Pagination if still in CSS */
 .pagination {
     display: none;
-}
-
-width: 100%;
-padding: 14px;
-font-size: 16px;
 }
 
 @media (max-width: 1024px) {
@@ -3161,7 +3158,8 @@ font-size: 16px;
 
 .service-image {
     position: relative;
-    height: 170px; /* Reduced from 180px */
+    height: 170px;
+    /* Reduced from 180px */
 }
 
 .service-image img {
@@ -3195,7 +3193,8 @@ font-size: 16px;
     display: flex;
     align-items: center;
     gap: 12px;
-    margin-bottom: 12px; /* Reduced from 16px */
+    margin-bottom: 12px;
+    /* Reduced from 16px */
 }
 
 .service-author img {
@@ -3221,16 +3220,19 @@ font-size: 16px;
 }
 
 .service-title {
-    font-size: 15px; /* Reduced from 16px */
+    font-size: 15px;
+    /* Reduced from 16px */
     font-weight: 700;
     line-height: 1.4;
-    margin-bottom: 16px; /* Reduced from 20px */
+    margin-bottom: 16px;
+    /* Reduced from 20px */
     color: var(--text-primary);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    height: 42px; /* Fixed height for consistency */
+    height: 42px;
+    /* Fixed height for consistency */
 }
 
 .service-footer {

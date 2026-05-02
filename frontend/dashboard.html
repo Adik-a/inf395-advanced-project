@@ -280,12 +280,15 @@
             
             const myGigsStr = localStorage.getItem('qwork_my_gigs');
             const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
-            const userName = currentUser.first_name || currentUser.fname || currentUser.email || 'User';
-            const userAvatar = currentUser.avatar || 'https://i.pravatar.cc/100?img=1';
+            const userName = currentUser.fname || currentUser.email || 'User';
+            const userAvatar = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
 
             if (myGigsStr) {
                 try {
-                    const myGigs = JSON.parse(myGigsStr);
+                    let myGigs = JSON.parse(myGigsStr);
+                    // Filter by ownership
+                    myGigs = myGigs.filter(g => g.owner_email === currentUser.email);
+                    
                     const list = document.getElementById('my-qworks-list');
                     const countBadge = document.getElementById('qwork-count');
 
@@ -337,7 +340,10 @@
             const myDraftsStr = localStorage.getItem('qwork_saved_drafts');
             if (myDraftsStr) {
                 try {
-                    const myDrafts = JSON.parse(myDraftsStr);
+                    let myDrafts = JSON.parse(myDraftsStr);
+                    // Filter by ownership
+                    myDrafts = myDrafts.filter(d => d.owner_email === currentUser.email);
+                    
                     const list = document.getElementById('my-drafts-list');
                     const countBadge = document.getElementById('draft-count');
 

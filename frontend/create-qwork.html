@@ -857,6 +857,7 @@
                 images,
                 image: images[0] || '',
                 currentStep,
+                owner_email: JSON.parse(localStorage.getItem('qwork_currentUser') || '{}').email || 'guest@mail.com',
                 savedAt: new Date().toISOString()
             };
 
@@ -1037,6 +1038,8 @@
                 if (text) requirements.push({ text, isRequired });
             });
 
+            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+
             const newGig = {
                 id: currentDraft.isEditing ? (currentDraft.id || Date.now()) : Date.now(),
                 title: document.getElementById('gig-title').value,
@@ -1064,7 +1067,9 @@
                 requirements,
                 images,
                 image: images[0] || '',
-                author: 'City4Ha',
+                owner_email: currentUser.email || 'guest@mail.com',
+                author_name: currentUser.fname ? `${currentUser.fname} ${currentUser.lname || ''}`.trim() : 'User',
+                author_avatar: `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`,
                 rating: 5.0,
                 reviews: 0,
                 tags,

@@ -603,9 +603,11 @@
             if (currentUserStr && myGigsStr) {
                 const user = JSON.parse(currentUserStr);
                 const userName = (user.fname || user.first_name || 'User') + ' ' + (user.lname || user.last_name || '');
-                const userAvatar = user.avatar || 'https://i.pravatar.cc/100?img=1';
+                const userAvatar = `https://ui-avatars.com/api/?name=${user.fname || 'U'}&background=random`;
                 
-                const myGigs = JSON.parse(myGigsStr).filter(g => g.status === 'Active');
+                let myGigs = JSON.parse(myGigsStr);
+                // Filter by owner and status
+                myGigs = myGigs.filter(g => g.owner_email === user.email && g.status === 'Active');
                 const grid = document.getElementById('profile-qworks-grid');
                 const title = document.getElementById('services-count-title');
                 

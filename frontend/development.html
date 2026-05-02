@@ -371,7 +371,7 @@
                     : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
 
                 const authorName = gig.author_name || "User";
-                const authorAvatar = gig.author_avatar || "https://i.pravatar.cc/100?img=1";
+                const authorAvatar = gig.author_avatar || `https://ui-avatars.com/api/?name=${authorName}&background=random`;
 
                 card.innerHTML = `
                     <div class="service-image">
