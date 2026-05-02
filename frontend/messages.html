@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .messages-container {
+            flex: 1;
+            display: flex;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            background: var(--white);
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        /* Sidebar Chats List */
+        .chats-sidebar {
+            width: 350px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .chats-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .chat-item:hover {
+            background: #f8fafc;
+        }
+
+        .chat-item.active {
+            background: #f0f9ff;
+            border-left: 4px solid var(--primary);
+        }
+
+        .chat-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-info-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .chat-name {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chat-preview {
+            font-size: 13px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Main Chat Area */
+        .chat-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fdfdfd;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fff;
+        }
+
+        .chat-user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            background: #f8fafc;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: #fff;
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            border-bottom-left-radius: 2px;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: var(--primary);
+            color: #fff;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            margin-top: 4px;
+            opacity: 0.7;
+            display: block;
+            text-align: right;
+        }
+
+        .chat-input-area {
+            padding: 20px 24px;
+            background: #fff;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: var(--primary);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #0089aa;
+        }
+
+        .empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-state i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            color: #e2e8f0;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="index.html" class="logo">QWork</a>
+
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+
+                <div class="header-actions" id="guest-actions">
+                    <a href="auth.html" class="sign-in-link">Sign In</a>
+                    <a href="auth.html" class="btn btn-primary">Sign Up</a>
+                </div>
+
+                <div class="header-actions" id="user-actions" style="display: none;">
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="messages.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications"
+                        style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item has-dropdown">
+                        <a href="design.html">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="design.html">Logo Design</a>
+                                <a href="design.html">Brand Identity</a>
+                                <a href="design.html">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html">UI/UX Design</a>
+                                <a href="design.html">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html">Web Development</a>
+                                <a href="development.html">Mobile Apps</a>
+                                <a href="development.html">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html">SEO</a>
+                                <a href="development.html">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html">Articles & Blog Posts</a>
+                                <a href="writing.html">Copywriting</a>
+                                <a href="writing.html">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html">Proofreading</a>
+                                <a href="writing.html">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html">Voice Over</a>
+                                <a href="audio.html">Music Production</a>
+                                <a href="audio.html">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html">Podcast Editing</a>
+                                <a href="audio.html">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="messages-container">
+        <aside class="chats-sidebar">
+            <div class="sidebar-header">
+                <h1>Chats</h1>
+            </div>
+            <div class="chats-list" id="chats-list">
+                <!-- Chat items will be loaded here -->
+            </div>
+        </aside>
+
+        <section class="chat-main" id="chat-main">
+            <div class="empty-state" id="empty-chat-state">
+                <i class="ph ph-chat-circle-dots"></i>
+                <h2>Select a chat to start messaging</h2>
+                <p>Choose from your existing conversations or contact a freelancer.</p>
+            </div>
+
+            <!-- Active Chat UI (hidden by default) -->
+            <div id="active-chat-ui" style="display: none; height: 100%; flex-direction: column;">
+                <div class="chat-header">
+                    <div class="chat-user-info">
+                        <img src="" alt="User" class="chat-avatar" id="active-chat-avatar">
+                        <div>
+                            <div class="chat-name" id="active-chat-name">User Name</div>
+                            <div style="font-size: 12px; color: #10b981;">Online</div>
+                        </div>
+                    </div>
+                    <button class="icon-btn"><i class="ph ph-dots-three-vertical"></i></button>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages-container">
+                    <!-- Messages will appear here -->
+                </div>
+
+                <form class="chat-input-area" id="chat-form">
+                    <input type="text" class="chat-input" id="message-input" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit" class="send-btn"><i class="ph-fill ph-paper-plane-right"></i></button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        let currentChatUser = null;
+        const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!currentUser) {
+                window.location.href = 'auth.html';
+                return;
+            }
+            loadChats();
+            
+            // Check if we should start a specific chat from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const contactId = urlParams.get('contact');
+            if (contactId) {
+                startChatWith(contactId);
+            }
+        });
+
+        function loadChats() {
+            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const chatsList = document.getElementById('chats-list');
+            chatsList.innerHTML = '';
+
+            // Group messages by conversation
+            const conversations = {};
+            messages.forEach(msg => {
+                const otherUser = msg.from === currentUser.username ? msg.to : msg.from;
+                if (!conversations[otherUser] || new Date(msg.timestamp) > new Date(conversations[otherUser].timestamp)) {
+                    conversations[otherUser] = msg;
+                }
+            });
+
+            const sortedConversations = Object.entries(conversations).sort((a, b) => 
+                new Date(b[1].timestamp) - new Date(a[1].timestamp)
+            );
+
+            if (sortedConversations.length === 0) {
+                chatsList.innerHTML = '<div style="padding: 40px; text-align: center; color: var(--text-secondary); font-size: 14px;">No messages yet</div>';
+                return;
+            }
+
+            sortedConversations.forEach(([username, lastMsg]) => {
+                const chatItem = document.createElement('div');
+                chatItem.className = `chat-item ${currentChatUser === username ? 'active' : ''}`;
+                chatItem.onclick = () => selectChat(username);
+                
+                const time = new Date(lastMsg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                chatItem.innerHTML = `
+                    <img src="https://i.pravatar.cc/100?u=${username}" alt="${username}" class="chat-avatar">
+                    <div class="chat-info">
+                        <div class="chat-info-top">
+                            <span class="chat-name">${username}</span>
+                            <span class="chat-time">${time}</span>
+                        </div>
+                        <div class="chat-preview">${lastMsg.text}</div>
+                    </div>
+                `;
+                chatsList.appendChild(chatItem);
+            });
+        }
+
+        function selectChat(username) {
+            currentChatUser = username;
+            document.getElementById('empty-chat-state').style.display = 'none';
+            document.getElementById('active-chat-ui').style.display = 'flex';
+            
+            document.getElementById('active-chat-name').textContent = username;
+            document.getElementById('active-chat-avatar').src = `https://i.pravatar.cc/100?u=${username}`;
+            
+            renderMessages();
+            loadChats(); // Refresh sidebar to show active state
+        }
+
+        function renderMessages() {
+            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const container = document.getElementById('chat-messages-container');
+            container.innerHTML = '';
+
+            const filteredMessages = messages.filter(msg => 
+                (msg.from === currentUser.username && msg.to === currentChatUser) ||
+                (msg.from === currentChatUser && msg.to === currentUser.username)
+            );
+
+            filteredMessages.forEach(msg => {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${msg.from === currentUser.username ? 'sent' : 'received'}`;
+                
+                const time = new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                msgDiv.innerHTML = `
+                    ${msg.text}
+                    <span class="message-time">${time}</span>
+                `;
+                container.appendChild(msgDiv);
+            });
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        document.getElementById('chat-form').onsubmit = (e) => {
+            e.preventDefault();
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            
+            if (!text || !currentChatUser) return;
+
+            const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const newMessage = {
+                id: Date.now(),
+                from: currentUser.username,
+                to: currentChatUser,
+                text: text,
+                timestamp: new Date().toISOString(),
+                read: false
+            };
+
+            messages.push(newMessage);
+            localStorage.setItem('qwork_messages', JSON.stringify(messages));
+            
+            input.value = '';
+            renderMessages();
+            loadChats();
+        };
+
+        function startChatWith(username) {
+            // Check if conversation exists, if not create a greeting or just select it
+            currentChatUser = username;
+            selectChat(username);
+        }
+    </script>
+</body>
+</html>

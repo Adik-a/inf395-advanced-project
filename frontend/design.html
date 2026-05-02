@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Services - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .category-hero {
+            background: linear-gradient(135deg, #00b0d7 0%, #0089aa 100%);
+            padding: 60px 0;
+            color: white;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .category-hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .category-hero p {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .catalog-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 100px 0;
+            color: var(--text-secondary);
+        }
+
+        .no-results i {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.2;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="index.html" class="logo">QWork</a>
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+                <div class="header-actions" id="guest-actions">
+                    <a href="auth.html" class="sign-in-link">Sign In</a>
+                    <a href="auth.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="header-actions" id="user-actions" style="display: none;">
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="messages.html" class="nav-item">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications" style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item has-dropdown">
+                        <a href="design.html" style="color: var(--primary); font-weight: 700;">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="design.html?sub=Logo Design">Logo Design</a>
+                                <a href="design.html?sub=Brand Identity">Brand Identity</a>
+                                <a href="design.html?sub=Illustration">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html?sub=UI/UX Design">UI/UX Design</a>
+                                <a href="design.html?sub=Poster & Flyer">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html?sub=Web Development">Web Development</a>
+                                <a href="development.html?sub=Mobile Apps">Mobile Apps</a>
+                                <a href="development.html?sub=WordPress">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html?sub=SEO">SEO</a>
+                                <a href="development.html?sub=Database">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html?sub=Articles & Blog Posts">Articles & Blog Posts</a>
+                                <a href="writing.html?sub=Copywriting">Copywriting</a>
+                                <a href="writing.html?sub=Translations">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html?sub=Proofreading">Proofreading</a>
+                                <a href="writing.html?sub=Creative Writing">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html?sub=Voice Over">Voice Over</a>
+                                <a href="audio.html?sub=Music Production">Music Production</a>
+                                <a href="audio.html?sub=Video Editing">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html?sub=Podcast Editing">Podcast Editing</a>
+                                <a href="audio.html?sub=Subtitles">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="category-hero">
+        <div class="nav-container">
+            <h1>Design Services</h1>
+            <p>Get your brand noticed with stunning visual design from top local experts.</p>
+        </div>
+    </div>
+
+    <main class="catalog-page-wrapper">
+        <div class="catalog-container">
+            <!-- Sidebar with Filters -->
+            <aside class="catalog-sidebar">
+                <div class="filter-section">
+                    <span class="filter-section-title orange">Categories</span>
+                    <ul class="filter-category-list">
+                        <li class="filter-category-item" onclick="window.location.href='index.html'"><i class="ph ph-caret-left"></i> All Categories</li>
+                        <li class="filter-category-item active"><i class="ph ph-caret-down"></i> Design</li>
+                        <div class="filter-controls" style="padding-left: 20px; margin-top: 10px;">
+                            <label class="custom-control">
+                                <input type="checkbox" name="subcategory" value="Logo Design" onchange="applyFilters()">
+                                <span>Logo Design</span>
+                            </label>
+                            <label class="custom-control">
+                                <input type="checkbox" name="subcategory" value="Brand Identity" onchange="applyFilters()">
+                                <span>Brand Identity</span>
+                            </label>
+                            <label class="custom-control">
+                                <input type="checkbox" name="subcategory" value="Illustration" onchange="applyFilters()">
+                                <span>Illustration</span>
+                            </label>
+                            <label class="custom-control">
+                                <input type="checkbox" name="subcategory" value="UI/UX Design" onchange="applyFilters()">
+                                <span>UI/UX Design</span>
+                            </label>
+                            <label class="custom-control">
+                                <input type="checkbox" name="subcategory" value="Social Media Design" onchange="applyFilters()">
+                                <span>Social Media Design</span>
+                            </label>
+                        </div>
+                    </ul>
+                </div>
+
+                <div class="filter-section">
+                    <span class="filter-section-title">Price</span>
+                    <div class="filter-controls">
+                        <label class="custom-control">
+                            <input type="radio" name="price_range" onchange="setPriceRange(0, 5000)">
+                            <span>Under ₸ 5,000</span>
+                        </label>
+                        <label class="custom-control">
+                            <input type="radio" name="price_range" onchange="setPriceRange(10000, 30000)">
+                            <span>₸ 10,000 – 30,000</span>
+                        </label>
+                        <label class="custom-control">
+                            <input type="radio" name="price_range" onchange="setPriceRange(50000, 150000)">
+                            <span>₸ 50,000 – 150,000</span>
+                        </label>
+                        <label class="custom-control">
+                            <input type="radio" name="price_range" onchange="setPriceRange(200000, null)">
+                            <span>₸ 200,000+</span>
+                        </label>
+                    </div>
+                    <div class="price-range-container">
+                        <div class="price-input-box">
+                            <input type="number" id="min-price" placeholder="Min" oninput="applyFilters()">
+                        </div>
+                        <div class="price-input-box">
+                            <input type="number" id="max-price" placeholder="Max" oninput="applyFilters()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <span class="filter-section-title">Seller Level</span>
+                    <div class="filter-controls">
+                        <label class="custom-control">
+                            <input type="checkbox" name="level">
+                            <span>Rising Talent</span>
+                        </label>
+                        <label class="custom-control">
+                            <input type="checkbox" name="level">
+                            <span>Top Rated</span>
+                        </label>
+                        <label class="custom-control">
+                            <input type="checkbox" name="level">
+                            <span>Pro Services</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-footer">
+                    <button class="reset-filters-btn" onclick="resetFilters()">
+                        <i class="ph ph-arrows-counter-clockwise"></i> Reset Filters
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content Area -->
+            <section class="dashboard-content">
+                <div class="catalog-results-header">
+                    <div class="results-info" id="results-count">0 services available</div>
+                    <div class="sort-dropdown">
+                        <select onchange="applyFilters()" id="sort-select">
+                            <option value="newest">Newest First</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="catalog-grid" id="catalog-grid">
+                    <!-- Dynamic cards injected here -->
+                </div>
+
+                <!-- Show More -->
+                <div class="show-more-container" id="show-more-wrapper" style="display: none;">
+                    <button class="show-more-btn" onclick="showMore()">
+                        Show More Services <i class="ph ph-caret-down"></i>
+                    </button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        let allGigs = [];
+        let filteredGigs = [];
+        let visibleCount = 9;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            allGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]')
+                        .filter(g => g.category === 'Design' && g.status === 'Active');
+            
+            // Handle subcategory deep linking
+            const urlParams = new URLSearchParams(window.location.search);
+            const subParam = urlParams.get('sub');
+            if (subParam) {
+                const checkbox = Array.from(document.querySelectorAll('input[name="subcategory"]'))
+                    .find(cb => cb.value === subParam);
+                if (checkbox) checkbox.checked = true;
+            }
+            
+            applyFilters();
+        });
+
+        function applyFilters() {
+            filteredGigs = [...allGigs];
+
+            // Filter by subcategory
+            const selectedSubs = Array.from(document.querySelectorAll('input[name="subcategory"]:checked')).map(cb => cb.value);
+            if (selectedSubs.length > 0) {
+                filteredGigs = filteredGigs.filter(g => selectedSubs.includes(g.subcategory));
+            }
+
+            // Filter by price
+            const min = document.getElementById('min-price').value;
+            const max = document.getElementById('max-price').value;
+            if (min) filteredGigs = filteredGigs.filter(g => Number(g.price) >= Number(min));
+            if (max) filteredGigs = filteredGigs.filter(g => Number(g.price) <= Number(max));
+
+            // Sort
+            const sortBy = document.getElementById('sort-select').value;
+            if (sortBy === 'price-low') filteredGigs.sort((a, b) => a.price - b.price);
+            if (sortBy === 'price-high') filteredGigs.sort((a, b) => b.price - a.price);
+            if (sortBy === 'newest') filteredGigs.sort((a, b) => b.id - a.id);
+
+            visibleCount = 9; // Reset count on new filter
+            renderGigs();
+        }
+
+        function showMore() {
+            visibleCount += 9;
+            renderGigs();
+        }
+
+        function renderGigs() {
+            const grid = document.getElementById('catalog-grid');
+            const wrapper = document.getElementById('show-more-wrapper');
+            const countDisplay = document.getElementById('results-count');
+            
+            const toShow = filteredGigs.slice(0, visibleCount);
+            
+            countDisplay.textContent = `${filteredGigs.length} services available`;
+
+            if (filteredGigs.length === 0) {
+                grid.innerHTML = `
+                    <div class="no-results">
+                        <i class="ph ph-magnifying-glass"></i>
+                        <h3>No services match your filters</h3>
+                        <p>Try adjusting your filters or search terms.</p>
+                    </div>
+                `;
+                wrapper.style.display = 'none';
+                return;
+            }
+
+            grid.innerHTML = '';
+            toShow.forEach(gig => {
+                const card = document.createElement('div');
+                card.className = 'service-card';
+                card.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+                
+                const imgHtml = gig.image
+                    ? `<img src="${gig.image}" alt="${gig.title}">`
+                    : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
+
+                const authorName = gig.author_name || "User";
+                const authorAvatar = gig.author_avatar || "https://i.pravatar.cc/100?img=1";
+
+                card.innerHTML = `
+                    <div class="service-image">
+                        ${imgHtml}
+                        <span class="service-tag">${gig.subcategory || gig.category}</span>
+                    </div>
+                    <div class="service-content">
+                        <div class="service-author">
+                            <img src="${authorAvatar}" alt="${authorName}">
+                            <div>
+                                <span class="author-name">${authorName}</span>
+                                <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                            </div>
+                        </div>
+                        <h3 class="service-title">${gig.title}</h3>
+                        <div class="service-footer">
+                            <span class="price-label">FROM</span>
+                            <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Toggle Show More button
+            if (visibleCount < filteredGigs.length) {
+                wrapper.style.display = 'flex';
+            } else {
+                wrapper.style.display = 'none';
+            }
+        }
+
+        function resetFilters() {
+            document.querySelectorAll('input[name="subcategory"]').forEach(cb => cb.checked = false);
+            document.querySelectorAll('input[name="price_range"]').forEach(rb => rb.checked = false);
+            document.querySelectorAll('input[name="level"]').forEach(cb => cb.checked = false);
+            document.getElementById('min-price').value = '';
+            document.getElementById('max-price').value = '';
+            document.getElementById('sort-select').value = 'newest';
+            applyFilters();
+        }
+    </script>
+</body>
+</html>
