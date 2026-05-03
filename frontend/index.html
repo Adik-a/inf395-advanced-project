@@ -40,7 +40,7 @@
                     
                     <div class="user-dropdown-wrapper" id="user-dropdown">
                         <div class="user-profile-trigger" id="profile-trigger">
-                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                            <img src="" alt="Profile" id="user-avatar" class="avatar-small"
                                 style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
                             <span id="user-name-display" class="user-name-display">User</span>
                             <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
@@ -388,6 +388,13 @@
         </div>
     </footer>
     <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+        });
+    </script>
 </body>
 
 </html>

@@ -405,10 +405,10 @@
             }
 
             // Update user info in header immediately
-            const userNameDisplay = document.getElementById('user-name-display');
-            const userAvatarDisplay = document.getElementById('user-avatar');
-            if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || 'User';
-            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
             
             if (document.getElementById('guest-actions')) document.getElementById('guest-actions').style.display = 'none';
             document.getElementById('user-actions').style.display = 'flex';
@@ -541,10 +541,9 @@
             renderChatList();
 
             // Update user info in header
-            const userNameDisplay = document.getElementById('user-name-display');
-            const userAvatarDisplay = document.getElementById('user-avatar');
-            if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || 'User';
-            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
             
             if (document.getElementById('guest-actions')) document.getElementById('guest-actions').style.display = 'none';
             document.getElementById('user-actions').style.display = 'flex';

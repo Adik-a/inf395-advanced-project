@@ -324,7 +324,6 @@
                 const data = await response.json();
 
                 if (response.ok) {
-                    alert("Registration successful! Please sign in.");
                     // Also save locally for fallback testing
                     let users = JSON.parse(localStorage.getItem('qwork_users')) || [];
                     users.push({ fname: first_name, lname: last_name, email, password });
@@ -342,7 +341,6 @@
                 const newUser = { fname: first_name, lname: last_name, email, password };
                 users.push(newUser);
                 localStorage.setItem('qwork_users', JSON.stringify(users));
-                alert("Registration successful (Local mode). Please sign in.");
 
                 document.getElementById('signup-form').reset();
                 switchTab('signin');

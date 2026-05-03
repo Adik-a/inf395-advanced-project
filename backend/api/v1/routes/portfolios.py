@@ -47,6 +47,23 @@ async def get_my_portfolios(
     return portfolios
 
 
+@router.get("/user/{portfolio_id}")
+async def get_portfolio_by_id(
+    portfolio_id: int,
+    session: SessionDep,
+    current_user: dict = Depends(get_current_user),
+):
+    data = await PortfoliosRepository.get_portfolio_by_id(
+        portfolio_id=portfolio_id,
+        session=session,
+    )
+
+    if not data:
+        return {"msg": "Portfolio not found"}
+
+    return data
+
+
 @router.get("/{user_id}")
 async def get_user_portfolios(
     user_id: int,
@@ -61,6 +78,22 @@ async def get_user_portfolios(
     if not portfolios:
         return {"msg": "No portfolios found for this user"}
 
+    return portfolios
+
+
+@router.get("/category/{category}")
+async def get_portfolios_by_category(
+    category: str,
+    session: SessionDep,
+    subcategory: str | None = None,
+    min_price: int | None = None,
+    max_price: int | None = None,
+):
+    portfolios = await PortfoliosRepository.get_portfolios_by_category(
+        category=category,
+        session=session,
+        subcategory=subcategory,
+    )
     return portfolios
 
 
@@ -83,10 +116,10 @@ async def get_user_portfolio(
     return portfolio
 
 
-@router.patch("/change/{portfolio_id}", status_code=status.HTTP_200_OK)
+@router.put("/change/{portfolio_id}", status_code=status.HTTP_200_OK)
 async def update_user_portfolio(
     portfolio_id: int,
-    portfolio_update: PortfoliosUpdateSchema,
+    portfolio_update: PortfoliosSchema,
     session: SessionDep,
     current_user: dict = Depends(get_current_user),
 ):
@@ -101,7 +134,8 @@ async def update_user_portfolio(
 
     updated_portfolio = await PortfoliosRepository.update_portfolio(
         portfolio=portfolio,
-        portfolio_update=portfolio_update,
+        portfolio_data=portfolio_update,
+        user_id=current_user["sub"],
         session=session,
         partial=True,
     )

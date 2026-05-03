@@ -34,7 +34,7 @@ class PortfoliosSchema(BaseModel):
     faqs: list[FAQsSchema]
     requirements: list[RequirementsSchema]
 
-    images: list[str]
+    images: list[str | None]
 
 
 class FAQsSchema(BaseModel):
