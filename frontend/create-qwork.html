@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a QWork - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="bg-gray">
+
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <span class="logo">QWork</span>
+                <div class="header-actions" id="user-actions">
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="#" class="nav-item">Messages</a>
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item has-dropdown">
+                        <a href="design.html">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="design.html">Logo Design</a>
+                                <a href="design.html">Brand Identity</a>
+                                <a href="design.html">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html">UI/UX Design</a>
+                                <a href="design.html">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html">Web Development</a>
+                                <a href="development.html">Mobile Apps</a>
+                                <a href="development.html">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html">SEO</a>
+                                <a href="development.html">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html">Articles & Blog Posts</a>
+                                <a href="writing.html">Copywriting</a>
+                                <a href="writing.html">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html">Proofreading</a>
+                                <a href="writing.html">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html">Voice Over</a>
+                                <a href="audio.html">Music Production</a>
+                                <a href="audio.html">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html">Podcast Editing</a>
+                                <a href="audio.html">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <div class="create-topbar">
+        <div class="create-topbar-inner">
+            <h1>Create a New QWork</h1>
+            <div class="create-topbar-actions">
+                <button class="btn-nav-back" onclick="saveDraft()">Save Draft</button>
+                <button class="btn-nav-back" onclick="handleCancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <main class="create-main">
+        <div class="create-container">
+
+            <aside class="create-stepper">
+                <div class="stepper-item active" data-go="1">
+                    <div class="stepper-num">1</div>
+                    <div class="stepper-info">
+                        <span class="stepper-label">Step 1</span>
+                        <span class="stepper-title">Overview</span>
+                    </div>
+                </div>
+                <div class="stepper-item" data-go="2">
+                    <div class="stepper-num">2</div>
+                    <div class="stepper-info">
+                        <span class="stepper-label">Step 2</span>
+                        <span class="stepper-title">Pricing</span>
+                    </div>
+                </div>
+                <div class="stepper-item" data-go="3">
+                    <div class="stepper-num">3</div>
+                    <div class="stepper-info">
+                        <span class="stepper-label">Step 3</span>
+                        <span class="stepper-title">Description</span>
+                    </div>
+                </div>
+                <div class="stepper-item" data-go="4">
+                    <div class="stepper-num">4</div>
+                    <div class="stepper-info">
+                        <span class="stepper-label">Step 4</span>
+                        <span class="stepper-title">Requirements</span>
+                    </div>
+                </div>
+                <div class="stepper-item" data-go="5">
+                    <div class="stepper-num">5</div>
+                    <div class="stepper-info">
+                        <span class="stepper-label">Step 5</span>
+                        <span class="stepper-title">Gallery & Publish</span>
+                    </div>
+                </div>
+            </aside>
+
+            <div class="create-form-area">
+
+                <div class="create-step active" id="step-1">
+                    <div class="create-step-header">
+                        <h2>QWork Overview</h2>
+                        <p>Start with the basics — give your QWork a strong title, category and tags.</p>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-card-title">QWork Title</div>
+                        <div class="create-field">
+                            <label for="gig-title">Title</label>
+                            <span class="field-desc">Tell buyers what you offer — start with "I will..."</span>
+                            <input type="text" id="gig-title" maxlength="80"
+                                placeholder="I will design a stunning logo for your brand">
+                            <span class="error-text" id="title-error">Please enter a descriptive title (at least 15
+                                chars)</span>
+                            <span class="char-counter" id="title-counter">0 / 80</span>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-card-title">Category & Status</div>
+                        <div class="create-field">
+                            <label for="gig-category">Category</label>
+                            <select id="gig-category" onchange="updateSubcategory()">
+                                <option value="">Select a category</option>
+                                <option value="Design">Design</option>
+                                <option value="Development & IT">Development & IT</option>
+                                <option value="Writing & Translation">Writing & Translation</option>
+                                <option value="Audio & Video">Audio & Video</option>
+                            </select>
+                            <span class="error-text" id="category-error">Please select a category and subcategory</span>
+                        </div>
+                        <div class="create-field">
+                            <label for="gig-subcategory">Subcategory</label>
+                            <select id="gig-subcategory">
+                                <option value="">Select a subcategory</option>
+                            </select>
+                        </div>
+                        <div class="create-field">
+                            <label for="gig-status">Initial Status</label>
+                            <select id="gig-status">
+                                <option value="Active" selected>Active</option>
+                                <option value="Paused">Paused</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-card">
+                        <div class="form-card-title">Search Tags</div>
+                        <div class="create-field">
+                            <label>Tags <span style="font-weight:400;color:var(--text-secondary)">(up to
+                                    5)</span></label>
+                            <span class="field-desc">Add keywords buyers use to find your service</span>
+                            <div class="tag-input-wrapper" id="tag-wrapper"
+                                onclick="document.getElementById('tag-input').focus()">
+                                <input class="tag-real-input" id="tag-input"
+                                    placeholder="Type a tag and press Enter...">
+                            </div>
+                            <span class="error-text" id="tags-error">Please add at least 3 tags to help buyers find
+                                you</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="create-step" id="step-2">
+                    <div class="create-step-header">
+                        <h2>Scope & Pricing</h2>
+                        <p>Set up your service packages with clear pricing and delivery details.</p>
+                    </div>
+
+                    <div class="form-card" style="padding:20px 32px;">
+                        <div
+                            style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+                            <div>
+                                <div class="form-card-title" style="border:none;padding:0;margin:0;font-size:16px;">
+                                    Package Type</div>
+                                <p style="font-size:13px;color:var(--text-secondary);margin-top:4px;">Choose between a
+                                    single package or three-tier pricing</p>
+                            </div>
+                            <div
+                                style="display:flex;border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;">
+                                <button id="toggle-one" class="pkg-toggle-btn active"
+                                    onclick="setPricingMode('one')">One Package</button>
+                                <button id="toggle-three" class="pkg-toggle-btn" onclick="setPricingMode('three')">Basic
+                                    / Standard / Premium</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-card" style="padding:0; overflow:hidden;">
+                        <div class="pricing-table-container">
+                            <table class="pricing-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 200px;">Scope</th>
+                                        <th>Basic</th>
+                                        <th class="pkg-multi" style="display:none;">Standard</th>
+                                        <th class="pkg-multi" style="display:none;">Premium</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>Package Name</th>
+                                        <td><input type="text" id="pkg-name-basic" placeholder="e.g. Basic Package" value="Basic"></td>
+                                        <td class="pkg-multi" style="display:none;"><input type="text" id="pkg-name-standard"
+                                                placeholder="e.g. Standard Package" value="Standard"></td>
+                                        <td class="pkg-multi" style="display:none;"><input type="text" id="pkg-name-premium"
+                                                placeholder="e.g. Premium Package" value="Premium"></td>
+                                    </tr>
+                                    <tr>
+                                        <th>Description</th>
+                                        <td><textarea id="pkg-desc-basic"
+                                                placeholder="Summarize what you offer in this package..."></textarea>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;"><textarea id="pkg-desc-standard"
+                                                placeholder="Summarize what you offer in this package..."></textarea>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;"><textarea id="pkg-desc-premium"
+                                                placeholder="Summarize what you offer in this package..."></textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Delivery Time</th>
+                                        <td>
+                                            <select id="pkg-delivery-basic">
+                                                <option>1 Day Delivery</option>
+                                                <option>2 Days Delivery</option>
+                                                <option>3 Days Delivery</option>
+                                                <option>5 Days Delivery</option>
+                                                <option>7 Days Delivery</option>
+                                            </select>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <select id="pkg-delivery-standard">
+                                                <option>3 Days Delivery</option>
+                                                <option>5 Days Delivery</option>
+                                                <option>7 Days Delivery</option>
+                                                <option>10 Days Delivery</option>
+                                            </select>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <select id="pkg-delivery-premium">
+                                                <option>7 Days Delivery</option>
+                                                <option>10 Days Delivery</option>
+                                                <option>14 Days Delivery</option>
+                                                <option>21 Days Delivery</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Revisions</th>
+                                        <td>
+                                            <select id="pkg-revisions-basic">
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>Unlimited</option>
+                                            </select>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <select id="pkg-revisions-standard">
+                                                <option>3</option>
+                                                <option>5</option>
+                                                <option>Unlimited</option>
+                                            </select>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <select id="pkg-revisions-premium">
+                                                <option>Unlimited</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>Price (₸)</th>
+                                        <td>
+                                            <div class="price-input-cell">
+                                                <input type="number" id="basic-price" placeholder="5000" min="500">
+                                            </div>
+                                            <span class="error-text" id="price-error-basic">Please enter a valid price (min 500)</span>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <div class="price-input-cell">
+                                                <input type="number" id="standard-price" placeholder="15000" min="500">
+                                            </div>
+                                            <span class="error-text" id="price-error-standard">Please enter a valid price (min 500)</span>
+                                        </td>
+                                        <td class="pkg-multi" style="display:none;">
+                                            <div class="price-input-cell">
+                                                <input type="number" id="premium-price" placeholder="30000" min="500">
+                                            </div>
+                                            <span class="error-text" id="price-error-premium">Please enter a valid price (min 500)</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="create-step" id="step-3">
+                    <div class="create-step-header">
+                        <h2>Description & FAQ</h2>
+                        <p>Describe your service in detail and answer common buyer questions.</p>
+                    </div>
+                    <div class="form-card">
+                        <div class="form-card-title">Service Description</div>
+                        <div class="create-field">
+                            <label for="gig-desc">Description</label>
+                            <span class="field-desc">Minimum 120 characters — be specific about what you deliver</span>
+                            <textarea id="gig-desc" maxlength="1200" rows="8"
+                                placeholder="Describe your service in detail. What will buyers get? What makes your service unique?"></textarea>
+                            <span class="error-text" id="desc-error">Description is too short. Please provide more
+                                details (min 120 chars)</span>
+                            <span class="char-counter" id="desc-counter">0 / 1200</span>
+                        </div>
+                    </div>
+                    <div class="form-card">
+                        <div class="form-card-title">Frequently Asked Questions</div>
+                        <div class="faq-list" id="faq-list">
+                        </div>
+                        <button class="btn-add-item" onclick="addFaq()" style="margin-top:8px;">
+                            <i class="ph ph-plus"></i> Add FAQ
+                        </button>
+                    </div>
+                </div>
+
+                <div class="create-step" id="step-4">
+                    <div class="create-step-header">
+                        <h2>Requirements</h2>
+                        <p>What information do you need from your buyer to start the order?</p>
+                    </div>
+                    <div class="form-card">
+                        <div class="form-card-title">Buyer Requirements</div>
+                        <div class="req-list" id="req-list">
+                        </div>
+                        <button class="btn-add-item" onclick="addRequirement()" style="margin-top:8px;">
+                            <i class="ph ph-plus"></i> Add Requirement
+                        </button>
+                        <span class="error-text" id="req-error">Please add at least one specific requirement for the
+                            buyer</span>
+                    </div>
+                </div>
+
+                <div class="create-step" id="step-5">
+                    <div class="create-step-header">
+                        <h2>Gallery & Publish</h2>
+                        <p>Upload images that showcase your work, then publish your QWork.</p>
+                    </div>
+                    <div class="form-card">
+                        <div class="form-card-title">QWork Gallery</div>
+                        <div class="gallery-upload-zone" id="upload-zone" ondragover="handleDragOver(event)"
+                            ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
+                            onclick="document.getElementById('file-input').click()">
+                            <i class="ph ph-images"></i>
+                            <h4>Drag & drop images here</h4>
+                            <p>or click to browse — PNG, JPG up to 10MB each (max 5 images)</p>
+                        </div>
+                        <input type="file" id="file-input" accept="image/*" multiple style="display:none"
+                            onchange="handleFiles(this.files)">
+                        <div class="gallery-preview-grid" id="gallery-preview"></div>
+                        <span class="error-text" id="gallery-error" style="text-align:center">Please upload at least one
+                            image to showcase your work</span>
+                    </div>
+
+                    <div class="publish-preview">
+                        <i class="ph ph-rocket-launch"></i>
+                        <h3>Ready to Go Live?</h3>
+                        <p>Review your QWork checklist before publishing to the marketplace.</p>
+                        <div class="publish-checklist" id="publish-checklist">
+                            <div class="publish-check-item" id="chk-title">
+                                <i class="ph ph-circle"></i> <span>QWork title added</span>
+                            </div>
+                            <div class="publish-check-item" id="chk-category">
+                                <i class="ph ph-circle"></i> <span>Category selected</span>
+                            </div>
+                            <div class="publish-check-item" id="chk-desc">
+                                <i class="ph ph-circle"></i> <span>Description written (min. 120 chars)</span>
+                            </div>
+                            <div class="publish-check-item" id="chk-gallery">
+                                <i class="ph ph-circle"></i> <span>Gallery image uploaded</span>
+                            </div>
+                        </div>
+                        <button class="btn-publish" onclick="publishQWork()">
+                            Publish My QWork →
+                        </button>
+                    </div>
+                </div>
+
+                <div class="create-nav-bar">
+                    <button class="btn-nav-back" id="btn-back" onclick="changeStep(-1)" disabled>← Back</button>
+                    <span style="font-size:14px;color:var(--text-secondary);font-weight:500;" id="step-indicator">Step 1
+                        of 5</span>
+                    <button class="btn btn-primary" id="btn-next" onclick="changeStep(1)">Save & Continue →</button>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <div class="success-overlay" id="success-overlay">
+        <div class="success-modal">
+            <i class="ph ph-check-circle"></i>
+            <h2>QWork Published!</h2>
+            <p>Your QWork is now live on the marketplace. Buyers can find and order your service.</p>
+            <a href="profile.html" class="btn btn-primary" style="display:inline-block;padding:14px 40px;">Go to
+                Dashboard</a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        const tags = [];
+        const MAX_TAGS = 5;
+        const galleryFiles = [];
+
+        const subcats = {
+            'Design': ['Logo Design', 'Brand Identity', 'Illustration', 'UI/UX Design', 'Poster & Flyer'],
+            'Development & IT': ['Web Development', 'Mobile Apps', 'WordPress', 'SEO', 'Database'],
+            'Writing & Translation': ['Articles & Blog Posts', 'Copywriting', 'Translations', 'Proofreading', 'Creative Writing'],
+            'Audio & Video': ['Voice Over', 'Music Production', 'Video Editing', 'Podcast Editing', 'Subtitles']
+        };
+
+        function updateSubcategory() {
+            const cat = document.getElementById('gig-category').value;
+            const sub = document.getElementById('gig-subcategory');
+            sub.innerHTML = '<option value="">Select a subcategory</option>';
+            if (subcats[cat]) {
+                subcats[cat].forEach(s => {
+                    const o = document.createElement('option');
+                    o.value = s;
+                    o.textContent = s;
+                    sub.appendChild(o);
+                });
+            }
+        }
+
+        document.getElementById('tag-input').addEventListener('keydown', function (e) {
+            if ((e.key === 'Enter' || e.key === ',') && this.value.trim()) {
+                e.preventDefault();
+                if (tags.length >= MAX_TAGS) return;
+                const val = this.value.trim().replace(/,/g, '');
+                if (val && !tags.includes(val)) {
+                    tags.push(val);
+                    renderTags();
+                }
+                this.value = '';
+            }
+            if (e.key === 'Backspace' && !this.value && tags.length) {
+                tags.pop();
+                renderTags();
+            }
+        });
+
+        function renderTags() {
+            const wrapper = document.getElementById('tag-wrapper');
+            wrapper.querySelectorAll('.tag-chip').forEach(t => t.remove());
+            const input = document.getElementById('tag-input');
+            tags.forEach((tag, i) => {
+                const chip = document.createElement('div');
+                chip.className = 'tag-chip';
+                chip.innerHTML = `${tag} <button onclick="removeTag(${i})" type="button">×</button>`;
+                wrapper.insertBefore(chip, input);
+            });
+            input.placeholder = tags.length >= MAX_TAGS ? '' : 'Type a tag and press Enter...';
+        }
+
+        function removeTag(i) { tags.splice(i, 1); renderTags(); }
+
+        document.getElementById('gig-title').addEventListener('input', function () {
+            const c = document.getElementById('title-counter');
+            c.textContent = `${this.value.length} / 80`;
+            c.className = 'char-counter' + (this.value.length > 72 ? ' near-limit' : '') + (this.value.length === 80 ? ' at-limit' : '');
+        });
+
+        document.getElementById('gig-desc').addEventListener('input', function () {
+            const c = document.getElementById('desc-counter');
+            c.textContent = `${this.value.length} / 1200`;
+            c.className = 'char-counter' + (this.value.length > 1000 ? ' near-limit' : '') + (this.value.length === 1200 ? ' at-limit' : '');
+        });
+
+        function addFaq() {
+            const list = document.getElementById('faq-list');
+            const item = document.createElement('div');
+            item.className = 'faq-item';
+            item.innerHTML = `
+                <input type="text" placeholder="Question: e.g. What file formats do you provide?">
+                <textarea placeholder="Answer: e.g. I deliver PNG, SVG, and PDF files."></textarea>
+                <div class="faq-footer"><button class="btn-remove" onclick="removeFaq(this)">Remove</button></div>`;
+            list.appendChild(item);
+        }
+
+        function removeFaq(btn) {
+            btn.closest('.faq-item').remove();
+        }
+
+        function addRequirement() {
+            const list = document.getElementById('req-list');
+            const item = document.createElement('div');
+            item.className = 'req-item';
+            item.innerHTML = `
+                <input type="text" placeholder="e.g. Please share your brand colors and logo preferences">
+                <div style="display:flex;align-items:center;gap:12px;">
+                    <label class="req-required"><input type="checkbox" checked> Required</label>
+                    <button class="btn-remove" onclick="removeRequirement(this)">Remove</button>
+                </div>`;
+            list.appendChild(item);
+            document.getElementById('req-error').classList.remove('show');
+        }
+
+        function removeRequirement(btn) {
+            btn.closest('.req-item').remove();
+        }
+
+        function handleDragOver(e) { e.preventDefault(); e.currentTarget.classList.add('dragover'); }
+        function handleDragLeave(e) { e.currentTarget.classList.remove('dragover'); }
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        }
+
+        function handleFiles(files) {
+            Array.from(files).slice(0, 5 - galleryFiles.length).forEach(file => {
+                if (!file.type.startsWith('image/')) return;
+                galleryFiles.push(file);
+                const reader = new FileReader();
+                reader.onload = ev => addThumb(ev.target.result, galleryFiles.length - 1);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function addThumb(src, idx) {
+            const grid = document.getElementById('gallery-preview');
+            const div = document.createElement('div');
+            div.className = 'gallery-thumb';
+            div.id = `thumb-${idx}`;
+            div.innerHTML = `<img src="${src}" alt="Preview"><button class="gallery-thumb-remove" onclick="removeThumb(${idx})">×</button>`;
+            grid.appendChild(div);
+        }
+
+        function removeThumb(idx) {
+            galleryFiles.splice(idx, 1);
+            document.getElementById(`thumb-${idx}`)?.remove();
+        }
+
+        function updateChecklist() {
+            const title = document.getElementById('gig-title').value.trim();
+            const category = document.getElementById('gig-category').value;
+            const desc = document.getElementById('gig-desc').value.trim();
+
+            setCheck('chk-title', title.length > 10);
+            setCheck('chk-category', category !== '');
+            setCheck('chk-desc', desc.length >= 120);
+            setCheck('chk-gallery', galleryFiles.length > 0);
+        }
+
+        function setCheck(id, done) {
+            const el = document.getElementById(id);
+            el.className = 'publish-check-item ' + (done ? 'done' : 'pending');
+            el.querySelector('i').className = done ? 'ph ph-check-circle' : 'ph ph-circle';
+        }
+
+        let pricingMode = 'one';
+        function setPricingMode(mode) {
+            pricingMode = mode;
+            const multiElements = document.querySelectorAll('.pkg-multi');
+            const isMulti = mode === 'three';
+            multiElements.forEach(el => {
+                el.style.display = isMulti ? '' : 'none';
+            });
+            document.getElementById('toggle-one').classList.toggle('active', mode === 'one');
+            document.getElementById('toggle-three').classList.toggle('active', mode === 'three');
+        }
+
+        function setFieldError(id, hasError, errorId) {
+            const field = document.getElementById(id);
+            const errSpan = document.getElementById(errorId);
+            if (!field || !errSpan) return; // Safety check
+            
+            if (hasError) {
+                field.classList.add('input-error');
+                errSpan.classList.add('show');
+            } else {
+                field.classList.remove('input-error');
+                errSpan.classList.remove('show');
+            }
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+
+            if (step === 1) {
+                const title = document.getElementById('gig-title').value.trim();
+                const cat = document.getElementById('gig-category').value;
+                const subcat = document.getElementById('gig-subcategory').value;
+
+                if (title.length < 15) {
+                    setFieldError('gig-title', true, 'title-error');
+                    isValid = false;
+                } else {
+                    setFieldError('gig-title', false, 'title-error');
+                }
+
+                if (!cat || !subcat) {
+                    setFieldError('gig-category', true, 'category-error');
+                    setFieldError('gig-subcategory', true, 'category-error');
+                    isValid = false;
+                } else {
+                    setFieldError('gig-category', false, 'category-error');
+                    setFieldError('gig-subcategory', false, 'category-error');
+                }
+
+                if (tags.length < 3) {
+                    document.getElementById('tag-wrapper').classList.add('input-error');
+                    document.getElementById('tags-error').classList.add('show');
+                    isValid = false;
+                } else {
+                    document.getElementById('tag-wrapper').classList.remove('input-error');
+                    document.getElementById('tags-error').classList.remove('show');
+                }
+            }
+
+            if (step === 2) {
+                const basicPrice = document.getElementById('basic-price').value;
+                if (!basicPrice || basicPrice < 500) {
+                    setFieldError('basic-price', true, 'price-error-basic');
+                    isValid = false;
+                } else {
+                    setFieldError('basic-price', false, 'price-error-basic');
+                }
+
+                if (pricingMode === 'three') {
+                    const stdPrice = document.getElementById('standard-price').value;
+                    const prePrice = document.getElementById('premium-price').value;
+
+                    if (!stdPrice || stdPrice < 500) {
+                        setFieldError('standard-price', true, 'price-error-standard');
+                        isValid = false;
+                    } else {
+                        setFieldError('standard-price', false, 'price-error-standard');
+                    }
+
+                    if (!prePrice || prePrice < 500) {
+                        setFieldError('premium-price', true, 'price-error-premium');
+                        isValid = false;
+                    } else {
+                        setFieldError('premium-price', false, 'price-error-premium');
+                    }
+                }
+            }
+
+            if (step === 3) {
+                const desc = document.getElementById('gig-desc').value.trim();
+                if (desc.length < 120) {
+                    setFieldError('gig-desc', true, 'desc-error');
+                    isValid = false;
+                } else {
+                    setFieldError('gig-desc', false, 'desc-error');
+                }
+            }
+
+            if (step === 4) {
+                const items = document.querySelectorAll('#req-list .req-item input[type="text"]');
+                const hasReq = Array.from(items).some(i => i.value.trim().length > 0);
+                if (!hasReq) {
+                    document.getElementById('req-error').classList.add('show');
+                    isValid = false;
+                } else {
+                    document.getElementById('req-error').classList.remove('show');
+                }
+            }
+
+            if (step === 5) {
+                const hasExistingImages = document.querySelectorAll('#gallery-preview .gallery-thumb').length > 0;
+                if (galleryFiles.length === 0 && !hasExistingImages) {
+                    document.getElementById('gallery-error').classList.add('show');
+                    isValid = false;
+                } else {
+                    document.getElementById('gallery-error').classList.remove('show');
+                }
+            }
+
+            return isValid;
+        }
+
+        document.getElementById('gig-title').addEventListener('input', () => setFieldError('gig-title', false, 'title-error'));
+        document.getElementById('gig-category').addEventListener('change', () => {
+            setFieldError('gig-category', false, 'category-error');
+            setFieldError('gig-subcategory', false, 'category-error');
+        });
+        document.getElementById('gig-subcategory').addEventListener('change', () => {
+            setFieldError('gig-category', false, 'category-error');
+            setFieldError('gig-subcategory', false, 'category-error');
+        });
+        document.getElementById('gig-desc').addEventListener('input', () => setFieldError('gig-desc', false, 'desc-error'));
+        document.getElementById('basic-price').addEventListener('input', () => setFieldError('basic-price', false, 'price-error-basic'));
+        document.getElementById('standard-price').addEventListener('input', () => setFieldError('standard-price', false, 'price-error-standard'));
+        document.getElementById('premium-price').addEventListener('input', () => setFieldError('premium-price', false, 'price-error-premium'));
+
+        function changeStep(dir) {
+            const next = currentStep + dir;
+            if (next < 1 || next > totalSteps) return;
+            if (dir > 0 && !validateStep(currentStep)) {
+                const firstError = document.querySelector('.error-text.show');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                return;
+            }
+            saveDraft(true);
+            goToStep(next);
+        }
+
+        function goToStep(n) {
+            document.getElementById(`step-${currentStep}`).classList.remove('active');
+            document.querySelectorAll('.stepper-item')[currentStep - 1].classList.remove('active');
+            if (n > currentStep) {
+                document.querySelectorAll('.stepper-item')[currentStep - 1].classList.add('completed');
+                document.querySelectorAll('.stepper-item')[currentStep - 1].querySelector('.stepper-num').innerHTML = '<i class="ph ph-check" style="font-size:16px"></i>';
+            } else {
+                document.querySelectorAll('.stepper-item')[currentStep - 1].classList.remove('completed');
+                document.querySelectorAll('.stepper-item')[currentStep - 1].querySelector('.stepper-num').textContent = currentStep;
+            }
+            currentStep = n;
+            document.getElementById(`step-${currentStep}`).classList.add('active');
+            document.querySelectorAll('.stepper-item')[currentStep - 1].classList.add('active');
+            document.getElementById('step-indicator').textContent = `Step ${currentStep} of ${totalSteps}`;
+            document.getElementById('btn-back').disabled = currentStep === 1;
+            document.getElementById('btn-next').style.display = currentStep === totalSteps ? 'none' : '';
+            if (currentStep === totalSteps) updateChecklist();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.querySelectorAll('.stepper-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const n = parseInt(item.dataset.go);
+                if (n <= currentStep) goToStep(n);
+            });
+        });
+
+        function saveDraft(isAuto = false) {
+            const currentTemp = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
+
+            const faqs = [];
+            document.querySelectorAll('#faq-list .faq-item').forEach(item => {
+                const q = item.querySelector('input').value;
+                const a = item.querySelector('textarea').value;
+                if (q && a) faqs.push({ q, a });
+            });
+            const requirements = [];
+            document.querySelectorAll('#req-list .req-item').forEach(item => {
+                const text = item.querySelector('input[type="text"]').value;
+                const isRequired = item.querySelector('input[type="checkbox"]').checked;
+                if (text) requirements.push({ text, isRequired });
+            });
+
+            const allImgElements = document.querySelectorAll('#gallery-preview .gallery-thumb img');
+            const images = Array.from(allImgElements).map(img => img.src);
+
+            const draft = {
+                title: document.getElementById('gig-title').value,
+                category: document.getElementById('gig-category').value,
+                subcategory: document.getElementById('gig-subcategory').value,
+                status: document.getElementById('gig-status').value,
+                pricingMode: pricingMode,
+                price: document.getElementById('basic-price').value,
+                priceStandard: document.getElementById('standard-price').value,
+                pricePremium: document.getElementById('premium-price').value,
+                pkgNameBasic: document.getElementById('pkg-name-basic').value,
+                pkgNameStandard: document.getElementById('pkg-name-standard').value,
+                pkgNamePremium: document.getElementById('pkg-name-premium').value,
+                descriptionBasic: document.getElementById('pkg-desc-basic').value,
+                descriptionStandard: document.getElementById('pkg-desc-standard').value,
+                descriptionPremium: document.getElementById('pkg-desc-premium').value,
+                deliveryBasic: document.getElementById('pkg-delivery-basic').value,
+                deliveryStandard: document.getElementById('pkg-delivery-standard').value,
+                deliveryPremium: document.getElementById('pkg-delivery-premium').value,
+                revisionsBasic: document.getElementById('pkg-revisions-basic').value,
+                revisionsStandard: document.getElementById('pkg-revisions-standard').value,
+                revisionsPremium: document.getElementById('pkg-revisions-premium').value,
+                description: document.getElementById('gig-desc').value,
+                faqs,
+                requirements,
+                tags,
+                images,
+                image: images[0] || '',
+                currentStep,
+                owner_email: JSON.parse(localStorage.getItem('qwork_currentUser') || '{}').email || 'guest@mail.com',
+                savedAt: new Date().toISOString()
+            };
+
+            if (currentTemp.isEditing) {
+                draft.isEditing = true;
+                draft.editIndex = currentTemp.editIndex;
+                draft.id = currentTemp.id;
+                draft.createdAt = currentTemp.createdAt;
+                draft.image = currentTemp.image;
+            }
+
+            if (currentTemp.isEditingDraft) {
+                draft.isEditingDraft = true;
+                draft.draftIndex = currentTemp.draftIndex;
+            }
+
+            if (isAuto) {
+                localStorage.setItem('qwork_temp_form', JSON.stringify(draft));
+            } else {
+                const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+                
+                if (currentTemp.isEditingDraft && currentTemp.draftIndex !== undefined) {
+                    savedDrafts[currentTemp.draftIndex] = draft;
+                } else {
+                    savedDrafts.push(draft);
+                }
+                
+                localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
+                alert('Draft saved successfully!');
+                localStorage.removeItem('qwork_temp_form');
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function handleCancel() {
+            localStorage.removeItem('qwork_temp_form');
+            if (window.history.length > 1) {
+                history.back();
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function clearForm() {
+            if (confirm('Are you sure you want to clear the form and start fresh? This will remove current progress.')) {
+                localStorage.removeItem('qwork_temp_form');
+                window.location.reload();
+            }
+        }
+
+        function loadDraft() {
+            const draftStr = localStorage.getItem('qwork_temp_form');
+            if (!draftStr) return;
+
+            try {
+                const draft = JSON.parse(draftStr);
+
+                document.getElementById('gig-title').value = draft.title || '';
+                document.getElementById('gig-title').dispatchEvent(new Event('input'));
+
+                if (draft.category) {
+                    document.getElementById('gig-category').value = draft.category;
+                    updateSubcategory();
+                    if (draft.subcategory) {
+                        document.getElementById('gig-subcategory').value = draft.subcategory;
+                    }
+                }
+
+                if (draft.tags && draft.tags.length) {
+                    tags.length = 0;
+                    draft.tags.forEach(t => tags.push(t));
+                    renderTags();
+                }
+
+                document.getElementById('basic-price').value = draft.price || '';
+                if (draft.priceStandard) document.getElementById('standard-price').value = draft.priceStandard;
+                if (draft.pricePremium) document.getElementById('premium-price').value = draft.pricePremium;
+
+                if (draft.pkgNameBasic) document.getElementById('pkg-name-basic').value = draft.pkgNameBasic;
+                if (draft.pkgNameStandard) document.getElementById('pkg-name-standard').value = draft.pkgNameStandard;
+                if (draft.pkgNamePremium) document.getElementById('pkg-name-premium').value = draft.pkgNamePremium;
+                if (draft.descriptionBasic) document.getElementById('pkg-desc-basic').value = draft.descriptionBasic;
+                if (draft.descriptionStandard) document.getElementById('pkg-desc-standard').value = draft.descriptionStandard;
+                if (draft.descriptionPremium) document.getElementById('pkg-desc-premium').value = draft.descriptionPremium;
+                if (draft.deliveryBasic) document.getElementById('pkg-delivery-basic').value = draft.deliveryBasic;
+                if (draft.deliveryStandard) document.getElementById('pkg-delivery-standard').value = draft.deliveryStandard;
+                if (draft.deliveryPremium) document.getElementById('pkg-delivery-premium').value = draft.deliveryPremium;
+                if (draft.revisionsBasic) document.getElementById('pkg-revisions-basic').value = draft.revisionsBasic;
+                if (draft.revisionsStandard) document.getElementById('pkg-revisions-standard').value = draft.revisionsStandard;
+                if (draft.revisionsPremium) document.getElementById('pkg-revisions-premium').value = draft.revisionsPremium;
+
+                if (draft.pricingMode) {
+                    setPricingMode(draft.pricingMode);
+                }
+
+                document.getElementById('gig-desc').value = draft.description || '';
+                document.getElementById('gig-desc').dispatchEvent(new Event('input'));
+
+                if (draft.status) {
+                    document.getElementById('gig-status').value = draft.status;
+                }
+
+                if (draft.faqs && draft.faqs.length) {
+                    const list = document.getElementById('faq-list');
+                    list.innerHTML = '';
+                    draft.faqs.forEach(f => {
+                        const item = document.createElement('div');
+                        item.className = 'faq-item';
+                        item.innerHTML = `
+                            <input type="text" placeholder="Question: e.g. What file formats do you provide?" value="${f.q}">
+                            <textarea placeholder="Answer: e.g. I deliver PNG, SVG, and PDF files.">${f.a}</textarea>
+                            <div class="faq-footer"><button class="btn-remove" onclick="removeFaq(this)">Remove</button></div>`;
+                        list.appendChild(item);
+                    });
+                }
+
+                if (draft.requirements && draft.requirements.length) {
+                    const list = document.getElementById('req-list');
+                    list.innerHTML = '';
+                    draft.requirements.forEach(r => {
+                        const item = document.createElement('div');
+                        item.className = 'req-item';
+                        item.innerHTML = `
+                            <input type="text" placeholder="e.g. Please share your brand colors and logo preferences" value="${r.text}">
+                            <div style="display:flex;align-items:center;gap:12px;">
+                                <label class="req-required"><input type="checkbox" ${r.isRequired ? 'checked' : ''}> Required</label>
+                                <button class="btn-remove" onclick="removeRequirement(this)">Remove</button>
+                            </div>`;
+                        list.appendChild(item);
+                    });
+                }
+
+                if (!galleryFiles.length) {
+                    if (draft.images && draft.images.length) {
+                        draft.images.forEach((img, idx) => addThumb(img, idx));
+                    } else if (draft.image) {
+                        addThumb(draft.image, 0);
+                    }
+                }
+
+                if (draft.isEditing) {
+                    const topHeader = document.querySelector('.create-topbar-inner h1');
+                    if (topHeader) topHeader.textContent = 'Edit Your QWork';
+                    const publishBtn = document.querySelector('.btn-publish');
+                    if (publishBtn) publishBtn.textContent = 'Update My QWork →';
+                } else if (draft.isEditingDraft) {
+                    const topHeader = document.querySelector('.create-topbar-inner h1');
+                    if (topHeader) topHeader.textContent = 'Continue Your Draft';
+                    const saveBtn = document.querySelector('.create-topbar-actions .btn-nav-back');
+                    if (saveBtn) saveBtn.textContent = 'Update Draft';
+                }
+
+                // Removed automatic step jump to ensure we always start at Step 1
+            } catch (e) { console.error('Error loading draft:', e); }
+        }
+
+        function publishQWork() {
+            if (!validateStep(5)) {
+                document.getElementById('gallery-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const currentDraft = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
+            const allImgElements = document.querySelectorAll('#gallery-preview .gallery-thumb img');
+            const images = Array.from(allImgElements).map(img => img.src);
+
+            const faqs = [];
+            document.querySelectorAll('#faq-list .faq-item').forEach(item => {
+                const q = item.querySelector('input').value;
+                const a = item.querySelector('textarea').value;
+                if (q && a) faqs.push({ q, a });
+            });
+
+            const requirements = [];
+            document.querySelectorAll('#req-list .req-item').forEach(item => {
+                const text = item.querySelector('input[type="text"]').value;
+                const isRequired = item.querySelector('input[type="checkbox"]').checked;
+                if (text) requirements.push({ text, isRequired });
+            });
+
+            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+
+            const newGig = {
+                id: currentDraft.isEditing ? (currentDraft.id || Date.now()) : Date.now(),
+                title: document.getElementById('gig-title').value,
+                category: document.getElementById('gig-category').value,
+                subcategory: document.getElementById('gig-subcategory').value,
+                status: document.getElementById('gig-status').value,
+                pricingMode: pricingMode,
+                price: document.getElementById('basic-price').value,
+                priceStandard: document.getElementById('standard-price').value,
+                pricePremium: document.getElementById('premium-price').value,
+                pkgNameBasic: document.getElementById('pkg-name-basic').value,
+                pkgNameStandard: document.getElementById('pkg-name-standard').value,
+                pkgNamePremium: document.getElementById('pkg-name-premium').value,
+                descriptionBasic: document.getElementById('pkg-desc-basic').value,
+                descriptionStandard: document.getElementById('pkg-desc-standard').value,
+                descriptionPremium: document.getElementById('pkg-desc-premium').value,
+                deliveryBasic: document.getElementById('pkg-delivery-basic').value,
+                deliveryStandard: document.getElementById('pkg-delivery-standard').value,
+                deliveryPremium: document.getElementById('pkg-delivery-premium').value,
+                revisionsBasic: document.getElementById('pkg-revisions-basic').value,
+                revisionsStandard: document.getElementById('pkg-revisions-standard').value,
+                revisionsPremium: document.getElementById('pkg-revisions-premium').value,
+                description: document.getElementById('gig-desc').value,
+                faqs,
+                requirements,
+                images,
+                image: images[0] || '',
+                owner_email: currentUser.email || 'guest@mail.com',
+                author_name: currentUser.fname ? `${currentUser.fname} ${currentUser.lname || ''}`.trim() : 'User',
+                author_avatar: `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`,
+                rating: 5.0,
+                reviews: 0,
+                tags,
+                createdAt: currentDraft.isEditing ? (currentDraft.createdAt || new Date().toISOString()) : new Date().toISOString()
+            };
+
+            const existingGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
+            
+            if (currentDraft.isEditing) {
+                const index = existingGigs.findIndex(g => g.id === newGig.id);
+                if (index !== -1) {
+                    existingGigs[index] = newGig;
+                } else {
+                    existingGigs.push(newGig);
+                }
+            } else {
+                existingGigs.push(newGig);
+            }
+
+            if (currentDraft.isEditingDraft && currentDraft.draftIndex !== undefined) {
+                const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+                savedDrafts.splice(currentDraft.draftIndex, 1);
+                localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
+            }
+
+            try {
+                localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
+                localStorage.removeItem('qwork_temp_form');
+
+                document.getElementById('success-overlay').classList.add('show');
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    alert('Error: Browser storage is full! Please delete some old QWorks or drafts to free up space. You can also try using smaller images.');
+                } else {
+                    alert('An error occurred while saving: ' + e.message);
+                }
+            }
+        }
+
+        loadDraft();
+
+        const userStr = localStorage.getItem('qwork_currentUser');
+        if (userStr) {
+            try {
+                const u = JSON.parse(userStr);
+                const name = (u.first_name || u.fname || u.email || 'User');
+                document.getElementById('user-name-display').textContent = name;
+            } catch (e) { }
+        }
+    </script>
+</body>
+
+</html>

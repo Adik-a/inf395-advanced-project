@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, status
 
 from modules.portfolios.schemas import (
-    PortfoliosCreateSchema,
     PortfoliosSchema,
     PortfoliosUpdateSchema,
 )
@@ -30,6 +29,22 @@ async def create_portfolio(
         "msg": "Portfolio created successfully",
         "portfolio": new_portfolio,
     }
+
+
+@router.get("/me")
+async def get_my_portfolios(
+    session: SessionDep,
+    current_user: dict = Depends(get_current_user),
+):
+    portfolios = await PortfoliosRepository.get_user_portfolios(
+        user_id=current_user["sub"],
+        session=session,
+    )
+
+    if not portfolios:
+        return {"msg": "No portfolios found for this user"}
+
+    return portfolios
 
 
 @router.get("/{user_id}")

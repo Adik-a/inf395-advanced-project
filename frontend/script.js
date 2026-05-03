@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     const currentUserStr = localStorage.getItem('qwork_currentUser');
     const guestActions = document.getElementById('guest-actions');
     const userActions = document.getElementById('user-actions');
@@ -19,19 +19,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add smooth appearance using Intersection Observer
     
+
+    const animatedElements = document.querySelectorAll('.animate-on-scroll');
+
     if ('IntersectionObserver' in window) {
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry, index) => {
+            entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    // Stagger the animation slightly
+                    const index = Array.from(animatedElements).indexOf(entry.target);
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                    }, 50 * index); // very short delay for each item
-                    
-                    // Optional: Unobserve after animating if we only want it once
+                    }, 50 * index); 
                     observer.unobserve(entry.target);
                 }
             });
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rootMargin: '0px 0px -50px 0px'
         });
 
-        // Initialize elements with initial state
+        
         animatedElements.forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(20px)';
@@ -48,24 +48,35 @@ document.addEventListener('DOMContentLoaded', () => {
             observer.observe(el);
         });
     } else {
-        // Fallback for older browsers
+        
         animatedElements.forEach(el => {
             el.style.opacity = '1';
             el.style.transform = 'translateY(0)';
         });
     }
 
-    // Floating animation for trust badge
-    const badge = document.querySelector('.floating-badge');
-    if (badge) {
-        let posY = 0;
-        let direction = 1;
-        
+    
+    // User Dropdown Toggle
+    const profileTrigger = document.getElementById('profile-trigger');
+    const userDropdown = document.getElementById('user-dropdown');
+
+    if (profileTrigger && userDropdown) {
+        profileTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('active');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (userDropdown.classList.contains('active') && !userDropdown.contains(e.target)) {
+                userDropdown.classList.remove('active');
+            }
+        });
     }
 });
 
-// Global Log out function
-window.logoutUser = function(e) {
+
+window.logoutUser = function (e) {
     if (e) e.preventDefault();
     localStorage.removeItem('qwork_currentUser');
     localStorage.removeItem('access_token');

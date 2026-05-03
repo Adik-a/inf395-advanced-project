@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - QWork</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="bg-gray">
+    
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="index.html" class="logo">QWork</a>
+
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+
+                <div class="header-actions" id="guest-actions">
+                    <a href="#" class="freelancer-link">Are you a freelancer?</a>
+                    <a href="auth.html" class="sign-in-link">Sign In</a>
+                    <a href="auth.html" class="btn btn-primary">Sign Up</a>
+                </div>
+
+                <div class="header-actions" id="user-actions" style="display: none;">
+                    <a href="dashboard.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Dashboard</a>
+                    <a href="messages.html" class="nav-item">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications"
+                        style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item has-dropdown">
+                        <a href="design.html">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="design.html?sub=Logo Design">Logo Design</a>
+                                <a href="design.html?sub=Brand Identity">Brand Identity</a>
+                                <a href="design.html?sub=Illustration">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html?sub=UI/UX Design">UI/UX Design</a>
+                                <a href="design.html?sub=Poster & Flyer">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html?sub=Web Development">Web Development</a>
+                                <a href="development.html?sub=Mobile Apps">Mobile Apps</a>
+                                <a href="development.html?sub=WordPress">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html?sub=SEO">SEO</a>
+                                <a href="development.html?sub=Database">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html?sub=Articles & Blog Posts">Articles & Blog Posts</a>
+                                <a href="writing.html?sub=Copywriting">Copywriting</a>
+                                <a href="writing.html?sub=Translations">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html?sub=Proofreading">Proofreading</a>
+                                <a href="writing.html?sub=Creative Writing">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html?sub=Voice Over">Voice Over</a>
+                                <a href="audio.html?sub=Music Production">Music Production</a>
+                                <a href="audio.html?sub=Video Editing">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html?sub=Podcast Editing">Podcast Editing</a>
+                                <a href="audio.html?sub=Subtitles">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            
+            <aside class="dashboard-sidebar">
+                <div class="profile-card">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
+                    <h2 class="profile-name" id="dashboard-name">Daniel R.</h2>
+                    <span class="profile-role">Seller</span>
+
+                    <div class="profile-stats">
+                        <div class="stat-row">
+                            <span class="stat-name">Reliability</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Punctuality</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Response Rate</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-name">Response Time</span>
+                            <div class="progress-bar-wrapper">
+                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            </div>
+                            <span class="stat-percent">100%</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            
+            <section class="dashboard-content">
+                
+                <div class="dashboard-block">
+                    <h3>My Orders <span class="badge-neutral">0</span></h3>
+                </div>
+
+                <div class="dashboard-block">
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <h3>My QWorks <span class="badge-neutral" id="qwork-count">0</span></h3>
+                        <a href="#" onclick="startNewQWork()" class="btn btn-primary-outline">Create a QWork</a>
+                    </div>
+                    <div id="my-qworks-list" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">You haven't created
+                            any QWorks yet.</p>
+                    </div>
+                </div>
+
+
+                <div class="dashboard-block">
+                    <div class="flex-between" style="margin-bottom: 20px;">
+                        <h3>My Drafts <span class="badge-neutral" id="draft-count">0</span></h3>
+                    </div>
+                    <div id="my-drafts-list" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px; grid-column: 1/-1;">No saved drafts.
+                        </p>
+                    </div>
+                </div>
+
+
+                
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <div class="tip-header">
+                            <h4>Tip</h4>
+                            <i class="ph ph-lightbulb"></i>
+                        </div>
+                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also
+                            bid on buyer requests in the Exchange. This can be particularly helpful when you're just
+                            getting started and don't have a strong rating yet.</p>
+                    </div>
+
+                    <div class="tip-card">
+                        <div class="tip-header">
+                            <h4>Tip</h4>
+                            <i class="ph ph-lightbulb"></i>
+                        </div>
+                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it
+                            is higher than the buyer might initially expect.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col-main">
+                <div class="footer-logo">QWork</div>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH
+                    EXPERTISE ACROSS THE STEPPE.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>COMPANY</h4>
+                    <a href="#">ABOUT US</a>
+                    <a href="#">TERMS OF SERVICE</a>
+                    <a href="#">PRIVACY POLICY</a>
+                </div>
+                <div class="footer-column">
+                    <h4>SUPPORT</h4>
+                    <a href="#">CONTACT SUPPORT</a>
+                    <a href="#">HELP CENTER</a>
+                    <a href="#">KZT RATES</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 QWORK KAZAKHSTAN. ALL RIGHTS RESERVED. | KZT</p>
+            <div class="social-links">
+                <a href="#"><i class="ph ph-instagram-logo"></i></a>
+                <a href="#"><i class="ph ph-twitter-logo"></i></a>
+                <a href="#"><i class="ph ph-youtube-logo"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const currentUserStr = localStorage.getItem('qwork_currentUser');
+            if (currentUserStr) {
+                try {
+                    const currentUser = JSON.parse(currentUserStr);
+                    const dbName = document.getElementById('dashboard-name');
+                    if (dbName) {
+                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email;
+                        if (currentUser.last_name || currentUser.lname) {
+                            nameStr += ' ' + (currentUser.last_name || currentUser.lname);
+                        }
+                        dbName.textContent = nameStr;
+                    }
+                } catch (e) { console.error(e); }
+            }
+            
+            const myGigsStr = localStorage.getItem('qwork_my_gigs');
+            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+            const userName = currentUser.fname || currentUser.email || 'User';
+            const userAvatar = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+
+            if (myGigsStr) {
+                try {
+                    let myGigs = JSON.parse(myGigsStr);
+                    // Filter by ownership
+                    myGigs = myGigs.filter(g => g.owner_email === currentUser.email);
+                    
+                    const list = document.getElementById('my-qworks-list');
+                    const countBadge = document.getElementById('qwork-count');
+
+                    if (myGigs.length > 0) {
+                        countBadge.textContent = myGigs.length;
+                        list.innerHTML = ''; 
+
+                        myGigs.forEach((gig, index) => {
+                            const gigEl = document.createElement('div');
+                            gigEl.className = 'service-card';
+                            gigEl.style.cursor = 'pointer';
+                            gigEl.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+
+                            const imgHtml = gig.image
+                                ? `<img src="${gig.image}" alt="${gig.title}">`
+                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
+
+                            const status = gig.status || 'Active';
+                            const statusClass = `status-${status.toLowerCase()}`;
+
+                            gigEl.innerHTML = `
+                                <div class="service-image">
+                                    ${imgHtml}
+                                    <span class="service-tag">${gig.category || 'SERVICE'}</span>
+                                    <span class="status-badge ${statusClass}">${status}</span>
+                                </div>
+                                <div class="service-content">
+                                    <div class="service-author">
+                                        <img src="${userAvatar}" alt="${userName}">
+                                        <div>
+                                            <span class="author-name">${userName}</span>
+                                            <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="service-title">${gig.title}</h3>
+                                    <div class="service-footer">
+                                        <span class="price-label">FROM</span>
+                                        <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(gigEl);
+                        });
+                    }
+                } catch (e) { console.error(e); }
+            }
+
+            
+            const myDraftsStr = localStorage.getItem('qwork_saved_drafts');
+            if (myDraftsStr) {
+                try {
+                    let myDrafts = JSON.parse(myDraftsStr);
+                    // Filter by ownership
+                    myDrafts = myDrafts.filter(d => d.owner_email === currentUser.email);
+                    
+                    const list = document.getElementById('my-drafts-list');
+                    const countBadge = document.getElementById('draft-count');
+
+                    if (myDrafts.length > 0) {
+                        countBadge.textContent = myDrafts.length;
+                        list.innerHTML = '';
+
+                        myDrafts.forEach((draft, index) => {
+                            const draftEl = document.createElement('div');
+                            draftEl.className = 'service-card draft-card';
+                            draftEl.style.cursor = 'pointer';
+                            draftEl.onclick = () => {
+                                localStorage.setItem('qwork_temp_form', JSON.stringify({
+                                    ...draft,
+                                    isEditingDraft: true,
+                                    draftIndex: index
+                                }));
+                                window.location.href = 'create-qwork.html';
+                            };
+
+                            const imgHtml = draft.image
+                                ? `<img src="${draft.image}" alt="${draft.title}" style="opacity: 0.7;">`
+                                : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#fef9c3;"><i class="ph ph-note-pencil" style="font-size:48px; color:#ca8a04;"></i></div>`;
+
+                            draftEl.innerHTML = `
+                                <div class="service-image">
+                                    ${imgHtml}
+                                    <span class="service-tag">${draft.category || 'DRAFT'}</span>
+                                    <span class="status-badge status-draft">Draft</span>
+                                </div>
+                                <div class="service-content">
+                                    <div class="service-author">
+                                        <img src="${userAvatar}" alt="${userName}">
+                                        <div>
+                                            <span class="author-name">${userName}</span>
+                                            <span class="author-rating"><i class="ph-fill ph-star"></i> Draft</span>
+                                        </div>
+                                    </div>
+                                    <h3 class="service-title">${draft.title || 'Untitled Draft'}</h3>
+                                    <div class="service-footer">
+                                        <span class="price-label">DRAFT</span>
+                                        <div style="display:flex; gap:10px; align-items:center;">
+                                            <button onclick="event.stopPropagation(); deleteDraft(${index})" style="color:#ef4444; font-size:18px; cursor:pointer; background:none; border:none;"><i class="ph ph-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                            list.appendChild(draftEl);
+                        });
+                    }
+                } catch (e) { console.error(e); }
+            }
+        });
+
+        function startNewQWork() {
+            localStorage.removeItem('qwork_temp_form');
+            window.location.href = 'create-qwork.html';
+        }
+
+        function deleteDraft(index) {
+            if (confirm('Delete this draft?')) {
+                const myDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+                myDrafts.splice(index, 1);
+                localStorage.setItem('qwork_saved_drafts', JSON.stringify(myDrafts));
+                window.location.reload();
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - QWork</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Force Header Fixes */
+        .header {
+            width: 100% !important;
+            position: sticky !important;
+            top: 0 !important;
+            left: 0 !important;
+            z-index: 1000 !important;
+            background: white !important;
+        }
+        .header .nav-container {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            max-width: 1450px !important;
+            width: 100% !important;
+            margin: 0 auto !important;
+        }
+        .header-actions {
+            display: flex !important;
+            align-items: center !important;
+            gap: 20px !important;
+        }
+        .user-profile-trigger {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        .header-search {
+            flex: 1 !important;
+            max-width: 500px !important;
+            margin: 0 40px !important;
+            display: flex !important;
+        }
+        .header-search input {
+            flex: 1 !important;
+        }
+
+        .messages-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e2e8f0;
+            height: calc(100vh - 200px);
+            overflow: hidden;
+        }
+
+        .chats-sidebar {
+            border-right: 1px solid #e2e8f0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-header h2 {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .chat-item {
+            padding: 16px 24px;
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .chat-item:hover {
+            background: #f8fafc;
+        }
+
+        .chat-item.active {
+            background: #eff6ff;
+            border-left: 4px solid #2563eb;
+        }
+
+        .chat-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-info {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .chat-name {
+            font-weight: 700;
+            font-size: 15px;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .chat-last-msg {
+            font-size: 13px;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .chat-window {
+            display: flex;
+            flex-direction: column;
+            background: #f8fafc;
+        }
+
+        .chat-header {
+            padding: 16px 24px;
+            background: white;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.sent {
+            align-self: flex-end;
+            background: #2563eb;
+            color: white;
+            border-bottom-right-radius: 2px;
+        }
+
+        .message.received {
+            align-self: flex-start;
+            background: white;
+            color: #1e293b;
+            border-bottom-left-radius: 2px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .chat-input-area {
+            padding: 24px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            background: #f1f5f9;
+            padding: 8px 16px;
+            border-radius: 12px;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 8px 0;
+            font-size: 14px;
+        }
+
+        .btn-send {
+            background: #2563eb;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn-send:hover {
+            transform: scale(1.05);
+        }
+
+        .no-chat-selected {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+        }
+
+        .no-chat-selected i {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="nav-container">
+                <a href="index.html" class="logo">QWork</a>
+
+                <div class="header-search">
+                    <input type="text" placeholder="Find Services">
+                    <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
+                </div>
+
+                <div class="header-actions" id="user-actions">
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="messages.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications"
+                        style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown-wrapper">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="header-bottom">
+            <div class="nav-container">
+                <ul class="category-nav">
+                    <li class="cat-item has-dropdown">
+                        <a href="design.html">Design</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Design</h4>
+                                <a href="design.html?sub=Logo Design">Logo Design</a>
+                                <a href="design.html?sub=Brand Identity">Brand Identity</a>
+                                <a href="design.html?sub=Illustration">Illustration</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html?sub=UI/UX Design">UI/UX Design</a>
+                                <a href="design.html?sub=Poster & Flyer">Poster & Flyer</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html?sub=Web Development">Web Development</a>
+                                <a href="development.html?sub=Mobile Apps">Mobile Apps</a>
+                                <a href="development.html?sub=WordPress">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html?sub=SEO">SEO</a>
+                                <a href="development.html?sub=Database">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html?sub=Articles & Blog Posts">Articles & Blog Posts</a>
+                                <a href="writing.html?sub=Copywriting">Copywriting</a>
+                                <a href="writing.html?sub=Translations">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html?sub=Proofreading">Proofreading</a>
+                                <a href="writing.html?sub=Creative Writing">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html?sub=Voice Over">Voice Over</a>
+                                <a href="audio.html?sub=Music Production">Music Production</a>
+                                <a href="audio.html?sub=Video Editing">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html?sub=Podcast Editing">Podcast Editing</a>
+                                <a href="audio.html?sub=Subtitles">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <main class="messages-container">
+        <aside class="chats-sidebar">
+            <div class="sidebar-header">
+                <h2>Messages</h2>
+            </div>
+            <div class="chat-list" id="chat-list">
+                <!-- Chats will be rendered here -->
+            </div>
+        </aside>
+
+        <section class="chat-window" id="chat-window">
+            <div class="no-chat-selected" id="no-chat-view">
+                <i class="ph ph-chats-circle"></i>
+                <p>Select a conversation to start messaging</p>
+            </div>
+
+            <div id="active-chat-view" style="display: none; height: 100%; flex-direction: column;">
+                <div class="chat-header">
+                    <img src="" alt="Avatar" class="chat-avatar" id="active-chat-avatar">
+                    <h3 id="active-chat-name">Seller Name</h3>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <!-- Messages will be rendered here -->
+                </div>
+                <div class="chat-input-area">
+                    <form onsubmit="sendMessage(event)" class="input-wrapper">
+                        <input type="text" id="message-input" placeholder="Type your message here..." autocomplete="off">
+                        <button type="submit" class="btn-send"><i class="ph-fill ph-paper-plane-right"></i></button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+        let chats = [];
+        let activeChatEmail = null;
+
+        
+        const socket = new WebSocket(`ws://localhost:8000/messages/ws/${currentUser.id}`);
+
+        // 1. Обработка открытия соединения
+        socket.onopen = (e) => {
+            console.log("Соединение установлено");
+        };
+
+        // 2. Прием сообщений от сервера
+        socket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            renderMessages()
+            
+            // Форматируем вывод: "От 2: Всем привет!"
+            const messageLine = `От ${data.sender_id}: ${data.message}`;
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!currentUser.email) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // Update user info in header immediately
+            const userNameDisplay = document.getElementById('user-name-display');
+            const userAvatarDisplay = document.getElementById('user-avatar');
+            if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || 'User';
+            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            
+            if (document.getElementById('guest-actions')) document.getElementById('guest-actions').style.display = 'none';
+            document.getElementById('user-actions').style.display = 'flex';
+
+            // Handle URL params if coming from a specific gig
+            const urlParams = new URLSearchParams(window.location.search);
+            const sellerEmail = urlParams.get('seller');
+            if (sellerEmail) {
+                activeChatEmail = sellerEmail;
+                // Create a placeholder chat if it doesn't exist
+                ensureChatExists(sellerEmail);
+            }
+
+            await loadChats();
+            renderChatList();
+            
+            if (activeChatEmail) {
+                openChat(activeChatEmail);
+            }
+        });
+
+        async function ensureChatExists(email) {
+            // let messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
+            const chatExists = messages.some(m => 
+                (m.sender_email === currentUser.email && m.receiver_email === email) || 
+                (m.sender_email === email && m.receiver_email === currentUser.email)
+            );
+            
+            if (!chatExists) {
+                // Add a "system" message or just a marker?
+                // For now, we'll just let the list rendering handle it by looking at messages.
+            }
+        }
+
+        async function loadChats() {
+            try {
+                const response = await fetch('http://localhost:8000/messages/my/all', {
+                    method: 'GET',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+                });
+
+                if (!response.ok) throw new Error('Failed to fetch messages');
+                const messages = await response.json();
+
+                const uniqueEmails = new Set();
+                messages.forEach(m => {
+                    if (m.sender_email === currentUser.email) uniqueEmails.add(m.receiver_email);
+                    if (m.receiver_email === currentUser.email) uniqueEmails.add(m.sender_email);
+                });
+
+                // Проверка URL на наличие продавца
+                const urlParams = new URLSearchParams(window.location.search);
+                const sellerEmail = urlParams.get('seller');
+                if (sellerEmail) uniqueEmails.add(sellerEmail);
+
+                // Использование Promise.all для корректной обработки асинхронных вызовов в map
+                chats = await Promise.all(Array.from(uniqueEmails).map(async (email) => {
+                    const last = await getLastMessage(email); // Теперь email определен
+                    return {
+                        email,
+                        name: email.split('@')[0],
+                        avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=random`,
+                        lastMsg: last
+                    };
+                }));
+
+                renderChatList(); // Вызываем отрисовку ПОСЛЕ того, как данные загружены
+            } catch (error) {
+                console.error("Ошибка загрузки чатов:", error);
+            }
+        }
+
+        async function getLastMessage(email) {
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
+            const filtered = messages.filter(m => 
+                (m.sender_email === currentUser.email && m.receiver_email === email) || 
+                (m.sender_email === email && m.receiver_email === currentUser.email)
+            );
+            return filtered.length > 0 ? filtered[filtered.length - 1].content : 'No messages yet';
+        }
+
+        function renderChatList() {
+            const list = document.getElementById('chat-list');
+            list.innerHTML = chats.map(chat => `
+                <div class="chat-item ${activeChatEmail === chat.email ? 'active' : ''}" onclick="openChat('${chat.email}')">
+                    <img src="${chat.avatar}" alt="${chat.name}" class="chat-avatar">
+                    <div class="chat-info">
+                        <span class="chat-name">${chat.name}</span>
+                        <p class="chat-last-msg">${chat.lastMsg}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openChat(email) {
+            activeChatEmail = email;
+            document.getElementById('no-chat-view').style.display = 'none';
+            document.getElementById('active-chat-view').style.display = 'flex';
+            
+            const chat = chats.find(c => c.email === email) || {
+                name: email.split('@')[0],
+                avatar: `https://ui-avatars.com/api/?name=${email.split('@')[0]}&background=random`
+            };
+            
+            document.getElementById('active-chat-name').textContent = chat.name;
+            document.getElementById('active-chat-avatar').src = chat.avatar;
+            
+            renderMessages();
+            renderChatList();
+
+            // Update user info in header
+            const userNameDisplay = document.getElementById('user-name-display');
+            const userAvatarDisplay = document.getElementById('user-avatar');
+            if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || 'User';
+            if (userAvatarDisplay) userAvatarDisplay.src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            
+            if (document.getElementById('guest-actions')) document.getElementById('guest-actions').style.display = 'none';
+            document.getElementById('user-actions').style.display = 'flex';
+        }
+
+        // Dropdown toggle logic
+        const profileTrigger = document.getElementById('profile-trigger');
+        const userDropdownWrapper = document.getElementById('user-dropdown-wrapper');
+        if (profileTrigger && userDropdownWrapper) {
+            profileTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                userDropdownWrapper.classList.toggle('active');
+            });
+            document.addEventListener('click', () => userDropdownWrapper.classList.remove('active'));
+        }
+
+        async function renderMessages() {
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            const response = await fetch('http://localhost:8000/messages/my/all', {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                    }
+            });
+
+            const messages = await response.json();
+
+            const filtered = messages.filter(m => 
+                (m.sender_email === currentUser.email && m.receiver_email === activeChatEmail) || 
+                (m.sender_email === activeChatEmail && m.receiver_email === currentUser.email)
+            );
+            
+            const container = document.getElementById('chat-messages');
+            container.innerHTML = filtered.map(m => `
+                <div class="message ${m.sender_email === currentUser.email ? 'sent' : 'received'}">
+                    ${m.content}
+                </div>
+            `).join('');
+            
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendMessage(e) {
+            e.preventDefault();
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (!text || !activeChatEmail) return;
+
+            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
+            // const response = await fetch('http://localhost:8000/messages/my/all', {
+            //     method: 'GET',
+            //     headers: { 'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            //         }
+            // });
+
+            // const messages = await response.json();
+
+            // messages.push({
+            //     from: currentUser.email,
+            //     to: activeChatEmail,
+            //     text,
+            //     timestamp: new Date().toISOString()
+            // });
+            
+            // localStorage.setItem('qwork_messages', JSON.stringify(messages));
+
+            // const response2 = await fetch('http://localhost:8000/messages/send', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json',
+            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+            //         },
+            //     body: JSON.stringify({
+            //         sender_id: currentUser.id,
+            //         receiver_email: activeChatEmail,
+            //         content: text
+            //     })
+            // });
+
+            const response = await fetch(`http://localhost:8000/messages/get-id-by-email/${activeChatEmail}`, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+        
+            const receiverData = await response.json();
+            console.log("Receiver data:", receiverData);
+        
+            const payload = {
+                receiver_id: receiverData.user_id,
+                message: text
+            };
+
+            // Отправляем JSON на сервер
+            socket.send(JSON.stringify(payload));
+            console.log("Сообщение отправлено:", payload);
+
+
+            input.value = '';
+            
+            loadChats();
+            renderMessages();
+            renderChatList();
+        }
+    </script>
+</body>
+
+</html>

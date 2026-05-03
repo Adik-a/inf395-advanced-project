@@ -4,16 +4,298 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile Dashboard - QWork</title>
+    <title>User Profile - QWork</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .profile-header-bg {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), #0089aa);
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+        }
+
+        .profile-user-card {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            margin-top: -100px;
+            padding: 30px;
+            box-shadow: var(--shadow-md);
+            display: flex;
+            gap: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .profile-user-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            border: 5px solid var(--white);
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .profile-user-info {
+            flex: 1;
+            padding-top: 20px;
+            min-width: 0; /* Prevents flex item from expanding beyond container */
+        }
+
+        .profile-user-info h1, .profile-user-info p, .profile-section p, .skill-tag {
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+
+        .profile-user-info h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .profile-user-info p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .profile-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .meta-item i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .profile-section {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            padding: 25px;
+            border: 1px solid var(--border);
+            margin-bottom: 30px;
+        }
+
+        .profile-section h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .skill-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            margin: 0 8px 8px 0;
+            color: #475569;
+        }
+
+        .my-qworks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-user-card {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .profile-meta {
+                justify-content: center;
+            }
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-scroll-area {
+            padding: 25px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 2000;
+            animation: slideInRight 0.3s ease;
+        }
+
+        .toast.active {
+            display: flex;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 
 <body class="bg-gray">
-    <!-- Header -->
+
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
@@ -25,24 +307,31 @@
                 </div>
 
                 <div class="header-actions" id="guest-actions">
-                    <a href="#" class="freelancer-link">Are you a freelancer?</a>
                     <a href="auth.html" class="sign-in-link">Sign In</a>
                     <a href="auth.html" class="btn btn-primary">Sign Up</a>
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="profile.html" class="nav-item" style="color: var(--primary); font-weight: 600;">Dashboard</a>
-                    <a href="#" class="nav-item">Messages</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="messages.html" class="nav-item">Messages</a>
                     <button class="icon-btn" aria-label="Notifications"
                         style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
-                    <div class="user-profile"
-                        style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
-                            style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
-                        <span id="user-name-display"
-                            style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item"
-                            style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar"
+                                class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item"
+                                style="color:var(--primary); font-weight:600;">Profile</a>
+                            <a href="#" class="user-menu-item" onclick="openEditModal()">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -50,187 +339,184 @@
         <div class="header-bottom">
             <div class="nav-container">
                 <ul class="category-nav">
-                    <li class="cat-item"><a href="#">Design</a></li>
-                    <li class="cat-item"><a href="#">Development & IT</a></li>
                     <li class="cat-item has-dropdown">
-                        <a href="#">Writing & Translations</a>
+                        <a href="design.html">Design</a>
                         <div class="cat-dropdown">
                             <div class="dropdown-col">
-                                <h4>Writing & Translations</h4>
-                                <a href="#">Articles</a>
-                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
-                                <a href="#">Business Names & Slogans</a>
-                                <a href="#">Website Content Posting</a>
-                                <a href="#">Creative Writing</a>
+                                <h4>Design</h4>
+                                <a href="design.html">Logo Design</a>
+                                <a href="design.html">Brand Identity</a>
+                                <a href="design.html">Illustration</a>
                             </div>
+                            <div class="dropdown-divider"></div>
                             <div class="dropdown-col">
-                                <h4>&nbsp;</h4>
-                                <a href="#">Scriptwriting</a>
-                                <a href="#">Proofreading & Editing</a>
-                                <a href="#">Transcripts</a>
-                                <a href="#">Translations</a>
-                                <a href="#">Resumes & Job Ads</a>
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html">UI/UX Design</a>
+                                <a href="design.html">Poster & Flyer</a>
                             </div>
                         </div>
                     </li>
-                    <li class="cat-item"><a href="#">Audio & Video</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html">Web Development</a>
+                                <a href="development.html">Mobile Apps</a>
+                                <a href="development.html">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html">SEO</a>
+                                <a href="development.html">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html">Articles & Blog Posts</a>
+                                <a href="writing.html">Copywriting</a>
+                                <a href="writing.html">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html">Proofreading</a>
+                                <a href="writing.html">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html">Voice Over</a>
+                                <a href="audio.html">Music Production</a>
+                                <a href="audio.html">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html">Podcast Editing</a>
+                                <a href="audio.html">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
     </header>
 
-    <main class="dashboard-main">
-        <div class="dashboard-container">
-            <!-- Sidebar -->
-            <aside class="dashboard-sidebar">
-                <div class="profile-card">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
-                    <h2 class="profile-name" id="dashboard-name">Daniel R.</h2>
-                    <span class="profile-role">Seller</span>
+    <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        <div class="profile-header-bg"></div>
 
-                    <div class="profile-stats">
-                        <div class="stat-row">
-                            <span class="stat-name">Reliability</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
+        <div class="profile-user-card">
+            <img src="https://i.pravatar.cc/150?img=11" alt="User" class="profile-user-img" id="profile-img-large">
+            <div class="profile-user-info">
+                <h1 id="profile-name-large">Daniel R.</h1>
+                <p id="profile-bio">Professional UI/UX Designer & Frontend Developer based in Almaty. Helping businesses
+                    build stunning digital products.</p>
+                <div class="profile-meta">
+                    <div class="meta-item"><i class="ph ph-map-pin"></i> <span id="profile-location">Almaty,
+                            Kazakhstan</span></div>
+                    <div class="meta-item"><i class="ph ph-star-fill" style="color:#ffb33e;"></i> 5.0 (24 reviews)</div>
+                    <div class="meta-item"><i class="ph ph-clock"></i> Member since 2024</div>
+                </div>
+            </div>
+            <div style="padding-top: 20px; display: flex; gap: 12px; align-items: center;">
+                <button class="btn btn-primary" onclick="openEditModal()" id="edit-profile-btn" style="width: auto; padding: 10px 24px;">Edit Profile</button>
+                <button class="btn btn-secondary" id="contact-user-btn" style="display: none; width: auto; padding: 10px 24px;">Message</button>
+            </div>
+        </div>
+
+        <!-- Edit Profile Modal -->
+        <div id="edit-profile-modal" class="modal-overlay">
+            <div class="modal-content profile-edit-modal">
+                <div class="modal-header">
+                    <h2>Edit Profile</h2>
+                    <button class="close-modal" onclick="closeEditModal()"><i class="ph ph-x"></i></button>
+                </div>
+                <form id="edit-profile-form" onsubmit="saveProfileChanges(event)">
+                    <div class="modal-scroll-area">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <input type="text" id="edit-fname" maxlength="50" required>
                             </div>
-                            <span class="stat-percent">100%</span>
-                        </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Punctuality</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <input type="text" id="edit-lname" maxlength="50">
                             </div>
-                            <span class="stat-percent">100%</span>
                         </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Response Rate</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
+                        <div class="form-group">
+                            <label>Username</label>
+                            <input type="text" id="edit-username" maxlength="30" placeholder="@username">
                         </div>
-                        <div class="stat-row">
-                            <span class="stat-name">Response Time</span>
-                            <div class="progress-bar-wrapper">
-                                <div class="progress-bar-fill" style="width: 100%;"></div>
-                            </div>
-                            <span class="stat-percent">100%</span>
+                        <div class="form-group">
+                            <label>Profile Bio (Short tagline)</label>
+                            <input type="text" id="edit-bio" maxlength="100" placeholder="e.g. Professional Designer">
                         </div>
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="edit-location" maxlength="100" placeholder="e.g. Almaty, Kazakhstan">
+                        </div>
+                        <div class="form-group">
+                            <label>About Me</label>
+                            <textarea id="edit-about" rows="4" maxlength="1000" placeholder="Tell us about yourself..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Skills (separate by commas)</label>
+                            <input type="text" id="edit-skills" maxlength="200" placeholder="e.g. UI Design, Figma, React">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary"
+                            style="padding: 12px 24px; border: 1px solid var(--border);"
+                            onclick="closeEditModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary"
+                            style="padding: 12px 40px; font-weight: 700; background: var(--primary); min-width: 120px; font-size: 16px;">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="toast-notify" class="toast">
+            <i class="ph ph-check-circle" style="font-size: 20px;"></i>
+            <span>Changes saved successfully!</span>
+        </div>
+
+        <div class="profile-grid">
+            <aside>
+                <div class="profile-section">
+                    <h3>About Me</h3>
+                    <p id="profile-about" style="font-size:14px; line-height:1.6; color:var(--text-secondary);">
+                        Passionate about creating clean and functional user interfaces. Over 5 years of experience in
+                        the design industry. Specialized in mobile app design and web applications.
+                    </p>
+                </div>
+                <div class="profile-section">
+                    <h3>Skills</h3>
+                    <div id="skills-container">
+                        <span class="skill-tag">UI Design</span>
+                        <span class="skill-tag">UX Research</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">React.js</span>
+                        <span class="skill-tag">HTML/CSS</span>
+                        <span class="skill-tag">Branding</span>
                     </div>
                 </div>
             </aside>
 
-            <!-- Main Content -->
-            <section class="dashboard-content">
-                <!-- Data Blocks -->
-                <div class="dashboard-block">
-                    <h3>My Orders <span class="badge-neutral">0</span></h3>
-                </div>
-
-                <div class="dashboard-block flex-between">
-                    <h3>My QWorks <span class="badge-neutral">0</span></h3>
-                    <a href="#" class="btn btn-primary-outline">Create a QWork</a>
-                </div>
-
-                <!-- Success Banner -->
-                <div class="success-banner">
-                    <div class="banner-text">
-                        <h2>Four Simple Steps to QWork Success</h2>
-                        <p>The secret to success on QWork is starting off on the right foot and actively maintaining your ratings. Here are some tips to help you become a top seller on QWork.</p>
-                    </div>
-                    <img src="assets/images/trophy.png" alt="Success Trophy" class="banner-image">
-                </div>
-
-                <!-- Steps List -->
-                <div class="steps-list">
-                    <!-- Step 1 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-magic-wand"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 1: Create your QWorks—the more, the better</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/9 active QWorks</span>
-                                <i class="ph ph-question marker-icon"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-                    
-                    <!-- Step 2 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-megaphone"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 2: Share your QWorks to get your first orders and reviews!</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/10 reviews</span>
-                                <i class="ph ph-question marker-icon"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-
-                    <!-- Step 3 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-device-mobile"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 3: Get the QWork app</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">You haven't downloaded the app yet</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-
-                    <!-- Step 4 -->
-                    <div class="step-item">
-                        <div class="step-icon">
-                            <i class="ph ph-graduation-cap"></i>
-                        </div>
-                        <div class="step-details">
-                            <h4>Step 4: Take our free introductory course How To Earn on QWork</h4>
-                            <div class="step-progress">
-                                <div class="step-bar">
-                                    <div class="step-fill" style="width: 0%;"></div>
-                                </div>
-                                <span class="step-text">0/7 lessons completed</span>
-                            </div>
-                        </div>
-                        <a href="#" class="btn btn-primary-outline">Learn More</a>
-                    </div>
-                </div>
-
-                <!-- Tips Section -->
-                <div class="tips-grid">
-                    <div class="tip-card">
-                        <div class="tip-header">
-                            <h4>Tip #6</h4>
-                            <i class="ph ph-lightbulb"></i>
-                        </div>
-                        <p>Be proactive! Share your QWorks on social media, messengers, and other websites. You can also bid on buyer requests in the Exchange. This can be particularly helpful when you're just getting started and don't have a strong rating yet.</p>
-                    </div>
-
-                    <div class="tip-card">
-                        <div class="tip-header">
-                            <h4>Tip #14</h4>
-                            <i class="ph ph-lightbulb"></i>
-                        </div>
-                        <p>Always provide clear, concrete details to explain the price you are quoting, especially if it is higher than the buyer might initially expect.</p>
+            <section>
+                <div class="profile-section">
+                    <h3 id="services-count-title">My Services (0)</h3>
+                    <div id="profile-qworks-grid" class="my-qworks-grid">
+                        <p style="color: var(--text-secondary); font-size: 14px;">No active services to display.</p>
                     </div>
                 </div>
             </section>
@@ -241,29 +527,7 @@
         <div class="footer-content">
             <div class="footer-col-main">
                 <div class="footer-logo">QWork</div>
-                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH EXPERTISE ACROSS THE STEPPE.</p>
-            </div>
-            <div class="footer-links">
-                <div class="footer-column">
-                    <h4>COMPANY</h4>
-                    <a href="#">ABOUT US</a>
-                    <a href="#">TERMS OF SERVICE</a>
-                    <a href="#">PRIVACY POLICY</a>
-                </div>
-                <div class="footer-column">
-                    <h4>SUPPORT</h4>
-                    <a href="#">CONTACT SUPPORT</a>
-                    <a href="#">HELP CENTER</a>
-                    <a href="#">KZT RATES</a>
-                </div>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2024 QWORK KAZAKHSTAN. ALL RIGHTS RESERVED. | KZT</p>
-            <div class="social-links">
-                <a href="#"><i class="ph ph-instagram-logo"></i></a>
-                <a href="#"><i class="ph ph-twitter-logo"></i></a>
-                <a href="#"><i class="ph ph-youtube-logo"></i></a>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE.</p>
             </div>
         </div>
     </footer>
@@ -271,22 +535,175 @@
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Update profile name automatically if logged in
-            const currentUserStr = localStorage.getItem('qwork_currentUser');
-            if (currentUserStr) {
-                try {
-                    const currentUser = JSON.parse(currentUserStr);
-                    const dbName = document.getElementById('dashboard-name');
-                    if (dbName) {
-                        let nameStr = currentUser.first_name || currentUser.fname || currentUser.email; 
-                        if (currentUser.last_name || currentUser.lname) {
-                            nameStr += ' ' + (currentUser.last_name || currentUser.lname);
-                        }
-                        dbName.textContent = nameStr;
-                    }
-                } catch(e) { console.error(e); }
+            loadUserProfile();
+            loadUserGigs();
+
+            // Check if we should open the edit modal automatically
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('edit') === 'true') {
+                openEditModal();
+                // Clean up the URL without refreshing
+                window.history.replaceState({}, document.title, window.location.pathname);
             }
         });
+
+        function loadUserProfile() {
+            const currentUserStr = localStorage.getItem('qwork_currentUser');
+            if (currentUserStr) {
+                const user = JSON.parse(currentUserStr);
+
+                // Update text elements only if they have values
+                if (user.fname || user.lname || user.first_name || user.last_name) {
+                    const fullName = (user.fname || user.first_name || '') + ' ' + (user.lname || user.last_name || '');
+                    document.getElementById('profile-name-large').textContent = fullName.trim() || 'Daniel R.';
+                }
+
+                if (user.bio) document.getElementById('profile-bio').textContent = user.bio;
+                if (user.location) document.getElementById('profile-location').textContent = user.location;
+                if (user.about) document.getElementById('profile-about').textContent = user.about;
+
+                if (user.avatar) {
+                    document.getElementById('profile-img-large').src = user.avatar;
+                }
+
+                // Show/hide edit vs message buttons
+                const currentLoggedUserStr = localStorage.getItem('qwork_currentUser');
+                if (currentLoggedUserStr) {
+                    const loggedUser = JSON.parse(currentLoggedUserStr);
+                    const isMyProfile = loggedUser.username === user.username;
+                    document.getElementById('edit-profile-btn').style.display = isMyProfile ? 'block' : 'none';
+                    document.getElementById('contact-user-btn').style.display = isMyProfile ? 'none' : 'block';
+                    if (!isMyProfile) {
+                        document.getElementById('contact-user-btn').onclick = () => contactUser(user.username);
+                    }
+                }
+
+                // Render skills
+                if (user.skills) {
+                    const skillsContainer = document.getElementById('skills-container');
+                    skillsContainer.innerHTML = '';
+                    const skills = Array.isArray(user.skills) ? user.skills : user.skills.split(',').map(s => s.trim());
+
+                    skills.forEach(skill => {
+                        if (skill) {
+                            const tag = document.createElement('span');
+                            tag.className = 'skill-tag';
+                            tag.textContent = skill;
+                            skillsContainer.appendChild(tag);
+                        }
+                    });
+                }
+            }
+        }
+
+        function loadUserGigs() {
+            const currentUserStr = localStorage.getItem('qwork_currentUser');
+            const myGigsStr = localStorage.getItem('qwork_my_gigs');
+            
+            if (currentUserStr && myGigsStr) {
+                const user = JSON.parse(currentUserStr);
+                const userName = (user.fname || user.first_name || 'User') + ' ' + (user.lname || user.last_name || '');
+                const userAvatar = `https://ui-avatars.com/api/?name=${user.fname || 'U'}&background=random`;
+                
+                let myGigs = JSON.parse(myGigsStr);
+                // Filter by owner and status
+                myGigs = myGigs.filter(g => g.owner_email === user.email && g.status === 'Active');
+                const grid = document.getElementById('profile-qworks-grid');
+                const title = document.getElementById('services-count-title');
+                
+                if (myGigs.length > 0) {
+                    title.textContent = `My Services (${myGigs.length})`;
+                    grid.innerHTML = '';
+                    myGigs.forEach(gig => {
+                        const card = document.createElement('div');
+                        card.className = 'service-card';
+                        card.style.cursor = 'pointer';
+                        card.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+                        
+                        const imgHtml = gig.image
+                            ? `<img src="${gig.image}" alt="${gig.title}">`
+                            : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
+
+                        card.innerHTML = `
+                            <div class="service-image">
+                                ${imgHtml}
+                                <span class="service-tag">${gig.category || 'SERVICE'}</span>
+                            </div>
+                            <div class="service-content">
+                                <div class="service-author">
+                                    <img src="${userAvatar}" alt="${userName}">
+                                    <div>
+                                        <span class="author-name">${userName}</span>
+                                        <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                                    </div>
+                                </div>
+                                <h3 class="service-title">${gig.title}</h3>
+                                <div class="service-footer">
+                                    <span class="price-label">FROM</span>
+                                    <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(card);
+                    });
+                }
+            }
+        }
+
+        function openEditModal() {
+            const user = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+            document.getElementById('edit-fname').value = user.fname || user.first_name || 'Daniel';
+            document.getElementById('edit-lname').value = user.lname || user.last_name || 'R.';
+            document.getElementById('edit-username').value = user.username || '@daniel_r';
+            document.getElementById('edit-bio').value = user.bio || 'Professional UI/UX Designer & Frontend Developer based in Almaty.';
+            document.getElementById('edit-location').value = user.location || 'Almaty, Kazakhstan';
+            document.getElementById('edit-about').value = user.about || 'Passionate about creating clean and functional user interfaces. Over 5 years of experience in the design industry.';
+            document.getElementById('edit-skills').value = user.skills || 'UI Design, UX Research, Figma, React.js, HTML/CSS, Branding';
+
+            document.getElementById('edit-profile-modal').classList.add('active');
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-profile-modal').classList.remove('active');
+        }
+
+        function saveProfileChanges(e) {
+            e.preventDefault();
+            const user = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+
+            // Collect data
+            user.fname = document.getElementById('edit-fname').value;
+            user.first_name = user.fname;
+            user.lname = document.getElementById('edit-lname').value;
+            user.last_name = user.lname;
+            user.username = document.getElementById('edit-username').value;
+            user.bio = document.getElementById('edit-bio').value;
+            user.location = document.getElementById('edit-location').value;
+            user.about = document.getElementById('edit-about').value;
+            user.skills = document.getElementById('edit-skills').value;
+
+            // Save to localStorage
+            localStorage.setItem('qwork_currentUser', JSON.stringify(user));
+
+            // Close modal and refresh UI
+            closeEditModal();
+            loadUserProfile();
+
+            // Show toast notification
+            showToast();
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast-notify');
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 3000);
+        }
+
+        function contactUser(username) {
+            window.location.href = `messages.html?contact=${username}`;
+        }
     </script>
 </body>
 

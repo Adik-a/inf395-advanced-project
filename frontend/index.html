@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QWork - Freelance Experts for Kazakhstan</title>
-    <meta name="description" content="Connect with top local talent in Kazakhstan. Scale your business with verified professionals.">
+    <meta name="description"
+        content="Connect with top local talent in Kazakhstan. Scale your business with verified professionals.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-top">
             <div class="nav-container">
                 <a href="#" class="logo">QWork</a>
-                
+
                 <div class="header-search">
                     <input type="text" placeholder="Find Services">
                     <button type="submit" class="search-btn"><i class="ph ph-magnifying-glass"></i></button>
                 </div>
-                
+
                 <div class="header-actions" id="guest-actions">
                     <a href="#" class="freelancer-link">Are you a freelancer?</a>
                     <a href="auth.html" class="sign-in-link">Sign In</a>
@@ -30,13 +33,26 @@
                 </div>
 
                 <div class="header-actions" id="user-actions" style="display: none;">
-                    <a href="#" class="nav-item">Dashboard</a>
-                    <a href="#" class="nav-item">Messages</a>
-                    <button class="icon-btn" aria-label="Notifications" style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
-                    <div class="user-profile" style="display: flex; align-items: center; border-left: 1px solid var(--border); padding-left: 20px; margin-left: 10px;">
-                        <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
-                        <span id="user-name-display" style="font-size: 14px; font-weight: 600; margin-left: 8px;">User</span>
-                        <a href="#" onclick="logoutUser(event)" class="nav-item" style="margin-left: 16px; color: #ef4444;">Logout</a>
+                    <a href="dashboard.html" class="nav-item">Dashboard</a>
+                    <a href="messages.html" class="nav-item">Messages</a>
+                    <button class="icon-btn" aria-label="Notifications"
+                        style="font-size: 20px; color: var(--text-secondary);"><i class="ph ph-bell"></i></button>
+                    
+                    <div class="user-dropdown-wrapper" id="user-dropdown">
+                        <div class="user-profile-trigger" id="profile-trigger">
+                            <img src="https://i.pravatar.cc/100?img=1" alt="Profile" id="user-avatar" class="avatar-small"
+                                style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1px solid var(--border);">
+                            <span id="user-name-display" class="user-name-display">User</span>
+                            <i class="ph ph-caret-down" style="font-size: 12px; color: var(--text-secondary);"></i>
+                        </div>
+                        
+                        <div class="user-dropdown-menu">
+                            <a href="profile.html" class="user-menu-item">Profile</a>
+                            <a href="profile.html?edit=true" class="user-menu-item">Settings</a>
+                            <a href="#" class="user-menu-item">Cash Flow</a>
+                            <div class="user-menu-divider"></div>
+                            <a href="#" onclick="logoutUser(event)" class="user-menu-item sign-out">Sign out</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,30 +60,74 @@
         <div class="header-bottom">
             <div class="nav-container">
                 <ul class="category-nav">
-                    <li class="cat-item"><a href="#">Design</a></li>
-                    <li class="cat-item"><a href="#">Development & IT</a></li>
                     <li class="cat-item has-dropdown">
-                        <a href="#">Writing & Translations</a>
+                        <a href="design.html">Design</a>
                         <div class="cat-dropdown">
                             <div class="dropdown-col">
-                                <h4>Writing & Translations</h4>
-                                <a href="#">Articles</a>
-                                <a href="#" class="active-sub">Business & Marketing Copywriting</a>
-                                <a href="#">Business Names & Slogans</a>
-                                <a href="#">Website Content Posting</a>
-                                <a href="#">Creative Writing</a>
+                                <h4>Design</h4>
+                                <a href="design.html?sub=Logo Design">Logo Design</a>
+                                <a href="design.html?sub=Brand Identity">Brand Identity</a>
+                                <a href="design.html?sub=Illustration">Illustration</a>
                             </div>
+                            <div class="dropdown-divider"></div>
                             <div class="dropdown-col">
-                                <h4>&nbsp;</h4>
-                                <a href="#">Scriptwriting</a>
-                                <a href="#">Proofreading & Editing</a>
-                                <a href="#">Transcripts</a>
-                                <a href="#">Translations</a>
-                                <a href="#">Resumes & Job Ads</a>
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="design.html?sub=UI/UX Design">UI/UX Design</a>
+                                <a href="design.html?sub=Poster & Flyer">Poster & Flyer</a>
                             </div>
                         </div>
                     </li>
-                    <li class="cat-item"><a href="#">Audio & Video</a></li>
+                    <li class="cat-item has-dropdown">
+                        <a href="development.html">Development & IT</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Development & IT</h4>
+                                <a href="development.html?sub=Web Development">Web Development</a>
+                                <a href="development.html?sub=Mobile Apps">Mobile Apps</a>
+                                <a href="development.html?sub=WordPress">WordPress</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="development.html?sub=SEO">SEO</a>
+                                <a href="development.html?sub=Database">Database</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="writing.html">Writing & Translation</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Writing & Translation</h4>
+                                <a href="writing.html?sub=Articles & Blog Posts">Articles & Blog Posts</a>
+                                <a href="writing.html?sub=Copywriting">Copywriting</a>
+                                <a href="writing.html?sub=Translations">Translations</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="writing.html?sub=Proofreading">Proofreading</a>
+                                <a href="writing.html?sub=Creative Writing">Creative Writing</a>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="cat-item has-dropdown">
+                        <a href="audio.html">Audio & Video</a>
+                        <div class="cat-dropdown">
+                            <div class="dropdown-col">
+                                <h4>Audio & Video</h4>
+                                <a href="audio.html?sub=Voice Over">Voice Over</a>
+                                <a href="audio.html?sub=Music Production">Music Production</a>
+                                <a href="audio.html?sub=Video Editing">Video Editing</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-col">
+                                <h4 style="visibility: hidden;">&nbsp;</h4>
+                                <a href="audio.html?sub=Podcast Editing">Podcast Editing</a>
+                                <a href="audio.html?sub=Subtitles">Subtitles</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -79,7 +139,8 @@
             <div class="hero-content">
                 <span class="badge">#1 MARKETPLACE IN KAZAKHSTAN</span>
                 <h1>Freelance<br>Experts for<br><span class="highlight">Kazakhstan</span></h1>
-                <p>Connect with top local talent. Scale your business with verified professionals from Almaty to Astana.</p>
+                <p>Connect with top local talent. Scale your business with verified professionals from Almaty to Astana.
+                </p>
                 <div class="hero-search">
                     <i class="ph ph-magnifying-glass" style="color: #6c757d;"></i>
                     <input type="text" placeholder="Search for a designer, developer, or tutor...">
@@ -243,32 +304,35 @@
             <div class="why-choose-container">
                 <div class="why-content">
                     <h2>Why Kazakh businesses need QWork?</h2>
-                    
+
                     <div class="feature-list">
                         <div class="feature-item">
                             <div class="feature-icon"><i class="ph ph-shield-check"></i></div>
                             <div>
                                 <h4>Verified Professionals</h4>
-                                <p>Every freelancer on our platform goes through a multi-step verification process to ensure quality.</p>
+                                <p>Every freelancer on our platform goes through a multi-step verification process to
+                                    ensure quality.</p>
                             </div>
                         </div>
                         <div class="feature-item">
                             <div class="feature-icon"><i class="ph ph-wallet"></i></div>
                             <div>
                                 <h4>Safe Escrow Payments</h4>
-                                <p>Your funds are held safely and only released when you are 100% satisfied with the work.</p>
+                                <p>Your funds are held safely and only released when you are 100% satisfied with the
+                                    work.</p>
                             </div>
                         </div>
                         <div class="feature-item">
                             <div class="feature-icon"><i class="ph ph-headset"></i></div>
                             <div>
                                 <h4>Local KZT Support</h4>
-                                <p>Our support team is based in Kazakhstan, providing assistance in Kazakh, Russian, and English.</p>
+                                <p>Our support team is based in Kazakhstan, providing assistance in Kazakh, Russian, and
+                                    English.</p>
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="stats-card">
                     <div class="stat-main">
                         <div class="stat-icon-large"><i class="ph ph-rocket-launch"></i></div>
@@ -296,7 +360,8 @@
         <div class="footer-content">
             <div class="footer-col-main">
                 <div class="footer-logo">QWork</div>
-                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH EXPERTISE ACROSS THE STEPPE.</p>
+                <p class="footer-tagline">KAZAKHSTAN'S PREMIER FREELANCE MARKETPLACE,<br>CONNECTING AMBITION WITH
+                    EXPERTISE ACROSS THE STEPPE.</p>
             </div>
             <div class="footer-links">
                 <div class="footer-column">
@@ -324,4 +389,5 @@
     </footer>
     <script src="script.js"></script>
 </body>
+
 </html>
