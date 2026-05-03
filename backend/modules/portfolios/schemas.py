@@ -1,6 +1,16 @@
 from pydantic import BaseModel
 
 
+class FAQsSchema(BaseModel):
+    question: str
+    answer: str
+
+
+class RequirementsSchema(BaseModel):
+    requirement: str
+    is_required: bool
+
+
 class PortfoliosSchema(BaseModel):
     title: str
     category: str
@@ -35,16 +45,6 @@ class PortfoliosSchema(BaseModel):
     requirements: list[RequirementsSchema]
 
     images: list[str]
-
-
-class FAQsSchema(BaseModel):
-    question: str
-    answer: str
-
-
-class RequirementsSchema(BaseModel):
-    requirement: str
-    is_required: bool
 
 
 class PortfoliosCreateSchema(PortfoliosSchema):
