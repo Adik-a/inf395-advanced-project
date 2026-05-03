@@ -135,7 +135,7 @@
             
             <aside class="dashboard-sidebar">
                 <div class="profile-card">
-                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large">
+                    <img src="https://i.pravatar.cc/150?img=11" alt="Profile Avatar" class="profile-avatar-large" id="Profile-avatar">
                     <h2 class="profile-name" id="dashboard-name">Daniel R.</h2>
                     <span class="profile-role">Seller</span>
 
@@ -261,7 +261,7 @@
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             
             const currentUserStr = localStorage.getItem('qwork_currentUser');
             if (currentUserStr) {
@@ -278,35 +278,44 @@
                 } catch (e) { console.error(e); }
             }
             
-            const myGigsStr = localStorage.getItem('qwork_my_gigs');
+            // const myGigsStr = localStorage.getItem('qwork_my_gigs');
             const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
-            const userName = currentUser.fname || currentUser.email || 'User';
-            const userAvatar = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+            document.getElementById('Profile-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
 
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/portfolios/me', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json', 
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                },
+            })
+
+            const myGigsStr = await response.json();
             if (myGigsStr) {
                 try {
-                    let myGigs = JSON.parse(myGigsStr);
+                    let myGigs = myGigsStr;
                     // Filter by ownership
-                    myGigs = myGigs.filter(g => g.owner_email === currentUser.email);
+                    // let myGigs = myGigsStr.filter(g => g.id === currentUser.id);
                     
                     const list = document.getElementById('my-qworks-list');
                     const countBadge = document.getElementById('qwork-count');
-
+                    
                     if (myGigs.length > 0) {
                         countBadge.textContent = myGigs.length;
                         list.innerHTML = ''; 
-
+                        
                         myGigs.forEach((gig, index) => {
                             const gigEl = document.createElement('div');
                             gigEl.className = 'service-card';
                             gigEl.style.cursor = 'pointer';
                             gigEl.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
 
-                            const imgHtml = gig.image
-                                ? `<img src="${gig.image}" alt="${gig.title}">`
+                            const imgHtml = gig.images[0]
+                                ? `<img src="${gig.images[0]}" alt="${gig.title}">`
                                 : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
 
-                            const status = gig.status || 'Active';
+                            const status = gig.initial_status || 'Active';
                             const statusClass = `status-${status.toLowerCase()}`;
 
                             gigEl.innerHTML = `
@@ -326,7 +335,7 @@
                                     <h3 class="service-title">${gig.title}</h3>
                                     <div class="service-footer">
                                         <span class="price-label">FROM</span>
-                                        <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
+                                        <span class="price-value">₸ ${Number(gig.price_basic).toLocaleString()}</span>
                                     </div>
                                 </div>
                             `;

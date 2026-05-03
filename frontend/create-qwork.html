@@ -450,7 +450,7 @@
                                 <i class="ph ph-circle"></i> <span>Gallery image uploaded</span>
                             </div>
                         </div>
-                        <button class="btn-publish" onclick="publishQWork()">
+                        <button class="btn-publish" id="btn-publish" onclick="publishQWork()">
                             Publish My QWork →
                         </button>
                     </div>
@@ -479,6 +479,12 @@
 
     <script src="script.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+        });
+        
         let currentStep = 1;
         const totalSteps = 5;
         const tags = [];
@@ -779,7 +785,7 @@
                 }
                 return;
             }
-            saveDraft(true);
+            // saveDraft(true);
             goToStep(next);
         }
 
@@ -886,7 +892,6 @@
                 }
                 
                 localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
-                alert('Draft saved successfully!');
                 localStorage.removeItem('qwork_temp_form');
                 window.location.href = 'profile.html';
             }
@@ -908,7 +913,7 @@
             }
         }
 
-        function loadDraft() {
+        async function loadDraft() {
             const draftStr = localStorage.getItem('qwork_temp_form');
             if (!draftStr) return;
 
@@ -932,32 +937,32 @@
                     renderTags();
                 }
 
-                document.getElementById('basic-price').value = draft.price || '';
-                if (draft.priceStandard) document.getElementById('standard-price').value = draft.priceStandard;
-                if (draft.pricePremium) document.getElementById('premium-price').value = draft.pricePremium;
+                document.getElementById('basic-price').value = draft.price_basic || '';
+                if (draft.price_standard) document.getElementById('standard-price').value = draft.price_standard;
+                if (draft.price_premium) document.getElementById('premium-price').value = draft.price_premium;
 
-                if (draft.pkgNameBasic) document.getElementById('pkg-name-basic').value = draft.pkgNameBasic;
-                if (draft.pkgNameStandard) document.getElementById('pkg-name-standard').value = draft.pkgNameStandard;
-                if (draft.pkgNamePremium) document.getElementById('pkg-name-premium').value = draft.pkgNamePremium;
-                if (draft.descriptionBasic) document.getElementById('pkg-desc-basic').value = draft.descriptionBasic;
-                if (draft.descriptionStandard) document.getElementById('pkg-desc-standard').value = draft.descriptionStandard;
-                if (draft.descriptionPremium) document.getElementById('pkg-desc-premium').value = draft.descriptionPremium;
-                if (draft.deliveryBasic) document.getElementById('pkg-delivery-basic').value = draft.deliveryBasic;
-                if (draft.deliveryStandard) document.getElementById('pkg-delivery-standard').value = draft.deliveryStandard;
-                if (draft.deliveryPremium) document.getElementById('pkg-delivery-premium').value = draft.deliveryPremium;
-                if (draft.revisionsBasic) document.getElementById('pkg-revisions-basic').value = draft.revisionsBasic;
-                if (draft.revisionsStandard) document.getElementById('pkg-revisions-standard').value = draft.revisionsStandard;
-                if (draft.revisionsPremium) document.getElementById('pkg-revisions-premium').value = draft.revisionsPremium;
+                if (draft.package_name_basic) document.getElementById('pkg-name-basic').value = draft.package_name_basic;
+                if (draft.package_name_standard) document.getElementById('pkg-name-standard').value = draft.package_name_standard;
+                if (draft.package_name_premium) document.getElementById('pkg-name-premium').value = draft.package_name_premium;
+                if (draft.description_basic) document.getElementById('pkg-desc-basic').value = draft.description_basic;
+                if (draft.description_standard) document.getElementById('pkg-desc-standard').value = draft.description_standard;
+                if (draft.description_premium) document.getElementById('pkg-desc-premium').value = draft.description_premium;
+                if (draft.delivery_basic) document.getElementById('pkg-delivery-basic').value = draft.delivery_basic;
+                if (draft.delivery_standard) document.getElementById('pkg-delivery-standard').value = draft.delivery_standard;
+                if (draft.delivery_premium) document.getElementById('pkg-delivery-premium').value = draft.delivery_premium;
+                if (draft.revisions_basic) document.getElementById('pkg-revisions-basic').value = draft.revisions_basic;
+                if (draft.revisions_standard) document.getElementById('pkg-revisions-standard').value = draft.revisions_standard;
+                if (draft.revisionsPremium) document.getElementById('pkg-revisions-premium').value = draft.revisions_premium;
 
-                if (draft.pricingMode) {
-                    setPricingMode(draft.pricingMode);
+                if (draft.pricing_mode) {
+                    setPricingMode(draft.pricing_mode);
                 }
 
                 document.getElementById('gig-desc').value = draft.description || '';
                 document.getElementById('gig-desc').dispatchEvent(new Event('input'));
 
-                if (draft.status) {
-                    document.getElementById('gig-status').value = draft.status;
+                if (draft.initial_status) {
+                    document.getElementById('gig-status').value = draft.initial_status;
                 }
 
                 if (draft.faqs && draft.faqs.length) {
@@ -967,8 +972,8 @@
                         const item = document.createElement('div');
                         item.className = 'faq-item';
                         item.innerHTML = `
-                            <input type="text" placeholder="Question: e.g. What file formats do you provide?" value="${f.q}">
-                            <textarea placeholder="Answer: e.g. I deliver PNG, SVG, and PDF files.">${f.a}</textarea>
+                            <input type="text" placeholder="Question: e.g. What file formats do you provide?" value="${f.question}">
+                            <textarea placeholder="Answer: e.g. I deliver PNG, SVG, and PDF files.">${f.answer}</textarea>
                             <div class="faq-footer"><button class="btn-remove" onclick="removeFaq(this)">Remove</button></div>`;
                         list.appendChild(item);
                     });
@@ -981,9 +986,9 @@
                         const item = document.createElement('div');
                         item.className = 'req-item';
                         item.innerHTML = `
-                            <input type="text" placeholder="e.g. Please share your brand colors and logo preferences" value="${r.text}">
+                            <input type="text" placeholder="e.g. Please share your brand colors and logo preferences" value="${r.requirement}">
                             <div style="display:flex;align-items:center;gap:12px;">
-                                <label class="req-required"><input type="checkbox" ${r.isRequired ? 'checked' : ''}> Required</label>
+                                <label class="req-required"><input type="checkbox" ${r.is_required ? 'checked' : ''}> Required</label>
                                 <button class="btn-remove" onclick="removeRequirement(this)">Remove</button>
                             </div>`;
                         list.appendChild(item);
@@ -998,23 +1003,32 @@
                     }
                 }
 
-                if (draft.isEditing) {
-                    const topHeader = document.querySelector('.create-topbar-inner h1');
-                    if (topHeader) topHeader.textContent = 'Edit Your QWork';
-                    const publishBtn = document.querySelector('.btn-publish');
-                    if (publishBtn) publishBtn.textContent = 'Update My QWork →';
-                } else if (draft.isEditingDraft) {
-                    const topHeader = document.querySelector('.create-topbar-inner h1');
-                    if (topHeader) topHeader.textContent = 'Continue Your Draft';
-                    const saveBtn = document.querySelector('.create-topbar-actions .btn-nav-back');
-                    if (saveBtn) saveBtn.textContent = 'Update Draft';
+                // if (draft.isEditing) {
+                //     const topHeader = document.querySelector('.create-topbar-inner h1');
+                //     if (topHeader) topHeader.textContent = 'Edit Your QWork';
+                //     const publishBtn = document.querySelector('.btn-publish');
+                //     if (publishBtn) publishBtn.textContent = 'Update My QWork →';
+                // } else if (draft.isEditingDraft) {
+                //     const topHeader = document.querySelector('.create-topbar-inner h1');
+                //     if (topHeader) topHeader.textContent = 'Continue Your Draft';
+                //     const saveBtn = document.querySelector('.create-topbar-actions .btn-nav-back');
+                //     if (saveBtn) saveBtn.textContent = 'Update Draft';
+                // }
+                
+                if (draft.is_editing) {
+                    const btn = document.getElementById('btn-publish');
+                    btn.textContent = 'Update My QWork →';
+                    btn.setAttribute('onclick', `updateQWork(${draft.id})`);
                 }
+
 
                 // Removed automatic step jump to ensure we always start at Step 1
             } catch (e) { console.error('Error loading draft:', e); }
         }
 
-        function publishQWork() {
+
+
+        async function updateQWork(portfolioId) {
             if (!validateStep(5)) {
                 document.getElementById('gallery-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
@@ -1026,85 +1040,189 @@
 
             const faqs = [];
             document.querySelectorAll('#faq-list .faq-item').forEach(item => {
-                const q = item.querySelector('input').value;
-                const a = item.querySelector('textarea').value;
-                if (q && a) faqs.push({ q, a });
+                const question = item.querySelector('input').value;
+                const answer = item.querySelector('textarea').value;
+                if (question && answer) faqs.push({ question, answer });
             });
 
             const requirements = [];
             document.querySelectorAll('#req-list .req-item').forEach(item => {
-                const text = item.querySelector('input[type="text"]').value;
-                const isRequired = item.querySelector('input[type="checkbox"]').checked;
-                if (text) requirements.push({ text, isRequired });
+                const requirement = item.querySelector('input[type="text"]').value;
+                const is_required = item.querySelector('input[type="checkbox"]').checked;
+                if (requirement) requirements.push({ requirement, is_required });
             });
 
             const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
 
+            // const formData = new FormData();
+
+            selectedFiles = document.getElementById('file-input').files;
+            
+            
+
             const newGig = {
-                id: currentDraft.isEditing ? (currentDraft.id || Date.now()) : Date.now(),
                 title: document.getElementById('gig-title').value,
                 category: document.getElementById('gig-category').value,
                 subcategory: document.getElementById('gig-subcategory').value,
-                status: document.getElementById('gig-status').value,
-                pricingMode: pricingMode,
-                price: document.getElementById('basic-price').value,
-                priceStandard: document.getElementById('standard-price').value,
-                pricePremium: document.getElementById('premium-price').value,
-                pkgNameBasic: document.getElementById('pkg-name-basic').value,
-                pkgNameStandard: document.getElementById('pkg-name-standard').value,
-                pkgNamePremium: document.getElementById('pkg-name-premium').value,
-                descriptionBasic: document.getElementById('pkg-desc-basic').value,
-                descriptionStandard: document.getElementById('pkg-desc-standard').value,
-                descriptionPremium: document.getElementById('pkg-desc-premium').value,
-                deliveryBasic: document.getElementById('pkg-delivery-basic').value,
-                deliveryStandard: document.getElementById('pkg-delivery-standard').value,
-                deliveryPremium: document.getElementById('pkg-delivery-premium').value,
-                revisionsBasic: document.getElementById('pkg-revisions-basic').value,
-                revisionsStandard: document.getElementById('pkg-revisions-standard').value,
-                revisionsPremium: document.getElementById('pkg-revisions-premium').value,
+                initial_status: document.getElementById('gig-status').value,
+                pricing_mode: pricingMode,
+                price_basic: document.getElementById('basic-price').value,
+                price_standard: document.getElementById('standard-price').value,
+                price_premium: document.getElementById('premium-price').value,
+                package_name_basic: document.getElementById('pkg-name-basic').value,
+                package_name_standard: document.getElementById('pkg-name-standard').value,
+                package_name_premium: document.getElementById('pkg-name-premium').value,
+                description_basic: document.getElementById('pkg-desc-basic').value,
+                description_standard: document.getElementById('pkg-desc-standard').value,
+                description_premium: document.getElementById('pkg-desc-premium').value,
+                delivery_basic: document.getElementById('pkg-delivery-basic').value,
+                delivery_standard: document.getElementById('pkg-delivery-standard').value,
+                delivery_premium: document.getElementById('pkg-delivery-premium').value,
+                revisions_basic: document.getElementById('pkg-revisions-basic').value,
+                revisions_standard: document.getElementById('pkg-revisions-standard').value,
+                revisions_premium: document.getElementById('pkg-revisions-premium').value,
                 description: document.getElementById('gig-desc').value,
-                faqs,
-                requirements,
-                images,
-                image: images[0] || '',
-                owner_email: currentUser.email || 'guest@mail.com',
-                author_name: currentUser.fname ? `${currentUser.fname} ${currentUser.lname || ''}`.trim() : 'User',
-                author_avatar: `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`,
-                rating: 5.0,
-                reviews: 0,
-                tags,
-                createdAt: currentDraft.isEditing ? (currentDraft.createdAt || new Date().toISOString()) : new Date().toISOString()
+                faqs: faqs,
+                requirements: requirements,
+                images: [],
+                tags: tags,
             };
 
-            const existingGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-            
-            if (currentDraft.isEditing) {
-                const index = existingGigs.findIndex(g => g.id === newGig.id);
-                if (index !== -1) {
-                    existingGigs[index] = newGig;
-                } else {
-                    existingGigs.push(newGig);
-                }
-            } else {
-                existingGigs.push(newGig);
-            }
+            const response2 = await fetch(`https://inf395-advanced-project-production.up.railway.app/portfolios/change/${portfolioId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                 },
+                body: JSON.stringify(newGig)
+            });
 
-            if (currentDraft.isEditingDraft && currentDraft.draftIndex !== undefined) {
-                const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
-                savedDrafts.splice(currentDraft.draftIndex, 1);
-                localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
-            }
+            const result = await response2.json();
+            
+            const btn = document.getElementById('btn-publish');
+            btn.textContent = 'Publish My QWork →';
+            btn.setAttribute('onclick', 'publishQWork()');
 
             try {
-                localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
+                // localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
                 localStorage.removeItem('qwork_temp_form');
 
                 document.getElementById('success-overlay').classList.add('show');
             } catch (e) {
                 if (e.name === 'QuotaExceededError') {
-                    alert('Error: Browser storage is full! Please delete some old QWorks or drafts to free up space. You can also try using smaller images.');
                 } else {
-                    alert('An error occurred while saving: ' + e.message);
+                }
+            }
+        }
+
+
+
+        async function publishQWork() {
+            if (!validateStep(5)) {
+                document.getElementById('gallery-error').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            const currentDraft = JSON.parse(localStorage.getItem('qwork_temp_form') || '{}');
+            const allImgElements = document.querySelectorAll('#gallery-preview .gallery-thumb img');
+            const images = Array.from(allImgElements).map(img => img.src);
+
+            const faqs = [];
+            document.querySelectorAll('#faq-list .faq-item').forEach(item => {
+                const question = item.querySelector('input').value;
+                const answer = item.querySelector('textarea').value;
+                if (question && answer) faqs.push({ question, answer });
+            });
+
+            const requirements = [];
+            document.querySelectorAll('#req-list .req-item').forEach(item => {
+                const requirement = item.querySelector('input[type="text"]').value;
+                const is_required = item.querySelector('input[type="checkbox"]').checked;
+                if (requirement) requirements.push({ requirement, is_required });
+            });
+
+            const currentUser = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
+
+            const formData = new FormData();
+
+            selectedFiles = document.getElementById('file-input').files;
+            for (let i = 0; i < selectedFiles.length; i++) {
+                formData.append('files', selectedFiles[i]);
+            }
+
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/upload-images', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const resultt =await response.json();
+            
+
+            const newGig = {
+                title: document.getElementById('gig-title').value,
+                category: document.getElementById('gig-category').value,
+                subcategory: document.getElementById('gig-subcategory').value,
+                initial_status: document.getElementById('gig-status').value,
+                pricing_mode: pricingMode,
+                price_basic: document.getElementById('basic-price').value,
+                price_standard: document.getElementById('standard-price').value,
+                price_premium: document.getElementById('premium-price').value,
+                package_name_basic: document.getElementById('pkg-name-basic').value,
+                package_name_standard: document.getElementById('pkg-name-standard').value,
+                package_name_premium: document.getElementById('pkg-name-premium').value,
+                description_basic: document.getElementById('pkg-desc-basic').value,
+                description_standard: document.getElementById('pkg-desc-standard').value,
+                description_premium: document.getElementById('pkg-desc-premium').value,
+                delivery_basic: document.getElementById('pkg-delivery-basic').value,
+                delivery_standard: document.getElementById('pkg-delivery-standard').value,
+                delivery_premium: document.getElementById('pkg-delivery-premium').value,
+                revisions_basic: document.getElementById('pkg-revisions-basic').value,
+                revisions_standard: document.getElementById('pkg-revisions-standard').value,
+                revisions_premium: document.getElementById('pkg-revisions-premium').value,
+                description: document.getElementById('gig-desc').value,
+                faqs: faqs,
+                requirements: requirements,
+                images: resultt.urls,
+                // image: images[0] || '',
+                tags: tags,
+            };
+
+            const response2 = await fetch('https://inf395-advanced-project-production.up.railway.app/portfolios/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                 },
+                body: JSON.stringify(newGig)
+            });
+
+            const result = await response2.json();
+
+            // const existingGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
+            
+            // if (currentDraft.isEditing) {
+            //     const index = existingGigs.findIndex(g => g.id === newGig.id);
+            //     if (index !== -1) {
+            //         existingGigs[index] = newGig;
+            //     } else {
+            //         existingGigs.push(newGig);
+            //     }
+            // } else {
+            //     existingGigs.push(newGig);
+            // }
+
+            // if (currentDraft.isEditingDraft && currentDraft.draftIndex !== undefined) {
+            //     const savedDrafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+            //     savedDrafts.splice(currentDraft.draftIndex, 1);
+                // localStorage.setItem('qwork_saved_drafts', JSON.stringify(savedDrafts));
+            // }
+
+            try {
+                // localStorage.setItem('qwork_my_gigs', JSON.stringify(existingGigs));
+                localStorage.removeItem('qwork_temp_form');
+
+                document.getElementById('success-overlay').classList.add('show');
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                } else {
                 }
             }
         }

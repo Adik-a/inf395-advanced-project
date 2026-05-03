@@ -24,6 +24,10 @@ class UsersModel(Model):
     first_name: Mapped[str] = mapped_column(nullable=False)
     last_name: Mapped[str | None] = mapped_column(default=None, nullable=True)
     bio: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    location: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    about_me: Mapped[str | None] = mapped_column(default=None, nullable=True)
+    skills: Mapped[str | None] = mapped_column(default=None, nullable=True)
+
     role: Mapped[str] = mapped_column(default="user")
     rating: Mapped[float] = mapped_column(default=0.0)
     is_oauth: Mapped[bool] = mapped_column(default=False, nullable=False)

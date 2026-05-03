@@ -670,7 +670,7 @@
         let currentGig = null;
         let gigIndex = -1;
 
-        function loadServiceDetail() {
+        async function loadServiceDetail() {
             // Header Auth Logic (Shared with index)
             const currentUserStr = localStorage.getItem('qwork_currentUser');
             const guestActions = document.getElementById('guest-actions');
@@ -678,16 +678,14 @@
             const userNameDisplay = document.getElementById('user-name-display');
             const userAvatarHead = document.getElementById('user-avatar');
 
-            if (currentUserStr) {
-                const currentUser = JSON.parse(currentUserStr);
-                if (guestActions && userActions) {
-                    guestActions.style.display = 'none';
-                    userActions.style.display = 'flex';
-                    if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || currentUser.first_name || 'User';
-                    if (userAvatarHead && currentUser.avatar) userAvatarHead.src = currentUser.avatar;
-                }
+            const currentUser = JSON.parse(currentUserStr);
+            if (guestActions && userActions) {
+                guestActions.style.display = 'none';
+                userActions.style.display = 'flex';
+                if (userNameDisplay) userNameDisplay.textContent = currentUser.first_name;
+                if (userAvatarHead && currentUser.avatar) userAvatarHead.src = currentUser.avatar;
             }
-
+        
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             if (!id) {
@@ -695,79 +693,102 @@
                 return;
             }
 
-            const gigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
-            gigIndex = gigs.findIndex(g => g.id == id);
+            // const gigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]');
 
-            if (gigIndex === -1) {
-                const drafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
-                const draftIdx = drafts.findIndex(g => g.id == id);
-                if (draftIdx !== -1) {
-                    currentGig = drafts[draftIdx];
-                    gigIndex = draftIdx;
-                } else {
-                    alert('QWork not found!');
-                    window.location.href = 'dashboard.html';
-                    return;
+            const respons = await fetch(`https://inf395-advanced-project-production.up.railway.app/portfolios/user/${id}`, {
+                method: 'GET', 
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
                 }
-            } else {
-                currentGig = gigs[gigIndex];
-            }
+            });
 
-            renderDetails(currentGig);
+            const gigs = await respons.json();
+
+
+            const response = await fetch(`https://inf395-advanced-project-production.up.railway.app/users/${gigs.user_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }
+            });
+
+            const owner = await response.json();
+            
+
+            // gigIndex = 1;
+
+            // if (gigIndex === -1) {
+            //     const drafts = JSON.parse(localStorage.getItem('qwork_saved_drafts') || '[]');
+            //     const draftIdx = drafts.findIndex(g => g.id == id);
+            //     if (draftIdx !== -1) {
+            //         currentGig = drafts[draftIdx];
+            //         gigIndex = draftIdx;
+            //     } else {
+            //         window.location.href = 'dashboard.html';
+            //         return;
+            //     }
+            // } else {
+            currentGig = gigs;
+            ownerGig = owner;
+            // }
+
+            renderDetails(currentGig, owner);
         }
 
         let currentImageIndex = 0;
         let gigImages = [];
 
-        function renderDetails(gig) {
+        function renderDetails(gig, owner) {
             document.getElementById('service-title').textContent = gig.title;
-
+            
             const badge = document.getElementById('status-badge-detail');
-            const status = gig.status || 'Active';
+            const status = gig.initial_status || 'Active';
             badge.textContent = status;
             badge.className = `status-badge-mini status-${status.toLowerCase()}`;
-
+            
             document.getElementById('service-category-badge').textContent = (gig.category || '') + (gig.subcategory ? ` > ${gig.subcategory}` : '');
             updatePricingUI(gig, 'basic');
-
-            document.getElementById('service-description').textContent = gig.description || gig.desc || 'No description provided.';
-
+            
+            document.getElementById('service-description').textContent = gig.description || 'No description provided.';
+            
             // Image Slider Logic
-            gigImages = gig.images || (gig.image ? [gig.image] : []);
+            gigImages = gig.images[0] || (gig.images[0] ? [gig.images[0]] : []);
             currentImageIndex = 0;
             
             const mainImg = document.getElementById('main-image');
             const thumbRow = document.getElementById('thumb-row');
             const prevBtn = document.getElementById('slider-prev');
             const nextBtn = document.getElementById('slider-next');
-
+            
             if (gigImages.length > 0) {
-                mainImg.src = gigImages[0];
+                mainImg.src = gigImages;
                 
                 // Show/Hide slider buttons
-                if (gigImages.length > 1) {
-                    prevBtn.style.display = 'flex';
-                    nextBtn.style.display = 'flex';
-                    
-                    // Render Thumbnails
-                    thumbRow.innerHTML = gigImages.map((src, idx) => `
-                        <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToImage(${idx})">
-                            <img src="${src}" alt="Thumb ${idx + 1}">
-                        </div>
-                    `).join('');
+                
+                if (false) { // gigImages.length > 1) {
+                //     prevBtn.style.display = 'flex';
+                //     nextBtn.style.display = 'flex';
+                //     // Render Thumbnails
+                //     thumbRow.innerHTML = gigImages.map((src, idx) => `
+                //     <div class="thumb-item ${idx === 0 ? 'active' : ''}" onclick="goToImage(${idx})">
+                //         <img src="${src[0]}" alt="Thumb ${idx + 1}">
+                //         </div>
+                //         `).join('');
+                        
                 } else {
                     prevBtn.style.display = 'none';
                     nextBtn.style.display = 'none';
                     thumbRow.innerHTML = '';
                 }
             }
-
             if (gig.requirements && gig.requirements.length) {
                 document.getElementById('req-section').style.display = 'block';
                 const list = document.getElementById('requirements-list-detail');
                 list.innerHTML = gig.requirements.map(r => `
                     <li style="margin-bottom:10px;"><i class="ph ph-check-circle" style="color:var(--primary); margin-top:2px;"></i> 
-                        <span>${r.text} ${r.isRequired ? '<strong style="color:#ef4444; font-size:11px;">(REQUIRED)</strong>' : ''}</span>
+                        <span>${r.requirement} ${r.is_required ? '<strong style="color:#ef4444; font-size:11px;">(REQUIRED)</strong>' : ''}</span>
                     </li>
                 `).join('');
             }
@@ -778,8 +799,8 @@
                 const list = document.getElementById('faq-list-detail');
                 list.innerHTML = faqs.map(f => `
                     <div class="faq-item-detail">
-                        <span class="faq-q">Q: ${f.q}</span>
-                        <p class="faq-a">${f.a}</p>
+                        <span class="faq-q">Q: ${f.question}</span>
+                        <p class="faq-a">${f.answer}</p>
                     </div>
                 `).join('');
             } else {
@@ -790,8 +811,8 @@
             const currentUser = userStr ? JSON.parse(userStr) : null;
 
             // Update Author/Seller Info from gig data
-            const authorName = gig.author_name || 'User';
-            const authorAvatar = gig.author_avatar || `https://ui-avatars.com/api/?name=${authorName}&background=random`;
+            const authorName = owner.first_name;
+            const authorAvatar = `https://ui-avatars.com/api/?name=${authorName}&background=random`;
             
             document.getElementById('author-name').textContent = authorName;
             document.getElementById('seller-name').textContent = authorName;
@@ -802,7 +823,7 @@
             const ownerActions = document.getElementById('owner-actions');
             const visitorActions = document.getElementById('visitor-actions');
             
-            if (currentUser && gig.owner_email === currentUser.email) {
+            if (currentUser && gig.user_id === currentUser.id) {
                 ownerActions.style.display = 'flex';
                 visitorActions.style.display = 'none';
             } else {
@@ -813,23 +834,21 @@
             if (currentUser) {
                 document.getElementById('guest-actions').style.display = 'none';
                 document.getElementById('user-actions').style.display = 'flex';
-                document.getElementById('user-name-head').textContent = currentUser.fname || 'User';
-                document.getElementById('user-avatar-head').src = `https://ui-avatars.com/api/?name=${currentUser.fname || 'U'}&background=random`;
+                document.getElementById('user-name-head').textContent = currentUser.first_name || 'User';
+                document.getElementById('user-avatar-head').src = `https://ui-avatars.com/api/?name=${currentUser.first_name || 'U'}&background=random`;
             }
         }
 
         function handleBuyNow() {
-            alert('Order placed successfully! This is a simulated checkout.');
         }
 
         function handleOpenChat() {
             const userStr = localStorage.getItem('qwork_currentUser');
             if (!userStr) {
-                alert('Please login to send messages');
                 window.location.href = 'login.html';
                 return;
             }
-            window.location.href = `messages.html?seller=${currentGig.owner_email}&gig=${currentGig.id}`;
+            window.location.href = `messages.html?seller=${ownerGig.email}&gig=${currentGig.id}`;
         }
 
         function updatePricingUI(gig, tier) {
@@ -852,19 +871,19 @@
             const revisionsEl = document.getElementById('sidebar-revisions');
 
             if (tier === 'basic') {
-                priceEl.textContent = Number(gig.price).toLocaleString() + ' ₸';
+                priceEl.textContent = Number(gig.price_basic).toLocaleString() + ' ₸';
                 nameEl.textContent = gig.pkgNameBasic || 'Basic Package';
                 descEl.textContent = gig.descriptionBasic || '';
                 deliveryEl.textContent = gig.deliveryBasic || '3-day delivery';
                 revisionsEl.textContent = gig.revisionsBasic || 'Unlimited Revisions';
             } else if (tier === 'standard') {
-                priceEl.textContent = Number(gig.priceStandard).toLocaleString() + ' ₸';
+                priceEl.textContent = Number(gig.price_standard).toLocaleString() + ' ₸';
                 nameEl.textContent = gig.pkgNameStandard || 'Standard Package';
                 descEl.textContent = gig.descriptionStandard || '';
                 deliveryEl.textContent = gig.deliveryStandard || '5-day delivery';
                 revisionsEl.textContent = gig.revisionsStandard || 'Unlimited Revisions';
             } else if (tier === 'premium') {
-                priceEl.textContent = Number(gig.pricePremium).toLocaleString() + ' ₸';
+                priceEl.textContent = Number(gig.price_premium).toLocaleString() + ' ₸';
                 nameEl.textContent = gig.pkgNamePremium || 'Premium Package';
                 descEl.textContent = gig.descriptionPremium || '';
                 deliveryEl.textContent = gig.deliveryPremium || '7-day delivery';
@@ -884,9 +903,21 @@
             window.location.href = 'index.html';
         }
 
-        function editCurrentQWork() {
-            const editData = { ...currentGig, isEditing: true, editIndex: gigIndex };
-            localStorage.setItem('qwork_temp_form', JSON.stringify(editData));
+        async function editCurrentQWork() {
+            // const editData = { ...currentGig, isEditing: true, editIndex: gigIndex };
+
+            const response = await fetch(`https://inf395-advanced-project-production.up.railway.app/portfolios/${currentGig.user_id}/${currentGig.id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('access_token')}`
+                }            
+            });
+
+            const editData2 = await response.json(); 
+            editData2.is_editing = true;    
+
+            localStorage.setItem('qwork_temp_form', JSON.stringify(editData2));
             window.location.href = 'create-qwork.html';
         }
 
@@ -940,6 +971,9 @@
                     }
                 });
             }
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
         });
     </script>
 </body>

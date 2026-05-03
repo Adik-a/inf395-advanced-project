@@ -287,9 +287,24 @@
         let filteredGigs = [];
         let visibleCount = 9;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            allGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]')
-                        .filter(g => g.category === 'Audio & Video' && g.status === 'Active');
+        document.addEventListener('DOMContentLoaded', async () => {
+            // allGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]')
+            //             .filter(g => g.category === 'Audio & Video' && g.status === 'Active');
+
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/portfolios/category/Audio%20&%20Video', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // 'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                },
+            });
+
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+
+            const data = await response.json();
+            allGigs = data;
             
             // Handle subcategory deep linking
             const urlParams = new URLSearchParams(window.location.search);
@@ -315,13 +330,13 @@
             // Filter by price
             const min = document.getElementById('min-price').value;
             const max = document.getElementById('max-price').value;
-            if (min) filteredGigs = filteredGigs.filter(g => Number(g.price) >= Number(min));
-            if (max) filteredGigs = filteredGigs.filter(g => Number(g.price) <= Number(max));
+            if (min) filteredGigs = filteredGigs.filter(g => Number(g.price_basic) >= Number(min));
+            if (max) filteredGigs = filteredGigs.filter(g => Number(g.price_basic) <= Number(max));
 
             // Sort
             const sortBy = document.getElementById('sort-select').value;
-            if (sortBy === 'price-low') filteredGigs.sort((a, b) => a.price - b.price);
-            if (sortBy === 'price-high') filteredGigs.sort((a, b) => b.price - a.price);
+            if (sortBy === 'price-low') filteredGigs.sort((a, b) => a.price_basic - b.price_basic);
+            if (sortBy === 'price-high') filteredGigs.sort((a, b) => b.price_basic - a.price_basic);
             if (sortBy === 'newest') filteredGigs.sort((a, b) => b.id - a.id);
 
             visibleCount = 9;
@@ -361,47 +376,62 @@
             }
 
             grid.innerHTML = '';
-            toShow.forEach(gig => {
-                const card = document.createElement('div');
-                card.className = 'service-card';
-                card.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
-                
-                const imgHtml = gig.image
-                    ? `<img src="${gig.image}" alt="${gig.title}">`
-                    : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
+            const renderGigs = async (toShow) => {
+                for (const gig of toShow) {
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.onclick = () => window.location.href = `service-detail.html?id=${gig.id}`;
+                    
+                    const imgHtml = gig.images[0]
+                        ? `<img src="${gig.images[0]}" alt="${gig.title}">`
+                        : `<div style="height:100%; display:flex; align-items:center; justify-content:center; background:#e2e8f0;"><i class="ph ph-image" style="font-size:48px; color:#94a3b8;"></i></div>`;
 
-                const authorName = gig.author_name || "User";
-                const authorAvatar = gig.author_avatar || `https://ui-avatars.com/api/?name=${authorName}&background=random`;
+                    const userData = await get_first_name(gig.user_id);
+                    const authorName = userData.first_name;
+                    const authorAvatar = gig.author_avatar || `https://ui-avatars.com/api/?name=${authorName}&background=random`;
 
-                card.innerHTML = `
-                    <div class="service-image">
-                        ${imgHtml}
-                        <span class="service-tag">${gig.subcategory || gig.category}</span>
-                    </div>
-                    <div class="service-content">
-                        <div class="service-author">
-                            <img src="${authorAvatar}" alt="${authorName}">
-                            <div>
-                                <span class="author-name">${authorName}</span>
-                                <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                    card.innerHTML = `
+                        <div class="service-image">
+                            ${imgHtml}
+                            <span class="service-tag">${gig.subcategory || gig.category}</span>
+                        </div>
+                        <div class="service-content">
+                            <div class="service-author">
+                                <img src="${authorAvatar}" alt="${authorName}">
+                                <div>
+                                    <span class="author-name">${authorName}</span>
+                                    <span class="author-rating"><i class="ph-fill ph-star"></i> 5.0 (New)</span>
+                                </div>
+                            </div>
+                            <h3 class="service-title">${gig.title}</h3>
+                            <div class="service-footer">
+                                <span class="price-label">FROM</span>
+                                <span class="price-value">₸ ${Number(gig.price_basic).toLocaleString()}</span>
                             </div>
                         </div>
-                        <h3 class="service-title">${gig.title}</h3>
-                        <div class="service-footer">
-                            <span class="price-label">FROM</span>
-                            <span class="price-value">₸ ${Number(gig.price).toLocaleString()}</span>
-                        </div>
-                    </div>
-                `;
-                grid.appendChild(card);
-            });
-
+                    `;
+                    grid.appendChild(card);
+                }
+            };
+            renderGigs(toShow);
             // Toggle Show More button
             if (visibleCount < filteredGigs.length) {
                 wrapper.style.display = 'flex';
             } else {
                 wrapper.style.display = 'none';
             }
+        }
+
+        async function get_first_name(user_id) {
+            const response2 = await fetch(`https://inf395-advanced-project-production.up.railway.app/users/${user_id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                },
+            });
+
+            return await response2.json();
         }
 
         function resetFilters() {

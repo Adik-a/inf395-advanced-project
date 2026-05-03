@@ -24,6 +24,7 @@ async def upload_image(
 async def upload_images(
     files: List[UploadFile] = File(...),
 ):
+    print(f"✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅✅  {len(files)}")
     tasks = [run_in_threadpool(cloudinary.uploader.upload, file.file) for file in files]
     results = await asyncio.gather(*tasks)
     

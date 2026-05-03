@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.orm import selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -119,7 +119,12 @@ class PortfoliosRepository:
         session: AsyncSession,
     ):
         data = await session.scalar(
-            select(PortfoliosModel).where(
+            select(PortfoliosModel)
+            .options(
+                selectinload(PortfoliosModel.faqs),
+                selectinload(PortfoliosModel.requirements),
+            )
+            .where(
                 PortfoliosModel.user_id == user_id,
                 PortfoliosModel.id == portfolio_id,
             )
@@ -130,16 +135,56 @@ class PortfoliosRepository:
     async def update_portfolio(
         cls,
         portfolio: PortfoliosModel,
-        portfolio_update: PortfoliosUpdateSchema,
+        portfolio_data: PortfoliosSchema,
+        user_id: int,
         session: AsyncSession,
         partial: bool = False,
     ):
-        for field, value in portfolio_update.model_dump(exclude_unset=partial).items():
-            if value is not None:
-                setattr(portfolio, field, value)
+        portfolio_data = portfolio_data.model_dump()
+        faqs = portfolio_data.pop("faqs", [])
+        requirements = portfolio_data.pop("requirements", [])
 
+        if portfolio_data["pricing_mode"] == "one":
+            del portfolio_data["price_standard"]
+            del portfolio_data["price_premium"]
+            del portfolio_data["package_name_standard"]
+            del portfolio_data["package_name_premium"]
+            del portfolio_data["description_standard"]
+            del portfolio_data["description_premium"]
+            del portfolio_data["delivery_standard"]
+            del portfolio_data["delivery_premium"]
+            del portfolio_data["revisions_standard"]
+            del portfolio_data["revisions_premium"]
+        else:
+            portfolio_data["price_standard"] = int(
+                float(portfolio_data["price_standard"])
+            )
+            portfolio_data["price_premium"] = int(
+                float(portfolio_data["price_premium"])
+            )
+
+        portfolio_data["price_basic"] = int(float(portfolio_data["price_basic"]))
+
+        query = (
+            update(PortfoliosModel)
+            .where(PortfoliosModel.id == portfolio.id)
+            .values(**portfolio_data, user_id=user_id)
+        )
+        await session.execute(query)
         await session.commit()
-        await session.refresh(portfolio)
+        query = select(PortfoliosModel).where(PortfoliosModel.id == portfolio.id)
+        result = await session.execute(query)
+        return result.scalars().first()
+
+        # await cls.update_faqs()
+        # await cls.update_requirements()
+
+        # for field, value in portfolio_update.model_dump(exclude_unset=partial).items():
+        #     if value is not None:
+        #         setattr(portfolio, field, value)
+
+        # await session.commit()
+        # await session.refresh(portfolio)
 
         return portfolio
 
@@ -151,3 +196,39 @@ class PortfoliosRepository:
     ):
         await session.delete(portfolio)
         await session.commit()
+
+    @classmethod
+    async def get_portfolios_by_category(
+        cls,
+        category: str,
+        session: AsyncSession,
+        subcategory: str | None = None,
+    ):
+        query = select(PortfoliosModel).where(
+            PortfoliosModel.category == category,
+            PortfoliosModel.initial_status == "Active",
+        )
+
+        if subcategory:
+            query = query.where(PortfoliosModel.subcategory == subcategory)
+
+        data = await session.execute(query)
+        return data.scalars().all()
+
+    @classmethod
+    async def get_portfolio_by_id(
+        cls,
+        portfolio_id: int,
+        session: AsyncSession,
+    ):
+        data = await session.scalar(
+            select(PortfoliosModel)
+            .options(
+                selectinload(PortfoliosModel.faqs),
+                selectinload(PortfoliosModel.requirements),
+            )
+            .where(
+                PortfoliosModel.id == portfolio_id,
+            )
+        )
+        return data

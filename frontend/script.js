@@ -10,7 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (guestActions && userActions) {
             guestActions.style.display = 'none';
             userActions.style.display = 'flex';
-            if (userNameDisplay) userNameDisplay.textContent = currentUser.fname || 'User';
+            if (userNameDisplay) userNameDisplay.textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.f}&background=random`);
         }
     } else {
         if (guestActions && userActions) {

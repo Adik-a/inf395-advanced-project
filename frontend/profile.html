@@ -419,13 +419,11 @@
             <img src="https://i.pravatar.cc/150?img=11" alt="User" class="profile-user-img" id="profile-img-large">
             <div class="profile-user-info">
                 <h1 id="profile-name-large">Daniel R.</h1>
-                <p id="profile-bio">Professional UI/UX Designer & Frontend Developer based in Almaty. Helping businesses
-                    build stunning digital products.</p>
+                <p id="profile-bio">User bio</p>
                 <div class="profile-meta">
-                    <div class="meta-item"><i class="ph ph-map-pin"></i> <span id="profile-location">Almaty,
-                            Kazakhstan</span></div>
-                    <div class="meta-item"><i class="ph ph-star-fill" style="color:#ffb33e;"></i> 5.0 (24 reviews)</div>
-                    <div class="meta-item"><i class="ph ph-clock"></i> Member since 2024</div>
+                    <div class="meta-item"><i class="ph ph-map-pin"></i> <span id="profile-location">Kazakhstan</span></div>
+                    <div class="meta-item"><i class="ph ph-star-fill" style="color:#ffb33e;"></i> 5.0 (0 reviews)</div>
+                    <div class="meta-item" id="created_at"><i class="ph ph-clock"></i> </div>
                 </div>
             </div>
             <div style="padding-top: 20px; display: flex; gap: 12px; align-items: center;">
@@ -495,19 +493,13 @@
                 <div class="profile-section">
                     <h3>About Me</h3>
                     <p id="profile-about" style="font-size:14px; line-height:1.6; color:var(--text-secondary);">
-                        Passionate about creating clean and functional user interfaces. Over 5 years of experience in
-                        the design industry. Specialized in mobile app design and web applications.
+                        Information about <menu></menu>
                     </p>
                 </div>
                 <div class="profile-section">
                     <h3>Skills</h3>
                     <div id="skills-container">
-                        <span class="skill-tag">UI Design</span>
-                        <span class="skill-tag">UX Research</span>
-                        <span class="skill-tag">Figma</span>
-                        <span class="skill-tag">React.js</span>
-                        <span class="skill-tag">HTML/CSS</span>
-                        <span class="skill-tag">Branding</span>
+                        <!-- <span class="skill-tag">Skill</span> -->
                     </div>
                 </div>
             </aside>
@@ -534,9 +526,36 @@
 
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            loadUserProfile();
+        document.addEventListener('DOMContentLoaded', async () => {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/users/me', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                }
+            });
+            const userData = await response.json();
+            currentUser = JSON.parse(localStorage.getItem('qwork_currentUser'));
+            document.getElementById('user-name-display').textContent = currentUser.first_name;
+            document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+            document.getElementById('profile-img-large').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
+            
+            loadUserProfile(userData);
             loadUserGigs();
+
+
+            const createdAtElem = document.getElementById('created_at');
+            if (userData.created_at) {
+                const createdDate = new Date(userData.created_at);
+                
+                // Указываем локаль 'en-US' для принудительного использования английского
+                const options = { year: 'numeric', month: 'long' };
+                const formattedDate = createdDate.toLocaleDateString('en-US', options);
+                
+                createdAtElem.textContent = `Member since ${formattedDate}`;
+            } else {
+                createdAtElem.textContent = '';
+            }
+
 
             // Check if we should open the edit modal automatically
             const urlParams = new URLSearchParams(window.location.search);
@@ -547,54 +566,48 @@
             }
         });
 
-        function loadUserProfile() {
-            const currentUserStr = localStorage.getItem('qwork_currentUser');
-            if (currentUserStr) {
-                const user = JSON.parse(currentUserStr);
+        function loadUserProfile(userData) {
+            const fullName = (userData.first_name) + ' ' + (userData.last_name);
+            document.getElementById('profile-name-large').textContent = fullName.trim();
+                
 
-                // Update text elements only if they have values
-                if (user.fname || user.lname || user.first_name || user.last_name) {
-                    const fullName = (user.fname || user.first_name || '') + ' ' + (user.lname || user.last_name || '');
-                    document.getElementById('profile-name-large').textContent = fullName.trim() || 'Daniel R.';
-                }
+            if (userData.bio) document.getElementById('profile-bio').textContent = userData.bio;
+            if (userData.location) document.getElementById('profile-location').textContent = userData.location;
+            if (userData.about_me) document.getElementById('profile-about').textContent = userData.about_me;
 
-                if (user.bio) document.getElementById('profile-bio').textContent = user.bio;
-                if (user.location) document.getElementById('profile-location').textContent = user.location;
-                if (user.about) document.getElementById('profile-about').textContent = user.about;
+            // if (userData.avatar) {
+            //     document.getElementById('profile-img-large').src = userData.avatar;
+            // }
 
-                if (user.avatar) {
-                    document.getElementById('profile-img-large').src = user.avatar;
-                }
-
-                // Show/hide edit vs message buttons
-                const currentLoggedUserStr = localStorage.getItem('qwork_currentUser');
-                if (currentLoggedUserStr) {
-                    const loggedUser = JSON.parse(currentLoggedUserStr);
-                    const isMyProfile = loggedUser.username === user.username;
-                    document.getElementById('edit-profile-btn').style.display = isMyProfile ? 'block' : 'none';
-                    document.getElementById('contact-user-btn').style.display = isMyProfile ? 'none' : 'block';
-                    if (!isMyProfile) {
-                        document.getElementById('contact-user-btn').onclick = () => contactUser(user.username);
-                    }
-                }
-
-                // Render skills
-                if (user.skills) {
-                    const skillsContainer = document.getElementById('skills-container');
-                    skillsContainer.innerHTML = '';
-                    const skills = Array.isArray(user.skills) ? user.skills : user.skills.split(',').map(s => s.trim());
-
-                    skills.forEach(skill => {
-                        if (skill) {
-                            const tag = document.createElement('span');
-                            tag.className = 'skill-tag';
-                            tag.textContent = skill;
-                            skillsContainer.appendChild(tag);
-                        }
-                    });
+            // Show/hide edit vs message buttons
+            const currentLoggedUserStr = localStorage.getItem('qwork_currentUser');
+            if (currentLoggedUserStr) {
+                const loggedUser = JSON.parse(currentLoggedUserStr);
+                const isMyProfile = loggedUser.id === userData.id;
+                document.getElementById('edit-profile-btn').style.display = isMyProfile ? 'block' : 'none';
+                document.getElementById('contact-user-btn').style.display = isMyProfile ? 'none' : 'block';
+                if (!isMyProfile) {
+                    document.getElementById('contact-user-btn').onclick = () => contactUser(user.id);
                 }
             }
+
+            // Render skills
+            if (userData.skills) {
+                const skillsContainer = document.getElementById('skills-container');
+                skillsContainer.innerHTML = '';
+                const skills = Array.isArray(userData.skills) ? userData.skills : userData.skills.split(',').map(s => s.trim());
+
+                skills.forEach(skill => {
+                    if (skill) {
+                        const tag = document.createElement('span');
+                        tag.className = 'skill-tag';
+                        tag.textContent = skill;
+                        skillsContainer.appendChild(tag);
+                    }
+                });
+            }
         }
+        
 
         function loadUserGigs() {
             const currentUserStr = localStorage.getItem('qwork_currentUser');
@@ -650,15 +663,24 @@
             }
         }
 
-        function openEditModal() {
+        async function openEditModal() {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/users/me', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                }
+            });
+            const userData = await response.json();
+
+
             const user = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
-            document.getElementById('edit-fname').value = user.fname || user.first_name || 'Daniel';
-            document.getElementById('edit-lname').value = user.lname || user.last_name || 'R.';
-            document.getElementById('edit-username').value = user.username || '@daniel_r';
-            document.getElementById('edit-bio').value = user.bio || 'Professional UI/UX Designer & Frontend Developer based in Almaty.';
-            document.getElementById('edit-location').value = user.location || 'Almaty, Kazakhstan';
-            document.getElementById('edit-about').value = user.about || 'Passionate about creating clean and functional user interfaces. Over 5 years of experience in the design industry.';
-            document.getElementById('edit-skills').value = user.skills || 'UI Design, UX Research, Figma, React.js, HTML/CSS, Branding';
+            document.getElementById('edit-fname').value = userData.first_name;
+            document.getElementById('edit-lname').value = userData.last_name;
+            document.getElementById('edit-username').value = userData.username;
+            document.getElementById('edit-bio').value = userData.bio;
+            document.getElementById('edit-location').value = userData.location;
+            document.getElementById('edit-about').value = userData.about_me;
+            document.getElementById('edit-skills').value = userData.skills;
 
             document.getElementById('edit-profile-modal').classList.add('active');
         }
@@ -667,27 +689,38 @@
             document.getElementById('edit-profile-modal').classList.remove('active');
         }
 
-        function saveProfileChanges(e) {
+        async function saveProfileChanges(e) {
             e.preventDefault();
             const user = JSON.parse(localStorage.getItem('qwork_currentUser') || '{}');
 
             // Collect data
-            user.fname = document.getElementById('edit-fname').value;
-            user.first_name = user.fname;
-            user.lname = document.getElementById('edit-lname').value;
-            user.last_name = user.lname;
-            user.username = document.getElementById('edit-username').value;
-            user.bio = document.getElementById('edit-bio').value;
-            user.location = document.getElementById('edit-location').value;
-            user.about = document.getElementById('edit-about').value;
-            user.skills = document.getElementById('edit-skills').value;
+            user.first_name = document.getElementById('edit-fname').value;
+            user.last_name = document.getElementById('edit-lname').value;
+
+            data = {
+                first_name: user.first_name,
+                last_name: user.last_name,
+                username: document.getElementById('edit-username').value,
+                bio: document.getElementById('edit-bio').value,
+                location: document.getElementById('edit-location').value,
+                about_me: document.getElementById('edit-about').value,
+                skills: document.getElementById('edit-skills').value
+            }
+            
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/users/me', {
+                method: 'PATCH',
+                headers: {'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                },
+                body: JSON.stringify(data)
+            });
+            const userData = await response.json();
 
             // Save to localStorage
-            localStorage.setItem('qwork_currentUser', JSON.stringify(user));
 
             // Close modal and refresh UI
             closeEditModal();
-            loadUserProfile();
+            loadUserProfile(userData);
 
             // Show toast notification
             showToast();
