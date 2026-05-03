@@ -8,6 +8,8 @@ from database import engine, Model
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    async with engine.begin() as conn:
+        await conn.run_sync(Model.metadata.create_all)
     print("🔰🔗Database is launched🔗🔰")
 
     yield
@@ -21,12 +23,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-origins = [
-    "http://127.0.0.1:5500",
-    "http://localhost:5500",
-    "http://localhost:63342",
-    "http://127.0.0.1:63342",
-]
+origins = ["*"]
 
 app.add_middleware(
     CORSMiddleware,
