@@ -284,7 +284,7 @@
             document.getElementById('user-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
             document.getElementById('Profile-avatar').setAttribute('src', `https://ui-avatars.com/api/?name=${currentUser.first_name}&background=random`);
 
-            const response = await fetch('http://localhost:8000/portfolios/me', {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/portfolios/me', {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json', 
                     'Authorization': 'Bearer ' + localStorage.getItem('access_token')

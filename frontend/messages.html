@@ -432,7 +432,7 @@
 
         async function ensureChatExists(email) {
             // let messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            const response = await fetch('http://localhost:8000/messages/my/all', {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/messages/my/all', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -454,7 +454,7 @@
 
         async function loadChats() {
             try {
-                const response = await fetch('http://localhost:8000/messages/my/all', {
+                const response = await fetch('https://inf395-advanced-project-production.up.railway.app/messages/my/all', {
                     method: 'GET',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -495,7 +495,7 @@
 
         async function getLastMessage(email) {
             // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            const response = await fetch('http://localhost:8000/messages/my/all', {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/messages/my/all', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -562,7 +562,7 @@
 
         async function renderMessages() {
             // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            const response = await fetch('http://localhost:8000/messages/my/all', {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/messages/my/all', {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json',
                     'Authorization': `Bearer ${localStorage.getItem('access_token')}`
@@ -592,38 +592,9 @@
             const text = input.value.trim();
             if (!text || !activeChatEmail) return;
 
-            // const messages = JSON.parse(localStorage.getItem('qwork_messages') || '[]');
-            // const response = await fetch('http://localhost:8000/messages/my/all', {
-            //     method: 'GET',
-            //     headers: { 'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            //         }
-            // });
-
-            // const messages = await response.json();
-
-            // messages.push({
-            //     from: currentUser.email,
-            //     to: activeChatEmail,
-            //     text,
-            //     timestamp: new Date().toISOString()
-            // });
             
-            // localStorage.setItem('qwork_messages', JSON.stringify(messages));
 
-            // const response2 = await fetch('http://localhost:8000/messages/send', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json',
-            //         'Authorization': `Bearer ${localStorage.getItem('access_token')}`
-            //         },
-            //     body: JSON.stringify({
-            //         sender_id: currentUser.id,
-            //         receiver_email: activeChatEmail,
-            //         content: text
-            //     })
-            // });
-
-            const response = await fetch(`http://localhost:8000/messages/get-id-by-email/${activeChatEmail}`, {
+            const response = await fetch(`https://inf395-advanced-project-production.up.railway.app/messages/get-id-by-email/${activeChatEmail}`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${localStorage.getItem('access_token')}`

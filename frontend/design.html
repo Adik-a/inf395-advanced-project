@@ -299,7 +299,7 @@
             // allGigs = JSON.parse(localStorage.getItem('qwork_my_gigs') || '[]')
             //             .filter(g => g.category === 'Design' && g.status === 'Active');
 
-            const response = await fetch('http://127.0.0.1:8000/portfolios/category/Design', {
+            const response = await fetch('https://inf395-advanced-project-production.up.railway.app/portfolios/category/Design', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
@@ -433,7 +433,7 @@
         }
 
         async function get_first_name(user_id) {
-            const response2 = await fetch(`http://127.0.0.1:8000/users/${user_id}`, {
+            const response2 = await fetch(`https://inf395-advanced-project-production.up.railway.app/users/${user_id}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
